@@ -1,0 +1,14 @@
+{
+  "project_id": "FM_HASH",
+  "manifest_version": 3,
+  "status": "S2_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T11:45:16.843530+00:00",
+  "override_history": [],
+  "manifest_hash": "245bbaa6bb5b8eda7afda0c4755b689a2e269c35f316e3229141f818db6901aa",
+  "artifact_registry": {
+    "S2": "4e8dd9bce7be8c3aaf08e5cb537d28976ddae08dabad34b1b447f5bf0e61ce9e"
+  }
+}

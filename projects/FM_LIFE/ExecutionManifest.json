@@ -1,0 +1,11 @@
+{
+  "project_id": "FM_LIFE",
+  "manifest_version": 3,
+  "status": "CREATED",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T10:11:11.319478+00:00",
+  "override_history": [],
+  "manifest_hash": "2ff7ead8fe078fb5d65546578504cdaa7606d2200518f2c9575c2df4f47bd952"
+}

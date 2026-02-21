@@ -1,0 +1,14 @@
+{
+  "project_id": "FM_MUT",
+  "manifest_version": 3,
+  "status": "S2_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T11:50:47.940673+00:00",
+  "override_history": [],
+  "manifest_hash": "bc964e4f681aaaa509f97f46e399335cc1b50288069dc54991665459baebcc92",
+  "artifact_registry": {
+    "S2": "603fd23a4efe88acb5e45978d2f888234b71b6910fa01e2ac391c0f44858f73d"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "project_id": "FM_CROSS3",
+  "manifest_version": 3,
+  "status": "S2_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T12:34:17.502408+00:00",
+  "override_history": [],
+  "manifest_hash": "5a828ad88462a3769d0091d7da5b7fa2909769fc8b70db91657a3827af7e03b0",
+  "artifact_registry": {
+    "S1": "d2b95139b6d30bff4a2ebf6bf15ad13195af5147a8aea3661773e7af2df1e86d",
+    "S2": "468d9da045416c4c765df4a3358b71235a12b51560ae830a9ab5a4ed2d9d09c6"
+  }
+}

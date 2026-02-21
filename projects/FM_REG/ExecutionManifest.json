@@ -1,0 +1,15 @@
+{
+  "project_id": "FM_REG",
+  "manifest_version": 3,
+  "status": "S2_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T10:38:59.714785+00:00",
+  "override_history": [],
+  "manifest_hash": "fe734732166cb660648b86ea825bbd257d1416218b5d089d2d11fd69c42938dc",
+  "artifact_registry": {
+    "S1": "0fabe300212fa0e3086a9b0b6fad61af5a94d13089acc8e2714bf6789d804ea9",
+    "S2": "b4a68affa27daf37aba194b12f3154b200f8983ff8f969647317e84c6cea31dd"
+  }
+}

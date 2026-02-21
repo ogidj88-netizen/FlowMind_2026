@@ -1,0 +1,20 @@
+{
+  "project_id": "FM_HALT2",
+  "manifest_version": 3,
+  "status": "S1_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T10:15:30.734399+00:00",
+  "override_history": [
+    {
+      "action": "HALT",
+      "timestamp": "2026-02-20T10:15:30.778664+00:00"
+    },
+    {
+      "action": "RESUME",
+      "timestamp": "2026-02-20T10:15:37.640367+00:00"
+    }
+  ],
+  "manifest_hash": "53245a6ed8a589adfde74946406920514482bda5c0355b70d6e63a3c2be94beb"
+}

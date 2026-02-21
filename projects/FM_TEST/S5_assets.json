@@ -1,0 +1,13 @@
+{
+  "project_id": "FM_TEST",
+  "phase": "S5",
+  "assets_version": 1,
+  "required_assets": [
+    "voice_track.wav",
+    "background_music.wav",
+    "scene_1.mp4"
+  ],
+  "linked_script_title": "Why Most People Stay Broke",
+  "asset_strategy": "stock-first",
+  "created_at": "2026-02-20T09:29:55.396448+00:00"
+}

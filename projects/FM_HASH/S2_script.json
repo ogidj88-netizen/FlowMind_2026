@@ -1,0 +1,22 @@
+{
+  "project_id": "FM_HASH",
+  "phase": "S2",
+  "script_version": 1,
+  "based_on_strategy": true,
+  "title": "Auto-generated Script",
+  "intro_hook": "Auto hook.",
+  "body_outline": [
+    {
+      "section_id": 1,
+    }
+  ],
+  "script": [
+    {
+      "scene_id": 1,
+      "voiceover": "Auto generated content.",
+      "duration_seconds": 8
+    }
+  ],
+  "ending": "Auto ending.",
+  "created_at": "2026-02-20T11:45:16.919290+00:00"
+}

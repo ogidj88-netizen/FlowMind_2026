@@ -1,0 +1,15 @@
+{
+  "project_id": "FM_CROSS3",
+  "phase": "S2",
+  "based_on_strategy": true,
+  "based_on_niche": "Invisible Costs",
+  "strategy_version": "v1",
+  "script_outline": [
+    "Hook",
+    "Problem",
+    "Escalation",
+    "Reveal",
+    "Call to Action"
+  ],
+  "created_at": "2026-02-20T12:34:17.631049+00:00"
+}

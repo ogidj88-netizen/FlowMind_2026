@@ -1,0 +1,10 @@
+{
+  "project_id": "FM_LOCK",
+  "manifest_version": 2,
+  "status": "S5_DONE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T10:07:18.834946+00:00",
+  "override_history": [],
+  "manifest_hash": "44a9c2cf3b58a847f8e11f0d263a0e23b67cf1c678f0d64560c78f767219427e"
+}

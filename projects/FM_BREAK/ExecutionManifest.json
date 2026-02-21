@@ -1,0 +1,11 @@
+{
+  "project_id": "FM_BREAK",
+  "manifest_version": 3,
+  "status": "S2_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T11:39:33.536643+00:00",
+  "override_history": [],
+  "manifest_hash": "dc9491023aaca2c0c75321657b5e9cc3f67f135deda9baf7ff7cec3a88555396"
+}

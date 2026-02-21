@@ -1,0 +1,11 @@
+{
+  "project_id": "FM_STABLE",
+  "manifest_version": 3,
+  "status": "S2_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T11:22:52.742191+00:00",
+  "override_history": [],
+  "manifest_hash": "6658ccf1673f7e21ef2f22e30b0c164e12b01e710f1bde3496a9eb23313755f6"
+}

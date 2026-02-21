@@ -1,0 +1,10 @@
+{
+  "project_id": "FM_IMMUTABLE",
+  "manifest_version": 2,
+  "status": "S1_DONE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T10:02:44.554365+00:00",
+  "override_history": [],
+  "manifest_hash": "2e93dbed3a3f874b5ea936a9b3b729978124f99c46d26d8d9a7ca6dec65490c8"
+}

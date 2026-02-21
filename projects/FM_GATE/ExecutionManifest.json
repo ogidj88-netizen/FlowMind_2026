@@ -1,0 +1,11 @@
+{
+  "project_id": "FM_GATE",
+  "manifest_version": 3,
+  "status": "S2_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T11:29:58.776947+00:00",
+  "override_history": [],
+  "manifest_hash": "1eb00618070ebbfb4c8e602fc8c3a00e6c93163832919237dbdb3ba5a1edb5bd"
+}

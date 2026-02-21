@@ -1,0 +1,14 @@
+FlowMind 2026
+Dispatcher Core Freeze
+Version: v15
+Date: 2026-02-20
+
+Frozen Components:
+- Strict Phase Order
+- Structural Validation Gate
+- Semantic Cross-Phase Validation
+- Artifact Registry (SHA256 immutability)
+- Mutation detection
+- Deterministic transition control
+
+Status: IMMUTABLE

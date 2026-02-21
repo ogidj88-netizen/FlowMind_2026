@@ -1,0 +1,11 @@
+{
+  "project_id": "FM_CROSS",
+  "manifest_version": 3,
+  "status": "S1_DONE",
+  "lifecycle": "SAFE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T12:24:15.331356+00:00",
+  "override_history": [],
+  "manifest_hash": "b5b2c972896770dbb747dc4a738e9c1d7548678767cdaf0ab720f2baae215db6"
+}

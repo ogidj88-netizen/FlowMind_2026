@@ -1,0 +1,13 @@
+{
+  "project_id": "FM_LOCK",
+  "phase": "S5",
+  "assets_version": 1,
+  "required_assets": [
+    "voice_track.wav",
+    "background_music.wav",
+    "scene_1.mp4"
+  ],
+  "linked_script_title": "Why Most People Stay Broke",
+  "asset_strategy": "stock-first",
+  "created_at": "2026-02-20T10:09:23.138307+00:00"
+}

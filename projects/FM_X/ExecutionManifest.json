@@ -1,0 +1,10 @@
+{
+  "project_id": "FM_X",
+  "manifest_version": 2,
+  "status": "S1_DONE",
+  "topic": "UNDEFINED",
+  "mode": "normal",
+  "created_at": "2026-02-20T10:06:18.275895+00:00",
+  "override_history": [],
+  "manifest_hash": "61403b59589a9bd502702415151bfa4971e9a7b87c7aa224acaf3c6492d60a60"
+}
