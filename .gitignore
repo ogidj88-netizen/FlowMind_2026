@@ -1,0 +1,51 @@
+# --- FlowMind ignores (canon) ---
+
+# temp / quarantine
+tmp/
+**/*.tmp
+**/*.tmp.*
+**/.tmp/
+**/*~
+**/#*#
+
+# python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# logs
+*.log
+uvicorn.log
+celery*.log
+
+# secrets / oauth
+token.json
+token*.json
+credentials*.json
+client_secret*.json
+*.pem
+*.key
+
+# editor
+.vscode/
+.idea/
+.DS_Store
+
+# archive folders
+_ARCHIVE_FULL_SYSTEM/
+
+# --- FlowMind run outputs (do not commit by default) ---
+projects/*/S8_*.json
+projects/*/S9_*.json
+projects/*/S10_*.json

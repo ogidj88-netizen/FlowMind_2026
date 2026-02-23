@@ -1,0 +1,24 @@
+{
+  "schema": "S2_SCRIPT_V1",
+  "status": "STUBBED_INVALID_PREVIOUS_JSON",
+  "notes": [
+    "Previous S2_script.json was invalid JSON and quarantined by tools/json_repair_or_quarantine.sh",
+    "This is a minimal placeholder to unblock pipeline mechanics. Regenerate S2 properly later."
+  ],
+  "title": "STUB: Script missing (invalid JSON was quarantined)",
+  "language": "uk",
+  "voiceover": {
+    "style": "neutral",
+    "segments": [
+      {
+        "id": "seg_001",
+        "text": "Цей сценарій тимчасово відновлено як заглушку, бо попередній JSON був пошкоджений. Пайплайн продовжує роботу, але S2 треба перегенерувати."
+      }
+    ]
+  },
+  "metadata": {
+    "author": "Evgen Mazurets",
+    "created_by": "FlowMind tools/stub_s2_script_v1.json",
+    "warning": "DO_NOT_PUBLISH"
+  }
+}
