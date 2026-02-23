@@ -1,55 +1,55 @@
 #!/usr/bin/env python3
 """
-FlowMind 2026
-Manifest Engine v3
-Immutable + Lifecycle Model
+FlowMind Manifest Engine (v3.x) — Single-Writer enforced
+
+Rule:
+- ExecutionManifest.json is written ONLY via tools/json_write_locked.sh
 """
 
 import json
-import sys
+import subprocess
 import hashlib
 from pathlib import Path
-from datetime import datetime, UTC
 
-PROJECTS_DIR = Path("projects")
+TOOLS_DIR = Path(__file__).resolve().parents[1] / "tools"
+JSON_WRITE_LOCKED = TOOLS_DIR / "json_write_locked.sh"
 
-def compute_hash(data: dict) -> str:
-    temp = dict(data)
-    temp.pop("manifest_hash", None)
-    encoded = json.dumps(temp, sort_keys=True).encode()
-    return hashlib.sha256(encoded).hexdigest()
 
-def create_manifest(project_id):
-    project_path = PROJECTS_DIR / project_id
+def compute_hash(manifest: dict) -> str:
+    tmp = dict(manifest)
+    tmp.pop("manifest_hash", None)
+    raw = json.dumps(tmp, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
+def _write_json_locked(path: Path, obj: dict) -> None:
+    if not JSON_WRITE_LOCKED.exists():
+        raise RuntimeError(f"locked writer missing: {JSON_WRITE_LOCKED}")
+
+    data = json.dumps(obj, ensure_ascii=False, indent=2) + "\n"
+    proc = subprocess.run(
+        [str(JSON_WRITE_LOCKED), str(path)],
+        input=data.encode("utf-8"),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr.decode("utf-8", errors="replace").strip())
+
+
+def create_immutable_manifest(project_path: str | Path, base: dict) -> Path:
+    """
+    Creates/overwrites ExecutionManifest.json in project_path using locked writer.
+    """
+    project_path = Path(project_path)
     project_path.mkdir(parents=True, exist_ok=True)
 
-    manifest = {
-        "project_id": project_id,
-        "manifest_version": 3,
-        "status": "CREATED",
-        "lifecycle": "SAFE",
-        "topic": "UNDEFINED",
-        "mode": "normal",
-        "created_at": datetime.now(UTC).isoformat(),
-        "override_history": []
-    }
-
+    manifest = dict(base)
     manifest["manifest_hash"] = compute_hash(manifest)
 
     manifest_path = project_path / "ExecutionManifest.json"
+    _write_json_locked(manifest_path, manifest)
 
-    with open(manifest_path, "w") as f:
-        json.dump(manifest, f, indent=2)
-
-    print("[OK] Immutable Manifest v3 created.")
+    print("[OK] Immutable Manifest created (locked-writer).")
     print("[PATH]", manifest_path)
-
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: engine.py <PROJECT_ID>")
-        sys.exit(1)
-
-    create_manifest(sys.argv[1])
-
-if __name__ == "__main__":
-    main()
+    return manifest_path

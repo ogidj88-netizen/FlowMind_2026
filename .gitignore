@@ -8,44 +8,19 @@ tmp/
 **/*~
 **/#*#
 
-# python
-.venv/
-__pycache__/
-*.pyc
-*.pyo
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+# json quarantine outputs
+tmp/_json_quarantine/
 
-# node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# one-off patchers (must not be committed)
+tools/patch_*.py
+tools/patch_*.sh
 
-# logs
-*.log
-uvicorn.log
-celery*.log
-
-# secrets / oauth
-token.json
-token*.json
-credentials*.json
-client_secret*.json
-*.pem
-*.key
-
-# editor
-.vscode/
-.idea/
-.DS_Store
-
-# archive folders
-_ARCHIVE_FULL_SYSTEM/
-
-# --- FlowMind run outputs (do not commit by default) ---
+# --- project run outputs (do not commit by default) ---
 projects/*/S8_*.json
 projects/*/S9_*.json
 projects/*/S10_*.json
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
