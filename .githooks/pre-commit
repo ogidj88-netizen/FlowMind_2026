@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# FlowMind Git Safety Gate (pre-commit)
+# Blocks commits if repo hygiene is broken.
+# Runs tools/preflight.sh and fails commit if preflight fails.
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+if [[ ! -x tools/preflight.sh ]]; then
+  echo "[PRE-COMMIT][ERR] tools/preflight.sh missing or not executable" >&2
+  exit 2
+fi
+
+echo "[PRE-COMMIT] running tools/preflight.sh ..." >&2
+tools/preflight.sh
+echo "[PRE-COMMIT] OK" >&2
