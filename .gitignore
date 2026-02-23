@@ -27,3 +27,7 @@ projects/*/S10_*.json
 
 # FlowMind: ignore test runtime outputs
 projects/FM_HASH/S2_script.json
+projects/FM_SMOKE_SINGLE_WRITER/
+projects/FM_SMOKE_*/
+projects/*SMOKE*/
+projects/*SELFTEST*/
