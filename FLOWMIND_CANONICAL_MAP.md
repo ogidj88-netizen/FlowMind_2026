@@ -171,3 +171,35 @@ projects/FM_AUDIO_TEST містить:
 Спочатку треба:
 1. зафіксувати канонічний dispatcher
 2. тільки потім переводити main.py на єдиний маршрут
+---
+
+## 12. MANIFEST / DISPATCHER BREAKPOINT
+
+Під час аудиту підтверджено:
+
+### manifest_engine/engine.py
+Містить тільки:
+- compute_hash
+- _write_json_locked
+- create_immutable_manifest
+
+Тобто цей модуль зараз відповідає тільки за:
+- створення manifest
+- locked write
+- hash
+
+### Критична невідповідність
+dispatcher/engine_v16.py імпортує:
+- load_manifest
+- update_phase
+
+Але в manifest_engine/engine.py цих функцій у перевіреному коді немає.
+
+### Висновок
+engine_v16.py не може вважатися робочим канонічним dispatcher у поточному стані.
+
+### Правило
+ЗАБОРОНЕНО:
+- переводити main.py на engine_v16.py
+- вважати engine_v16.py живим dispatcher
+- робити рефакторинг dispatcher-шару до завершення аудиту dispatcher/engine.py
