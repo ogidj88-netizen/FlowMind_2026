@@ -26,6 +26,22 @@ ALLOWED_PHASE_TRANSITIONS: dict[str, set[str]] = {
     "HALT": set(),
 }
 
+PHASE_ORDER: dict[str, int] = {
+    "TOPIC": 10,
+    "SCRIPT": 20,
+    "SCENES": 30,
+    "ASSETS": 40,
+    "ASSEMBLY": 50,
+    "QA": 60,
+    "READY_FOR_UPLOAD": 70,
+    "UPLOADED": 80,
+    "ARCHIVED": 90,
+    "HALT": 999,
+}
+
+NO_ROLLBACK_AFTER_PHASES = frozenset({"ASSEMBLY", "QA", "READY_FOR_UPLOAD", "UPLOADED", "ARCHIVED"})
+RESUMABLE_PHASES = frozenset({"TOPIC", "SCRIPT", "SCENES", "ASSETS", "ASSEMBLY", "QA", "READY_FOR_UPLOAD"})
+
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -68,6 +84,37 @@ class CanonicalDispatcher:
             halt_reason=halt_reason,
             resume_hint=resume_hint,
         )
+
+    def resume_from_halt(self, target_phase: str) -> dict[str, Any]:
+        current_state = self.load()
+
+        if current_state["phase"] != "HALT":
+            raise DispatcherTransitionError("resume_from_halt is allowed only from phase 'HALT'")
+
+        normalized_target = self._normalize_phase(target_phase)
+        if normalized_target not in RESUMABLE_PHASES:
+            raise DispatcherTransitionError(
+                f"resume target '{normalized_target}' is not allowed"
+            )
+
+        candidate_state = deepcopy(current_state)
+        candidate_state["phase"] = normalized_target
+        candidate_state["halted"] = False
+        candidate_state["halt_reason"] = None
+        candidate_state["resume_hint"] = None
+        candidate_state["updated_at"] = utc_now_iso()
+
+        candidate_state["phase_history"] = list(candidate_state.get("phase_history", []))
+        candidate_state["phase_history"].append(
+            {
+                "from": "HALT",
+                "to": normalized_target,
+                "at": candidate_state["updated_at"],
+            }
+        )
+
+        self._assert_phase_guards("HALT", normalized_target, candidate_state)
+        return save_state_with_disk_guard(self.state_path, candidate_state)
 
     def mark_qa_passed(self) -> dict[str, Any]:
         current_state = self.load()
@@ -157,9 +204,28 @@ class CanonicalDispatcher:
         if allowed_targets is None:
             raise DispatcherTransitionError(f"unknown current phase '{current_phase}'")
 
+        if target_phase == "HALT":
+            return
+
+        self._assert_no_unsafe_rollback(current_phase, target_phase)
+
         if target_phase not in allowed_targets:
             raise DispatcherTransitionError(
                 f"transition '{current_phase}' -> '{target_phase}' is not allowed"
+            )
+
+    def _assert_no_unsafe_rollback(self, current_phase: str, target_phase: str) -> None:
+        current_rank = PHASE_ORDER.get(current_phase)
+        target_rank = PHASE_ORDER.get(target_phase)
+
+        if current_rank is None or target_rank is None:
+            raise DispatcherTransitionError(
+                f"phase order is undefined for transition '{current_phase}' -> '{target_phase}'"
+            )
+
+        if current_phase in NO_ROLLBACK_AFTER_PHASES and target_rank < current_rank:
+            raise DispatcherTransitionError(
+                f"rollback is forbidden after phase '{current_phase}'"
             )
 
     def _assert_phase_guards(
@@ -198,5 +264,8 @@ __all__ = [
     "ALLOWED_PHASE_TRANSITIONS",
     "CanonicalDispatcher",
     "DispatcherTransitionError",
+    "NO_ROLLBACK_AFTER_PHASES",
+    "PHASE_ORDER",
+    "RESUMABLE_PHASES",
     "utc_now_iso",
 ]
