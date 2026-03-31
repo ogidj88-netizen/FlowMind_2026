@@ -1,205 +1,118 @@
-# FLOWMIND CANONICAL MAP
+## 12. RUNTIME / DISPATCHER SPLIT (LOCKED)
 
-Останнє оновлення: 2026-03-31
-Статус документа: КАНОНІЧНА МАПА СИСТЕМИ
-Призначення: єдина точка звірки реального стану FlowMind
+### Поточний підтверджений стан
 
----
-
-## 1. ПРАВИЛА СТАТУСІВ
-
-- ПІДТВЕРДЖЕНО = модуль або шар фізично існує і має сильні ознаки реального використання
-- ЧАСТКОВО = щось існує, але завершення або підключення не підтверджене
-- LEGACY / ЗМІШАНО = старий або паралельний шар, який може плутати архітектуру
-- НЕ ПІДТВЕРДЖЕНО = немає достатніх фактів вважати модуль готовим
+У `cashflow-mode` одночасно існують **дві окремі системи керування**.
 
 ---
 
-## 2. ГОЛОВНИЙ ВИСНОВОК
+### A. Legacy Runtime Layer
 
-FlowMind зараз НЕ є повністю завершеним продакшн-пайплайном.
+Підтверджено:
 
-Поточний реальний стан:
-- є живий entrypoint;
-- є dispatcher;
-- є manifest-дисципліна;
-- є фазовий JSON-contract pipeline;
-- немає підтвердження повного runtime для генерації медіа, upload і Telegram.
+- `main.py` існує
+- `main.py` викликає:
+  - `dispatcher/engine.py --halt`
+  - `dispatcher/engine.py --resume`
+  - `dispatcher/engine.py --advance`
+- `dispatcher/engine.py` працює через `ExecutionManifest.json`
+- legacy runtime використовує стару фазову модель типу:
+  - `CREATED`
+  - `S1_DONE`
+  - `S2_DONE`
+  - `S5_DONE`
+  - `S6_DONE`
+  - `S7_DONE`
+  - `S8_DONE`
+  - `S9_DONE`
+  - `S10_DONE`
 
----
+### Legacy runtime verdict
 
-## 3. ЖИВЕ ЯДРО (ПІДТВЕРДЖЕНО)
-
-| Елемент | Статус | Коментар |
-|---|---|---|
-| main.py | ПІДТВЕРДЖЕНО | Єдиний entrypoint |
-| dispatcher/engine.py | ПІДТВЕРДЖЕНО | Живий dispatcher |
-| ExecutionManifest.json | ПІДТВЕРДЖЕНО | Основа запуску проектів |
-| PHASE ORDER S1→S2→S5→S6→S7→S8→S9→S10 | ПІДТВЕРДЖЕНО | Зафіксовано в dispatcher |
-| projects/* | ПІДТВЕРДЖЕНО | Є багато реальних manifest/project артефактів |
-
----
-
-## 4. PRODUCTION-LAYER (ЧАСТКОВО, АЛЕ ЖИВИЙ)
-
-| Етап | Статус | Реальний зміст |
-|---|---|---|
-| S1_strategy | ЧАСТКОВО | Генерує JSON-стратегію |
-| S2_script | ЧАСТКОВО | Генерує JSON-скрипт |
-| S5_assets | ЧАСТКОВО | Генерує assets contract |
-| S6_visual | ЧАСТКОВО | Генерує visual contract |
-| S7_audio | ЧАСТКОВО | Генерує audio contract |
-| S8_assembly | ЧАСТКОВО | Генерує assembly contract |
-| S9_thumbnail | ЧАСТКОВО | Генерує thumbnail contract |
-| S10_qa | ЧАСТКОВО | Потребує окремої перевірки, але входить у ланцюг |
-
-Висновок:
-production/ = реальний робочий контрактний pipeline,
-але НЕ підтверджений як повна бойова медіа-генерація.
+Legacy runtime **існує**, але не є основою нового canonical dispatcher layer.
 
 ---
 
-## 5. ENGINE-LAYER (LEGACY / ПЕРЕХІДНИЙ)
+### B. Canonical Dispatcher Layer
 
-| Елемент | Статус | Коментар |
-|---|---|---|
-| engine/module_runner.py | LEGACY / ПЕРЕХІДНИЙ | Працює лише з S1 і S2 |
-| engine/modules/s1_strategy.py | LEGACY / STUB | Прямо позначений як Stub v1 |
-| engine/modules/s2_script.py | LEGACY / ПЕРЕХІДНИЙ | Є, але не канонічний повний pipeline |
+Підтверджено:
 
-Висновок:
-engine/ не є повним живим ядром системи.
+- `docs/CANONICAL_MANIFEST_SPEC.md`
+- `engine/state_validator.py`
+- `engine/state_store.py`
+- `engine/canonical_dispatcher.py`
+- `tools/run_dispatcher_checks.py`
+- `tools/check_dispatcher.sh`
+- `tools/dispatcher_cli.py`
+- `tools/dispatcher.sh`
 
----
+Canonical dispatcher layer працює через:
 
-## 6. CASHFLOW-LAYER (НЕ ПІДТВЕРДЖЕНО ЯК RUNTIME)
+- `PROJECT_STATE.json`
 
-| Елемент | Статус | Коментар |
-|---|---|---|
-| cashflow/modules/topic | НЕ ПІДТВЕРДЖЕНО | Папка пуста |
-| cashflow/modules/script | НЕ ПІДТВЕРДЖЕНО | Папка пуста |
-| cashflow/modules/audio | НЕ ПІДТВЕРДЖЕНО | Папка пуста |
-| cashflow/modules/scene | НЕ ПІДТВЕРДЖЕНО | Папка пуста |
-| cashflow/modules/visual | НЕ ПІДТВЕРДЖЕНО | Папка пуста |
-| cashflow/modules/thumbnail | НЕ ПІДТВЕРДЖЕНО | Папка пуста |
-| cashflow/modules/qa | НЕ ПІДТВЕРДЖЕНО | Папка пуста |
-| cashflow/modules/upload | НЕ ПІДТВЕРДЖЕНО | Папка пуста |
+Canonical dispatcher layer використовує нову фазову модель:
 
-Висновок:
-cashflow/ зараз не є живим runtime-шаром.
+- `TOPIC`
+- `SCRIPT`
+- `SCENES`
+- `ASSETS`
+- `ASSEMBLY`
+- `QA`
+- `READY_FOR_UPLOAD`
+- `UPLOADED`
+- `ARCHIVED`
+- `HALT`
 
----
+### Canonical dispatcher verdict
 
-## 7. АРТЕФАКТНИЙ ДОКАЗ
+Canonical dispatcher layer **побудований, протестований і підтверджений**, але поки що працює як:
 
-Приклад:
-projects/FM_AUDIO_TEST містить:
-- ExecutionManifest.json
-- S1_strategy.json
-- S2_script.json
-- S5_assets.json
-- S6_visual.json
-- S7_audio.json
-- S8_assembly.json
-- S9_thumbnail.json
-- S10_qa.json
+> standalone stable control layer
 
-Це підтверджує, що контрактний ланцюг реально проганявся end-to-end.
+а не як вшита заміна legacy runtime.
 
 ---
 
-## 8. НЕ ПІДТВЕРДЖЕНО
+### C. Що заборонено
 
-| Елемент | Статус | Коментар |
-|---|---|---|
-| PROJECT_STATE.json як live runtime | НЕ ПІДТВЕРДЖЕНО | Пошук не знайшов |
-| Telegram runtime | НЕ ПІДТВЕРДЖЕНО | Пошук не знайшов |
-| Upload runtime | НЕ ПІДТВЕРДЖЕНО | Поки немає доказу |
-| Реальний media render | НЕ ПІДТВЕРДЖЕНО | Є assembly contract, але не доведено бойовий рендер |
-| Повний IronCore stack у коді | НЕ ПІДТВЕРДЖЕНО | Є master prompt, але не реальний audited runtime |
+До окремого migration plan заборонено:
 
----
-
-## 9. ПОТОЧНА ПОЗИЦІЯ
-
-Поточний етап:
-АУДИТ ЗАВЕРШЕНО — ЗАФІКСОВАНО РЕАЛЬНИЙ СТАН
-
-Наша ціль далі:
-1. не чіпати живе ядро навмання;
-2. відділити contract pipeline від реальної media-production;
-3. вирішити, що канон: добудова production-layer чи контрольована міграція.
+- вважати `dispatcher/engine.py` canonical dispatcher нового контуру
+- вважати `dispatcher/engine_v16.py` живим canonical dispatcher
+- напряму підміняти `main.py` на новий dispatcher
+- змішувати `ExecutionManifest.json` і `PROJECT_STATE.json`
+- змішувати фази `S1_DONE/S2_DONE/...` з фазами `TOPIC/SCRIPT/SCENES/...`
+- вважати legacy runtime і canonical dispatcher однією системою
 
 ---
 
-## 10. ГОЛОВНЕ ПРАВИЛО НАДАЛІ
+### D. Dispatcher / Runtime Final Decision
 
-Жоден модуль не вважається завершеним, поки не підтверджено:
-- код існує;
-- він реально підключений;
-- він виконує не лише запис JSON-контракту, а потрібну фактичну функцію.
+Поточне канонічне рішення таке:
+
+1. Legacy runtime layer існує окремо.
+2. Canonical dispatcher layer існує окремо.
+3. Пряма міграція між ними ще не затверджена.
+4. Будь-яка інтеграція можлива лише після окремого audit + migration plan.
+
 ---
 
-## 11. SPLIT-BRAIN ПРОБЛЕМА (НОВИЙ ФАКТ)
+### E. Operational Truth
 
-У системі виявлено розрив між entrypoint і phase executor.
+На поточному етапі правильне формулювання таке:
 
-### Підтверджено:
-- `main.py` викликає `dispatcher/engine.py`
-- `dispatcher/engine.py` у перевіреному вигляді містить manifest/state логіку, але не показаний як явний executor фаз
-- `dispatcher/engine_v16.py` містить логіку:
-  - вибір `module_path` через `PHASE_MAP`
-  - `run_module(module_path, project_id)`
-  - `update_phase(project_id, next_phase)`
+- `main.py` = legacy runtime entrypoint
+- `dispatcher/engine.py` = legacy runtime dispatcher layer
+- `engine/canonical_dispatcher.py` = new canonical dispatcher control layer
+- `tools/dispatcher_cli.py` / `tools/dispatcher.sh` = canonical local dispatcher entrypoints
+- `tools/check_dispatcher.sh` = canonical local dispatcher validation entrypoint
 
-### Висновок:
-Найімовірніше, `dispatcher/engine_v16.py` є реальним phase executor,
-але `main.py` досі спрямований на `dispatcher/engine.py`.
-
-### Ризик:
-Це створює split-brain архітектуру:
-- один файл виглядає як entry dispatcher
-- інший файл виглядає як реальний executor
-
-### Правило:
-До моменту явного виправлення маршруту запуску
-ЗАБОРОНЕНО:
-- чистити legacy-шари
-- переносити production-модулі
-- змінювати pipeline-структуру
-
-Спочатку треба:
-1. зафіксувати канонічний dispatcher
-2. тільки потім переводити main.py на єдиний маршрут
 ---
 
-## 12. MANIFEST / DISPATCHER BREAKPOINT
+### F. Locked rule
 
-Під час аудиту підтверджено:
+До окремого рішення про migration:
 
-### manifest_engine/engine.py
-Містить тільки:
-- compute_hash
-- _write_json_locked
-- create_immutable_manifest
-
-Тобто цей модуль зараз відповідає тільки за:
-- створення manifest
-- locked write
-- hash
-
-### Критична невідповідність
-dispatcher/engine_v16.py імпортує:
-- load_manifest
-- update_phase
-
-Але в manifest_engine/engine.py цих функцій у перевіреному коді немає.
-
-### Висновок
-engine_v16.py не може вважатися робочим канонічним dispatcher у поточному стані.
-
-### Правило
-ЗАБОРОНЕНО:
-- переводити main.py на engine_v16.py
-- вважати engine_v16.py живим dispatcher
-- робити рефакторинг dispatcher-шару до завершення аудиту dispatcher/engine.py
+> НЕ інтегрувати новий dispatcher у legacy runtime напряму.
+> НЕ оголошувати legacy runtime новим canonical dispatcher.
+> НЕ рефакторити старий dispatcher-шар “по дорозі”.
