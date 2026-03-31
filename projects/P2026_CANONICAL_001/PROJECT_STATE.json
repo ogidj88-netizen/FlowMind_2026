@@ -1,7 +1,9 @@
 {
-  "approval_status": "PENDING",
-  "approved_for_upload": false,
-  "artifacts": {},
+  "approval_status": "APPROVED",
+  "approved_for_upload": true,
+  "artifacts": {
+    "final_video_path": "projects/P2026_CANONICAL_001/final.mp4"
+  },
   "halt_reason": null,
   "halted": false,
   "manifest": {
@@ -22,7 +24,7 @@
     "topic": "Invisible subscription trap",
     "working_title": "The monthly charge people ignore"
   },
-  "phase": "ASSETS",
+  "phase": "UPLOADED",
   "phase_history": [
     {
       "at": "2026-03-31T14:24:12Z",
@@ -43,10 +45,30 @@
       "at": "2026-03-31T14:24:13Z",
       "from": "HALT",
       "to": "ASSETS"
+    },
+    {
+      "at": "2026-03-31T14:26:28Z",
+      "from": "ASSETS",
+      "to": "ASSEMBLY"
+    },
+    {
+      "at": "2026-03-31T14:26:28Z",
+      "from": "ASSEMBLY",
+      "to": "QA"
+    },
+    {
+      "at": "2026-03-31T14:27:29Z",
+      "from": "QA",
+      "to": "READY_FOR_UPLOAD"
+    },
+    {
+      "at": "2026-03-31T14:27:29Z",
+      "from": "READY_FOR_UPLOAD",
+      "to": "UPLOADED"
     }
   ],
   "project_id": "P2026_CANONICAL_001",
-  "qa_passed": false,
+  "qa_passed": true,
   "resume_hint": null,
-  "updated_at": "2026-03-31T14:24:13Z"
+  "updated_at": "2026-03-31T14:27:29Z"
 }
