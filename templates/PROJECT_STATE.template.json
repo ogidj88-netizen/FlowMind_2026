@@ -1,0 +1,31 @@
+{
+  "project_id": "PROJECT_ID_PLACEHOLDER",
+  "phase": "TOPIC",
+  "phase_history": [],
+  "updated_at": "2026-03-31T00:00:00Z",
+  "halted": false,
+  "halt_reason": null,
+  "resume_hint": null,
+  "approval_status": "PENDING",
+  "approved_for_upload": false,
+  "qa_passed": false,
+  "artifacts": {},
+  "manifest": {
+    "manifest_id": "PROJECT_ID_PLACEHOLDER:v1",
+    "manifest_version": 1,
+    "manifest_hash": "sha256:REPLACE_AT_BOOTSTRAP",
+    "mode": "cashflow-mode",
+    "niche": "Money Mistakes / Invisible Costs",
+    "audience": "Global English",
+    "content_language": "en",
+    "primary_platform": "youtube",
+    "topic": "TOPIC_PLACEHOLDER",
+    "working_title": "WORKING_TITLE_PLACEHOLDER",
+    "hook": "HOOK_PLACEHOLDER",
+    "target_duration_sec": 480,
+    "render_profile": "ffmpeg_stability_standard_v1_2",
+    "stock_policy": "stock_first_no_repeat",
+    "created_at": "2026-03-31T00:00:00Z",
+    "locked": true
+  }
+}
