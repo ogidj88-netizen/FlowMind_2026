@@ -1,7 +1,13 @@
 from __future__ import annotations
 
+import sys
 import tempfile
 from pathlib import Path
+
+CURRENT_FILE = Path(__file__).resolve()
+REPO_ROOT = CURRENT_FILE.parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from engine.canonical_dispatcher import CanonicalDispatcher, DispatcherTransitionError
 from engine.state_store import save_state_atomic
