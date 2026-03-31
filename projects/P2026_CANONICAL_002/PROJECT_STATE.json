@@ -1,0 +1,59 @@
+{
+  "approval_status": "PENDING",
+  "approved_for_upload": false,
+  "artifacts": {
+    "final_video_path": "projects/P2026_CANONICAL_002/final.mp4"
+  },
+  "halt_reason": null,
+  "halted": false,
+  "manifest": {
+    "audience": "Global English",
+    "content_language": "en",
+    "created_at": "2026-03-31T14:31:07Z",
+    "hook": "A tiny bank fee can quietly multiply into a major loss.",
+    "locked": true,
+    "manifest_hash": "sha256:d809765871131a9bee9573b9fcf5e68ad2ae22aa2df9c2fc0d6fab8e8aa2e11e",
+    "manifest_id": "P2026_CANONICAL_002:v1",
+    "manifest_version": 1,
+    "mode": "cashflow-mode",
+    "niche": "Money Mistakes / Invisible Costs",
+    "primary_platform": "youtube",
+    "render_profile": "ffmpeg_stability_standard_v1_2",
+    "stock_policy": "stock_first_no_repeat",
+    "target_duration_sec": 480,
+    "topic": "Hidden overdraft fee",
+    "working_title": "The fee your bank hopes you ignore"
+  },
+  "phase": "QA",
+  "phase_history": [
+    {
+      "at": "2026-03-31T14:31:07Z",
+      "from": "TOPIC",
+      "to": "SCRIPT"
+    },
+    {
+      "at": "2026-03-31T14:31:07Z",
+      "from": "SCRIPT",
+      "to": "SCENES"
+    },
+    {
+      "at": "2026-03-31T14:31:07Z",
+      "from": "SCENES",
+      "to": "ASSETS"
+    },
+    {
+      "at": "2026-03-31T14:31:07Z",
+      "from": "ASSETS",
+      "to": "ASSEMBLY"
+    },
+    {
+      "at": "2026-03-31T14:31:08Z",
+      "from": "ASSEMBLY",
+      "to": "QA"
+    }
+  ],
+  "project_id": "P2026_CANONICAL_002",
+  "qa_passed": false,
+  "resume_hint": null,
+  "updated_at": "2026-03-31T14:31:08Z"
+}
