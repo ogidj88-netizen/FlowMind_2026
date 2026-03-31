@@ -1,139 +1,202 @@
 from __future__ import annotations
 
-import sys
-import tempfile
+from copy import deepcopy
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any, Mapping
 
-CURRENT_FILE = Path(__file__).resolve()
-REPO_ROOT = CURRENT_FILE.parent.parent
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
-
-from engine.canonical_dispatcher import CanonicalDispatcher, DispatcherTransitionError
-from engine.state_store import save_state_atomic
-from engine.state_validator import compute_manifest_hash, load_state
+from engine.state_store import save_state_with_disk_guard
+from engine.state_validator import StateValidationError, load_state
 
 
-def build_initial_state() -> dict:
-    manifest = {
-        "manifest_id": "P2026_SMOKE:v1",
-        "manifest_version": 1,
-        "mode": "cashflow-mode",
-        "niche": "Money Mistakes / Invisible Costs",
-        "audience": "Global English",
-        "content_language": "en",
-        "primary_platform": "youtube",
-        "topic": "Smoke test topic",
-        "working_title": "Smoke Test Working Title",
-        "hook": "You lose money here without noticing it.",
-        "target_duration_sec": 480,
-        "render_profile": "ffmpeg_stability_standard_v1_2",
-        "stock_policy": "stock_first_no_repeat",
-        "created_at": "2026-03-31T00:00:00Z",
-        "locked": True,
-    }
-    manifest["manifest_hash"] = compute_manifest_hash(manifest)
-
-    return {
-        "project_id": "P2026_SMOKE",
-        "phase": "TOPIC",
-        "phase_history": [],
-        "updated_at": "2026-03-31T00:00:00Z",
-        "halted": False,
-        "halt_reason": None,
-        "resume_hint": None,
-        "approval_status": "PENDING",
-        "approved_for_upload": False,
-        "qa_passed": False,
-        "artifacts": {},
-        "manifest": manifest,
-    }
+class DispatcherTransitionError(StateValidationError):
+    """Raised when a phase transition violates dispatcher rules."""
 
 
-def expect_failure(fn, expected_text: str) -> None:
-    try:
-        fn()
-    except DispatcherTransitionError as exc:
-        message = str(exc)
-        if expected_text not in message:
-            raise AssertionError(
-                f"Expected error containing '{expected_text}', got '{message}'"
-            ) from exc
-    else:
-        raise AssertionError(f"Expected failure containing '{expected_text}'")
+ALLOWED_PHASE_TRANSITIONS: dict[str, set[str]] = {
+    "TOPIC": {"SCRIPT", "HALT"},
+    "SCRIPT": {"SCENES", "HALT"},
+    "SCENES": {"ASSETS", "HALT"},
+    "ASSETS": {"ASSEMBLY", "HALT"},
+    "ASSEMBLY": {"QA", "HALT"},
+    "QA": {"READY_FOR_UPLOAD", "HALT"},
+    "READY_FOR_UPLOAD": {"UPLOADED", "HALT"},
+    "UPLOADED": {"ARCHIVED"},
+    "ARCHIVED": set(),
+    "HALT": set(),
+}
 
 
-def main() -> None:
-    with tempfile.TemporaryDirectory(prefix="flowmind_dispatcher_smoke_") as tmp_dir:
-        state_path = Path(tmp_dir) / "PROJECT_STATE.json"
+def utc_now_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
-        initial_state = build_initial_state()
-        save_state_atomic(state_path, initial_state)
 
-        dispatcher = CanonicalDispatcher(state_path)
+class CanonicalDispatcher:
+    def __init__(self, state_path: str | Path) -> None:
+        self.state_path = Path(state_path)
 
-        state = dispatcher.load()
-        assert state["phase"] == "TOPIC"
+    def load(self) -> dict[str, Any]:
+        return load_state(self.state_path)
 
-        state = dispatcher.transition("SCRIPT")
-        assert state["phase"] == "SCRIPT"
+    def transition(
+        self,
+        target_phase: str,
+        *,
+        halt_reason: str | None = None,
+        resume_hint: str | None = None,
+        approval_status: str | None = None,
+        approved_for_upload: bool | None = None,
+        qa_passed: bool | None = None,
+        artifacts_patch: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        current_state = self.load()
+        candidate_state = self._build_transition_candidate(
+            current_state=current_state,
+            target_phase=target_phase,
+            halt_reason=halt_reason,
+            resume_hint=resume_hint,
+            approval_status=approval_status,
+            approved_for_upload=approved_for_upload,
+            qa_passed=qa_passed,
+            artifacts_patch=artifacts_patch,
+        )
+        return save_state_with_disk_guard(self.state_path, candidate_state)
 
-        state = dispatcher.transition("SCENES")
-        assert state["phase"] == "SCENES"
-
-        state = dispatcher.transition("ASSETS")
-        assert state["phase"] == "ASSETS"
-
-        state = dispatcher.transition("ASSEMBLY")
-        assert state["phase"] == "ASSEMBLY"
-
-        expect_failure(
-            lambda: dispatcher.transition("QA"),
-            "cannot transition ASSEMBLY -> QA without artifacts.final_video_path",
+    def halt(self, halt_reason: str, *, resume_hint: str | None = None) -> dict[str, Any]:
+        return self.transition(
+            "HALT",
+            halt_reason=halt_reason,
+            resume_hint=resume_hint,
         )
 
-        state = dispatcher.transition(
-            "QA",
-            artifacts_patch={"final_video_path": "/tmp/final.mp4"},
+    def mark_qa_passed(self) -> dict[str, Any]:
+        current_state = self.load()
+        current_phase = current_state["phase"]
+
+        if current_phase != "QA":
+            raise DispatcherTransitionError("qa_passed can only be set while phase is 'QA'")
+
+        candidate_state = deepcopy(current_state)
+        candidate_state["qa_passed"] = True
+        candidate_state["updated_at"] = utc_now_iso()
+        return save_state_with_disk_guard(self.state_path, candidate_state)
+
+    def approve_for_upload(self) -> dict[str, Any]:
+        current_state = self.load()
+        current_phase = current_state["phase"]
+
+        if current_phase != "READY_FOR_UPLOAD":
+            raise DispatcherTransitionError(
+                "approved_for_upload can only be set while phase is 'READY_FOR_UPLOAD'"
+            )
+
+        candidate_state = deepcopy(current_state)
+        candidate_state["approved_for_upload"] = True
+        candidate_state["approval_status"] = "APPROVED"
+        candidate_state["updated_at"] = utc_now_iso()
+        return save_state_with_disk_guard(self.state_path, candidate_state)
+
+    def _build_transition_candidate(
+        self,
+        *,
+        current_state: Mapping[str, Any],
+        target_phase: str,
+        halt_reason: str | None,
+        resume_hint: str | None,
+        approval_status: str | None,
+        approved_for_upload: bool | None,
+        qa_passed: bool | None,
+        artifacts_patch: Mapping[str, Any] | None,
+    ) -> dict[str, Any]:
+        current_phase = current_state["phase"]
+        target_phase = self._normalize_phase(target_phase)
+
+        self._assert_transition_allowed(current_phase, target_phase)
+
+        candidate_state = deepcopy(dict(current_state))
+        previous_phase = current_phase
+
+        candidate_state["phase"] = target_phase
+        candidate_state["updated_at"] = utc_now_iso()
+        candidate_state["halted"] = target_phase == "HALT"
+        candidate_state["halt_reason"] = halt_reason if target_phase == "HALT" else None
+        candidate_state["resume_hint"] = resume_hint if target_phase == "HALT" else None
+
+        if approval_status is not None:
+            candidate_state["approval_status"] = approval_status
+
+        if approved_for_upload is not None:
+            candidate_state["approved_for_upload"] = approved_for_upload
+
+        if qa_passed is not None:
+            candidate_state["qa_passed"] = qa_passed
+
+        if artifacts_patch:
+            artifacts = dict(candidate_state.get("artifacts", {}))
+            artifacts.update(dict(artifacts_patch))
+            candidate_state["artifacts"] = artifacts
+
+        self._assert_phase_guards(previous_phase, target_phase, candidate_state)
+
+        candidate_state["phase_history"] = list(candidate_state.get("phase_history", []))
+        candidate_state["phase_history"].append(
+            {
+                "from": previous_phase,
+                "to": target_phase,
+                "at": candidate_state["updated_at"],
+            }
         )
-        assert state["phase"] == "QA"
-        assert state["artifacts"]["final_video_path"] == "/tmp/final.mp4"
 
-        expect_failure(
-            lambda: dispatcher.transition("READY_FOR_UPLOAD"),
-            "cannot transition QA -> READY_FOR_UPLOAD while qa_passed is not true",
-        )
+        return candidate_state
 
-        state = dispatcher.mark_qa_passed()
-        assert state["qa_passed"] is True
+    def _assert_transition_allowed(self, current_phase: str, target_phase: str) -> None:
+        if current_phase == target_phase:
+            raise DispatcherTransitionError("no-op phase transition is not allowed")
 
-        state = dispatcher.transition("READY_FOR_UPLOAD")
-        assert state["phase"] == "READY_FOR_UPLOAD"
+        allowed_targets = ALLOWED_PHASE_TRANSITIONS.get(current_phase)
+        if allowed_targets is None:
+            raise DispatcherTransitionError(f"unknown current phase '{current_phase}'")
 
-        expect_failure(
-            lambda: dispatcher.transition("UPLOADED"),
-            "cannot transition READY_FOR_UPLOAD -> UPLOADED while approved_for_upload is not true",
-        )
+        if target_phase not in allowed_targets:
+            raise DispatcherTransitionError(
+                f"transition '{current_phase}' -> '{target_phase}' is not allowed"
+            )
 
-        state = dispatcher.approve_for_upload()
-        assert state["approved_for_upload"] is True
-        assert state["approval_status"] == "APPROVED"
+    def _assert_phase_guards(
+        self,
+        previous_phase: str,
+        target_phase: str,
+        candidate_state: Mapping[str, Any],
+    ) -> None:
+        if previous_phase == "ASSEMBLY" and target_phase == "QA":
+            artifacts = candidate_state.get("artifacts", {})
+            if "final_video_path" not in artifacts:
+                raise DispatcherTransitionError(
+                    "cannot transition ASSEMBLY -> QA without artifacts.final_video_path"
+                )
 
-        state = dispatcher.transition("UPLOADED")
-        assert state["phase"] == "UPLOADED"
+        if previous_phase == "QA" and target_phase == "READY_FOR_UPLOAD":
+            if candidate_state.get("qa_passed") is not True:
+                raise DispatcherTransitionError(
+                    "cannot transition QA -> READY_FOR_UPLOAD while qa_passed is not true"
+                )
 
-        state = dispatcher.transition("ARCHIVED")
-        assert state["phase"] == "ARCHIVED"
+        if previous_phase == "READY_FOR_UPLOAD" and target_phase == "UPLOADED":
+            if candidate_state.get("approved_for_upload") is not True:
+                raise DispatcherTransitionError(
+                    "cannot transition READY_FOR_UPLOAD -> UPLOADED while approved_for_upload is not true"
+                )
 
-        reloaded = load_state(state_path)
-        assert reloaded["phase"] == "ARCHIVED"
-        assert len(reloaded["phase_history"]) == 8
-
-        print("SMOKE_TEST_OK")
-        print(f"state_path={state_path}")
-        print(f"final_phase={reloaded['phase']}")
-        print(f"phase_history_entries={len(reloaded['phase_history'])}")
+    @staticmethod
+    def _normalize_phase(value: str) -> str:
+        if not isinstance(value, str) or not value.strip():
+            raise DispatcherTransitionError("target_phase must be a non-empty string")
+        return value.strip().upper()
 
 
-if __name__ == "__main__":
-    main()
+__all__ = [
+    "ALLOWED_PHASE_TRANSITIONS",
+    "CanonicalDispatcher",
+    "DispatcherTransitionError",
+    "utc_now_iso",
+]
