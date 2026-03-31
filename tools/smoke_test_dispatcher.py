@@ -127,7 +127,7 @@ def main() -> None:
 
         reloaded = load_state(state_path)
         assert reloaded["phase"] == "ARCHIVED"
-        assert len(reloaded["phase_history"]) == 7
+        assert len(reloaded["phase_history"]) == 8
 
         print("SMOKE_TEST_OK")
         print(f"state_path={state_path}")
