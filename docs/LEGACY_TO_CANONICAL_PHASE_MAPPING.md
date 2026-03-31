@@ -47,9 +47,9 @@ Canonical dispatcher flow:
 | S5_DONE | ASSETS | HIGH | Legacy S5 assets output aligns most closely with canonical assets stage. |
 | S6_DONE | ASSEMBLY | MEDIUM | Legacy S6 visual work appears upstream of canonical assembly, but old/new granularity may differ. |
 | S7_DONE | ASSEMBLY | LOW | Legacy S7 audio may be folded into canonical assembly flow, but this is not a clean 1:1 mapping yet. |
-| S8_DONE | QA | LOW | Legacy S8 looks assembly-related by naming, but there is not enough verified code evidence to claim a clean QA mapping. |
-| S9_DONE | READY_FOR_UPLOAD | MEDIUM | Legacy S9 is not yet verified from a live module, so pre-upload alignment remains plausible but unproven. |
-| S10_DONE | UPLOADED | MEDIUM | Legacy S10 appears final, but archival semantics remain unresolved. |
+| S8_DONE | ASSEMBLY | HIGH | Legacy S8 is explicitly represented as assembly contract output with video_spec. |
+| S9_DONE | READY_FOR_UPLOAD | MEDIUM | Legacy S9 likely represents thumbnail/final-prep, but live module code is still not verified in the current repo audit. |
+| S10_DONE | QA | HIGH | Legacy S10 is explicitly represented as QA pass output and validates S8 + S9 artifacts before writing S10_qa.json. |
 
 ## Non-1:1 areas
 
@@ -65,21 +65,21 @@ Legacy S2 produces script outline structure, which is closer to canonical SCRIPT
 Reason:
 Canonical dispatcher separates scene planning more explicitly than the legacy layer.
 
-4. S6_DONE / S7_DONE -> ASSEMBLY
+4. S6_DONE / S7_DONE / S8_DONE -> ASSEMBLY zone
 Reason:
-Legacy visual/audio phases may collapse into one canonical assembly zone.
+Legacy visual/audio/assembly work appears to compress into one broader canonical ASSEMBLY region.
 
-5. S8_DONE -> QA
+5. S9_DONE -> READY_FOR_UPLOAD
 Reason:
-The current repo audit did not confirm a live legacy S8 module in engine/modules, so this mapping remains weak.
+Legacy S9 is still inferred indirectly through S10 QA dependency on S9_thumbnail.json, but live module verification is still missing.
 
-6. S9_DONE -> READY_FOR_UPLOAD
+6. S10_DONE -> QA
 Reason:
-The current repo audit did not confirm a live legacy S9 module in engine/modules, so this mapping remains provisional.
+Legacy S10 clearly behaves like QA pass/final validation, not like upload confirmation.
 
-7. S10_DONE -> UPLOADED or ARCHIVED
+7. UPLOADED and ARCHIVED have no confirmed clean legacy equivalents yet
 Reason:
-Canonical flow distinguishes UPLOADED and ARCHIVED, while legacy finality may not.
+The current repo audit has not proven a legacy runtime phase that explicitly matches canonical UPLOADED or ARCHIVED semantics.
 
 ## Current migration interpretation
 
@@ -89,8 +89,10 @@ Working assumption for planning only:
 - legacy S1 remains closest to strategy/topic definition
 - legacy S2 is closest to canonical SCRIPT
 - canonical SCENES currently has no clean legacy 1:1 equivalent
-- legacy asset/visual/audio production compresses into ASSETS -> ASSEMBLY
-- legacy late-stage flow after assembly is still partially unresolved
+- legacy production from S5 through S8 compresses into ASSETS -> ASSEMBLY
+- legacy S10 is closest to canonical QA
+- READY_FOR_UPLOAD is only partially approximated by late legacy pre-upload artifacts
+- UPLOADED remains unresolved in legacy mapping
 - ARCHIVED remains canonical-only for now
 - HALT remains canonical-only for now
 
@@ -100,6 +102,7 @@ These canonical states do not yet have clean legacy equivalents:
 
 - SCENES
 - HALT
+- UPLOADED
 - ARCHIVED
 
 These should currently be treated as canonical-only states or states without a verified clean legacy match.
@@ -117,10 +120,10 @@ Until this mapping is upgraded from DRAFT-LOCK to LOCKED:
 
 Before this mapping can become LOCKED, we still need:
 
-1. verify whether S6 + S7 should merge into canonical ASSEMBLY
-2. verify what legacy S8 actually produces in runtime practice
-3. verify what legacy S9 actually produces in runtime practice
-4. verify whether S10_DONE means UPLOADED only, or UPLOADED + ARCHIVED semantics
+1. verify whether S6 + S7 should merge fully into canonical ASSEMBLY
+2. verify what live legacy S9 module actually produces
+3. verify whether any legacy runtime step corresponds to canonical UPLOADED
+4. verify whether any legacy runtime step corresponds to canonical ARCHIVED
 5. decide whether canonical SCENES should stay canonical-only in migration v1
 
 ## Current decision
