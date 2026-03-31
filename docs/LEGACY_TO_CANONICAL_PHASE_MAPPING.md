@@ -47,9 +47,9 @@ Canonical dispatcher flow:
 | S5_DONE | ASSETS | HIGH | Legacy S5 assets output aligns most closely with canonical assets stage. |
 | S6_DONE | ASSEMBLY | MEDIUM | Legacy S6 visual work appears upstream of canonical assembly, but old/new granularity may differ. |
 | S7_DONE | ASSEMBLY | LOW | Legacy S7 audio may be folded into canonical assembly flow, but this is not a clean 1:1 mapping yet. |
-| S8_DONE | QA | MEDIUM | Legacy assembly completion appears closest to canonical QA entry, but exact guard semantics must still be verified. |
-| S9_DONE | READY_FOR_UPLOAD | HIGH | Legacy thumbnail/final-prep stage is closest to canonical pre-upload ready state. |
-| S10_DONE | UPLOADED | MEDIUM | Legacy final stage likely corresponds to uploaded state, but archival semantics remain unresolved. |
+| S8_DONE | QA | LOW | Legacy S8 looks assembly-related by naming, but there is not enough verified code evidence to claim a clean QA mapping. |
+| S9_DONE | READY_FOR_UPLOAD | MEDIUM | Legacy S9 is not yet verified from a live module, so pre-upload alignment remains plausible but unproven. |
+| S10_DONE | UPLOADED | MEDIUM | Legacy S10 appears final, but archival semantics remain unresolved. |
 
 ## Non-1:1 areas
 
@@ -69,7 +69,15 @@ Canonical dispatcher separates scene planning more explicitly than the legacy la
 Reason:
 Legacy visual/audio phases may collapse into one canonical assembly zone.
 
-5. S10_DONE -> UPLOADED or ARCHIVED
+5. S8_DONE -> QA
+Reason:
+The current repo audit did not confirm a live legacy S8 module in engine/modules, so this mapping remains weak.
+
+6. S9_DONE -> READY_FOR_UPLOAD
+Reason:
+The current repo audit did not confirm a live legacy S9 module in engine/modules, so this mapping remains provisional.
+
+7. S10_DONE -> UPLOADED or ARCHIVED
 Reason:
 Canonical flow distinguishes UPLOADED and ARCHIVED, while legacy finality may not.
 
@@ -82,7 +90,7 @@ Working assumption for planning only:
 - legacy S2 is closest to canonical SCRIPT
 - canonical SCENES currently has no clean legacy 1:1 equivalent
 - legacy asset/visual/audio production compresses into ASSETS -> ASSEMBLY
-- legacy finalization compresses into QA -> READY_FOR_UPLOAD -> UPLOADED
+- legacy late-stage flow after assembly is still partially unresolved
 - ARCHIVED remains canonical-only for now
 - HALT remains canonical-only for now
 
@@ -110,9 +118,10 @@ Until this mapping is upgraded from DRAFT-LOCK to LOCKED:
 Before this mapping can become LOCKED, we still need:
 
 1. verify whether S6 + S7 should merge into canonical ASSEMBLY
-2. verify whether S8_DONE really maps cleanly to canonical QA
-3. verify whether S10_DONE means UPLOADED only, or UPLOADED + ARCHIVED semantics
-4. decide whether canonical SCENES should stay canonical-only in migration v1
+2. verify what legacy S8 actually produces in runtime practice
+3. verify what legacy S9 actually produces in runtime practice
+4. verify whether S10_DONE means UPLOADED only, or UPLOADED + ARCHIVED semantics
+5. decide whether canonical SCENES should stay canonical-only in migration v1
 
 ## Current decision
 
