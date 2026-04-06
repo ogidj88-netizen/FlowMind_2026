@@ -1,63 +1,60 @@
 # MAIN.PY STATUS
 
-Status: LOCKED  
+Status: ACTIVE AUDIT TRUTH  
 Branch: `cashflow-mode`
 
 ## Current verified role
 
-`main.py` is a **legacy launcher**, not a canonical dispatcher.
+`main.py` is a **retired legacy tombstone**, not a canonical dispatcher entrypoint and not an active launcher.
 
-Verified behavior:
+## Current verified behavior
 
-- requires `--project`
-- accepts:
-  - `--advance`
-  - `--halt`
-  - `--resume`
-- checks existence of:
-  - `projects/<PROJECT_ID>/ExecutionManifest.json`
-- delegates runtime actions to:
-  - `dispatcher/engine.py`
+`main.py` now:
+- does not operate as a runtime launcher
+- does not delegate to active dispatcher control flow
+- intentionally fails fast
+- exists only to prevent silent reuse of legacy entry logic during Phase 2 cleanup
 
 ## Meaning
 
-`main.py` belongs to the **legacy runtime layer**.
+`main.py` no longer belongs to the active control contour.
 
-It is tightly coupled to:
+It must not be treated as:
+- active launcher
+- dispatcher entrypoint
+- integration bridge
+- temporary convenience wrapper
 
-- `ExecutionManifest.json`
-- `dispatcher/engine.py`
-- legacy phase flow
+## Active control truth
 
-It is **not** coupled to:
+The active canonical command surface is:
 
-- `PROJECT_STATE.json`
-- `engine/canonical_dispatcher.py`
-- `tools/dispatcher_cli.py`
 - `tools/dispatcher.sh`
+- `tools/dispatcher_cli.py`
+- `tools/check_dispatcher.sh`
+
+The active canonical control core is:
+
+- `engine/canonical_dispatcher.py`
+- `engine/state_validator.py`
+- `engine/state_store.py`
 
 ## Rule
 
-Until a dedicated migration plan exists, it is forbidden to:
+During Phase 2, it is forbidden to:
 
-- treat `main.py` as canonical dispatcher entrypoint
-- wire `main.py` directly to the new canonical dispatcher
-- mix `ExecutionManifest.json` flow with `PROJECT_STATE.json` flow inside `main.py`
-- extend `main.py` with partial bridge logic “for convenience”
+- restore legacy runtime behavior inside `main.py`
+- rewire `main.py` back to `dispatcher/engine.py`
+- use `main.py` as a shortcut to reintroduce a second control path
+- extend `main.py` before control-layer cleanup is complete
 
 ## Final decision
 
 For `cashflow-mode` right now:
 
-- `main.py` = legacy launcher
-- `dispatcher/engine.py` = legacy runtime dispatcher
-- `engine/canonical_dispatcher.py` = new standalone canonical dispatcher layer
-
-## Next migration prerequisite
-
-Before any future migration of `main.py`, all of the following must exist:
-
-1. explicit migration plan
-2. phase mapping between legacy and canonical flow
-3. state model reconciliation
-4. single source of truth decision
+- `main.py` = retired legacy tombstone
+- `dispatcher/engine.py` = retired legacy tombstone
+- `dispatcher/engine_v16.py` = retired legacy tombstone
+- `tools/dispatcher.sh` = active shell entrypoint
+- `tools/dispatcher_cli.py` = active CLI entrypoint
+- `engine/canonical_dispatcher.py` = active canonical control core

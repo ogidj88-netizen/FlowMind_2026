@@ -10,7 +10,6 @@ echo "[CLEAN] normalize index state (avoid AM/MM traps)..." >&2
 git restore --staged .gitignore 2>/dev/null || true
 git restore --staged tools/preflight.sh 2>/dev/null || true
 git restore --staged tools/manifest_guard_scan.py 2>/dev/null || true
-git restore --staged dispatcher/engine.py 2>/dev/null || true
 git restore --staged manifest_engine/engine.py 2>/dev/null || true
 git restore --staged tools/manifest_write.py 2>/dev/null || true
 

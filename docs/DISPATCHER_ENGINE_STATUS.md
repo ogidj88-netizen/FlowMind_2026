@@ -1,56 +1,61 @@
 # DISPATCHER/ENGINE.PY STATUS
 
-Status: LOCKED  
+Status: ACTIVE AUDIT TRUTH  
 Branch: `cashflow-mode`
 
-## Current verified status
+## Current verified role
 
-`dispatcher/engine.py` is a **legacy frozen artifact**, not a valid canonical dispatcher.
+`dispatcher/engine.py` is a **retired legacy tombstone**, not a canonical dispatcher and not an active runtime dispatcher.
 
-Verified from direct audit:
+## Current verified behavior
 
-- file contains:
-  - locked JSON writer
-  - `load_manifest(project_id)`
-  - `save_manifest(manifest, path)`
-  - legacy constants like `PHASE_ORDER` and `PHASE_TO_FILE`
-- file does **not** provide verified live dispatcher behavior in the audited state
-- audited visible code does **not** prove existence of:
-  - `update_phase`
-  - `halt`
-  - `resume`
-  - `advance`
-  - canonical transition engine
-  - complete runtime executor logic
+`dispatcher/engine.py` now:
+- does not operate as an active dispatcher
+- does not provide valid runtime control flow
+- intentionally fails fast
+- exists only to prevent silent reuse of legacy dispatcher logic during Phase 2 cleanup
 
-## Architectural meaning
+## Meaning
 
-`dispatcher/engine.py` must not be treated as:
+`dispatcher/engine.py` no longer belongs to the active control contour.
 
+It must not be treated as:
 - canonical dispatcher
-- safe integration target
-- migration bridge to the new dispatcher layer
-- trustworthy runtime control surface
+- runtime control surface
+- integration target
+- migration bridge
+- temporary fallback dispatcher
+
+## Active control truth
+
+The active canonical command surface is:
+
+- `tools/dispatcher.sh`
+- `tools/dispatcher_cli.py`
+- `tools/check_dispatcher.sh`
+
+The active canonical control core is:
+
+- `engine/canonical_dispatcher.py`
+- `engine/state_validator.py`
+- `engine/state_store.py`
 
 ## Rule
 
-Until a dedicated migration/replacement plan exists, it is forbidden to:
+During Phase 2, it is forbidden to:
 
-- refactor `dispatcher/engine.py` incrementally
-- wire the new canonical dispatcher into `dispatcher/engine.py`
-- treat `dispatcher/engine.py` as the source of truth for runtime control
-- base new architecture decisions on assumptions that this file is complete
+- restore dispatcher behavior inside `dispatcher/engine.py`
+- route `main.py` back into `dispatcher/engine.py`
+- use this file as a bridge into canonical control flow
+- build new runtime logic on top of this file
 
 ## Final decision
 
-For `cashflow-mode`:
+For `cashflow-mode` right now:
 
-- `dispatcher/engine.py` = legacy frozen artifact
-- `main.py` = legacy launcher
-- `engine/canonical_dispatcher.py` = new standalone canonical dispatcher layer
-
-## Operational implication
-
-Do not build new control logic on top of `dispatcher/engine.py`.
-Do not migrate runtime through this file.
-Keep it frozen until a full replacement/migration block is approved.
+- `dispatcher/engine.py` = retired legacy tombstone
+- `dispatcher/engine_v16.py` = retired legacy tombstone
+- `main.py` = retired legacy tombstone
+- `tools/dispatcher.sh` = active shell entrypoint
+- `tools/dispatcher_cli.py` = active CLI entrypoint
+- `engine/canonical_dispatcher.py` = active canonical control core

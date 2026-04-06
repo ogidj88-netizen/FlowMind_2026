@@ -1,32 +1,57 @@
 # DISPATCHER ENTRYPOINT
 
-Status: LOCKED  
+Status: ACTIVE CONTROL TRUTH  
 Branch: `cashflow-mode`
 
 ## Canonical rule
 
-У поточній гілці `cashflow-mode` canonical dispatcher **не інтегрований у `fm.py`**, тому що `fm.py` у корені репозиторію відсутній.
+For `cashflow-mode`, the canonical dispatcher has one operational command surface.
 
-Canonical dispatcher entrypoints:
+There is no root launcher.
+There is no alternative entrypoint.
+There is no legacy integration layer.
 
-- `engine/canonical_dispatcher.py` — core logic
-- `tools/dispatcher_cli.py` — canonical CLI entrypoint
-- `tools/dispatcher.sh` — short local runner
-- `tools/run_dispatcher_checks.py` — consolidated validation
-- `tools/check_dispatcher.sh` — one-command local dispatcher check
+## Active entrypoint
 
-## Operational rule
+The only valid user-facing dispatcher entrypoint is:
 
-До окремого audit + migration decision заборонено:
+- `tools/dispatcher.sh`
 
-- інтегрувати dispatcher у старі dispatcher-шари
-- підключати dispatcher до `cashflow/dispatcher`
-- підключати dispatcher до `./dispatcher`
-- створювати новий альтернативний entrypoint
-- називати будь-який інший launcher “canonical dispatcher”
+## CLI layer
 
-## Current command set
+- `tools/dispatcher_cli.py`
 
-### Show state
-```bash
-./tools/dispatcher.sh --state /path/to/PROJECT_STATE.json show
+This file implements the canonical CLI logic and must not be treated as the primary operator-facing command surface.
+
+## Validation entrypoint
+
+- `tools/check_dispatcher.sh`
+
+This is the supported validation command for dispatcher checks.
+
+## Not allowed
+
+It is forbidden to treat any of the following as dispatcher entrypoints:
+
+- `main.py`
+- `dispatcher/engine.py`
+- `dispatcher/engine_v16.py`
+- `engine/canonical_dispatcher.py`
+- `tools/run_dispatcher_checks.py`
+
+## Operational truth
+
+All manual dispatcher interaction must go through:
+
+`./tools/dispatcher.sh --state /path/to/PROJECT_STATE.json <command>`
+
+## Final statement
+
+For `cashflow-mode`, there is:
+- one control brain
+- one state model
+- one command surface
+
+No alternatives.
+
+

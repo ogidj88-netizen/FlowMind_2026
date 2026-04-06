@@ -3,7 +3,6 @@ set -euo pipefail
 
 FILES=(
   ".gitignore"
-  "dispatcher/engine.py"
   "manifest_engine/engine.py"
   "tools/preflight.sh"
   "tools/manifest_guard_scan.py"

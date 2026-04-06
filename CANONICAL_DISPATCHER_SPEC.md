@@ -1,178 +1,172 @@
 # CANONICAL DISPATCHER SPEC
 
-Останнє оновлення: 2026-03-31
-Статус: TARGET SPEC
-Призначення: канонічний контракт центрального мозку FlowMind
+Останнє оновлення: 2026-04-06
+Статус: ACTIVE CONTROL SPEC
+Призначення: активний контракт canonical control layer для FlowMind cashflow-mode
 
 ---
 
 ## 1. РОЛЬ
 
-Canonical Dispatcher — це центральний мозок системи.
+Canonical Dispatcher — це єдиний активний control brain системи.
 
 Він:
-- читає стан проєкту
-- визначає дозволений наступний крок
-- запускає потрібний модуль
-- оновлює стан
+- читає PROJECT_STATE.json
+- перевіряє валідність стану
+- визначає дозволений перехід фази
+- виконує контроль переходу
 - блокує незаконні переходи
-- зупиняє систему при помилці
+- фіксує HALT / resume / approval-related transitions
+- зберігає оновлений стан через захищений state layer
 
+Dispatcher НЕ є production-модулем.
 Dispatcher НЕ генерує контент.
-Dispatcher НЕ виконує production-логіку сам.
-Dispatcher тільки керує маршрутом.
+Dispatcher НЕ є legacy launcher.
+Dispatcher керує маршрутом і цілісністю control flow.
 
 ---
 
 ## 2. SINGLE SOURCE OF TRUTH
 
-Єдине джерело правди:
-`projects/<PROJECT_ID>/ExecutionManifest.json`
+Єдине джерело правди для active control contour:
 
-Dispatcher читає і оновлює тільки його.
+`projects/<PROJECT_ID>/PROJECT_STATE.json`
 
----
-
-## 3. ОБОВʼЯЗКОВІ ПОЛЯ MANIFEST
-
-Мінімальний канонічний набір полів:
-
-- project_id
-- manifest_version
-- status
-- mode
-- created_at
-- updated_at
-- halt_reason
-- last_completed_stage
-- next_allowed_stages
-- rules
-- artifacts
-- manifest_hash
+Canonical dispatcher не використовує ExecutionManifest.json як runtime source of truth.
 
 ---
 
-## 4. КАНОНІЧНА МОДЕЛЬ СТАНУ
+## 3. ACTIVE CONTROL CORE
 
-Dispatcher працює через поле:
+Активний canonical control core складається з:
 
-`status`
+- `engine/canonical_dispatcher.py`
+- `engine/state_validator.py`
+- `engine/state_store.py`
 
-Не через:
-`current_phase`
-
----
-
-## 5. КАНОНІЧНІ СТАТУСИ
-
-- CREATED
-- S1_DONE
-- S2_DONE
-- S5_DONE
-- S6_DONE
-- S7_DONE
-- S8_DONE
-- S9_DONE
-- S10_DONE
-- HALTED
-- FAILED
+Ці файли формують базу одного активного control contour.
 
 ---
 
-## 6. КАНОНІЧНІ STATIONS
+## 4. ACTIVE ENTRYPOINTS
 
-- S1 Strategy
-- S2 Script
-- S5 Assets
-- S6 Visual
-- S7 Audio
-- S8 Assembly
-- S9 Thumbnail
-- S10 QA
+Офіційні active entrypoints для canonical dispatcher:
+
+- `tools/dispatcher.sh` — shell entrypoint
+- `tools/dispatcher_cli.py` — CLI implementation layer
+- `tools/check_dispatcher.sh` — validation entrypoint
 
 ---
 
-## 7. ПРАВИЛО МОЗКУ
+## 5. STATE MODEL
 
-Dispatcher не йде по сліпому ланцюгу.
+Canonical dispatcher працює через поле:
 
-Dispatcher:
-- читає status
-- читає rules
-- перевіряє artifacts
-- визначає, який етап дозволений
-- запускає тільки дозволений модуль
-- блокує все незаконне
+`phase`
 
----
-
-## 8. КОМАНДИ DISPATCHER
-
-Потрібні команди:
-
-- create
-- advance
-- rerun
-- halt
-- resume
-- status
+а не через:
+- `status`
+- `current_phase` legacy runtime
+- station-completion model типу `S1_DONE`, `S2_DONE`, etc.
 
 ---
 
-## 9. ПРАВИЛА ADVANCE
+## 6. CANONICAL PHASES
 
-advance дозволений тільки якщо:
-- попередній обов’язковий етап завершений
-- потрібні артефакти існують
-- немає halt/failed блокування
-- наступний статус входить у список allowed transitions
+Поточна canonical phase model:
 
----
-
-## 10. ПРАВИЛА HALT
-
-Dispatcher переводить проект у HALTED якщо:
-- модуль повернув non-zero exit code
-- відсутній обов’язковий артефакт
-- status transition незаконний
-- manifest невалідний
+- `TOPIC`
+- `SCRIPT`
+- `SCENES`
+- `ASSETS`
+- `ASSEMBLY`
+- `QA`
+- `READY_FOR_UPLOAD`
+- `UPLOADED`
+- `ARCHIVED`
+- `HALT`
 
 ---
 
-## 11. ПРАВИЛА SUCCESS
+## 7. GUARDED TRANSITIONS
 
-Етап вважається успішним тільки якщо:
-- модуль завершився без помилки
-- створений очікуваний артефакт
-- manifest успішно оновлений
-- зафіксований новий status
+Dispatcher дозволяє тільки явно визначені переходи між фазами.
 
----
+Dispatcher зобов’язаний:
+- забороняти no-op transitions
+- забороняти незаконні переходи
+- забороняти unsafe rollback after protected phases
+- вимагати обов’язкові runtime conditions before guarded transitions
 
-## 12. ПРАВИЛА МІГРАЦІЇ
-
-Dispatcher будується під нову чисту систему,
-але нумерація станцій має залишатися сумісною
-з уже наявними артефактами та contract-pipeline.
-
-Тому:
-- S1, S2, S5, S6, S7, S8, S9, S10 — канонічні
-- нова логіка не повинна ламати існуючу нумерацію без окремого migration-plan
+Приклади guard logic:
+- `ASSEMBLY -> QA` тільки якщо існує `artifacts.final_video_path`
+- `QA -> READY_FOR_UPLOAD` тільки якщо `qa_passed = true`
+- `READY_FOR_UPLOAD -> UPLOADED` тільки якщо `approved_for_upload = true`
 
 ---
 
-## 13. ЩО ЗАБОРОНЕНО
+## 8. HALT / RESUME RULE
 
-ЗАБОРОНЕНО:
-- кілька dispatcher-ів як рівноправні
-- current_phase як друга модель стану
-- прямий перезапис manifest без locked writer
-- запуск наступного етапу без перевірки артефакту попереднього
-- змінювати нумерацію станцій без окремого migration-plan
+Dispatcher може:
+- перевести стан у `HALT`
+- записати `halt_reason`
+- записати `resume_hint`
+- дозволити resume тільки в дозволені canonical phases
+
+Resume із `HALT` дозволений тільки через canonical dispatcher rules.
 
 ---
 
-## 14. ЦІЛЬ
+## 9. STATE DISCIPLINE
 
-Після реалізації Canonical Dispatcher має стати
-єдиним центром керування нової чистої системи.
+Canonical state layer зобов’язаний:
+- валідовувати top-level PROJECT_STATE structure
+- валідовувати manifest payload inside state
+- контролювати immutable vs mutable fields
+- блокувати несанкціоновані runtime mutations
+- зберігати state тільки через захищений state-store path
+
+---
+
+## 10. LEGACY SEPARATION
+
+Наступні файли НЕ входять в active canonical control contour:
+
+- `main.py`
+- `dispatcher/engine.py`
+- `dispatcher/engine_v16.py`
+
+Вони є legacy / retired artifacts і не повинні використовуватись як активні control entrypoints.
+
+---
+
+## 11. NOT ALLOWED
+
+Заборонено:
+- відновлювати legacy dispatcher flow
+- змішувати `ExecutionManifest.json` runtime flow з `PROJECT_STATE.json` flow
+- змішувати legacy statuses зі canonical phases
+- створювати новий parallel control brain
+- вводити новий root entrypoint без сильної практичної потреби
+- називати legacy launcher canonical dispatcher
+
+---
+
+## 12. CURRENT PRACTICAL RULE
+
+Під час Phase 2 система не потребує нової вигаданої архітектури control layer.
+
+Система потребує:
+- control-layer alignment
+- removal of legacy control ambiguity
+- one active dispatcher contour
+- one active command surface
+
+---
+
+## 13. TARGET
+
+Поточна ціль canonical dispatcher layer:
+
+Стати єдиним активним control brain для FlowMind cashflow-mode
+без legacy ambiguity, без parallel control logic, без подвійної state model.

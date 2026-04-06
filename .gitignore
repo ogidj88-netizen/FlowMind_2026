@@ -1,5 +1,12 @@
 # --- FlowMind ignores (canon) ---
 
+# Python runtime / cache
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
 # temp / quarantine
 tmp/
 **/*.tmp
