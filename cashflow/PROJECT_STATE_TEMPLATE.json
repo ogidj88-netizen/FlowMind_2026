@@ -1,21 +1,6 @@
 {
-  "project_id": "",
-  "status": "INIT",
-  "current_phase": "S0",
-  "phases_completed": [],
-  "halt_reason": null,
-  "resume_hint": null,
-  "telegram": {
-    "approval_required": false,
-    "stage": null
-  },
-  "gates": {
-    "hook_passed": false,
-    "length_passed": false,
-    "yml_safe": false,
-    "ffprobe_passed": false,
-    "thumbnail_passed": false
-  },
-  "created_at": null,
-  "updated_at": null
+  "_comment": "FROZEN LEGACY TEMPLATE — NOT PART OF CANONICAL STATE MODEL",
+
+  "status": "deprecated",
+  "note": "Use canonical PROJECT_STATE.json structure instead of this legacy template."
 }
