@@ -1,4 +1,20 @@
 #!/usr/bin/env python3
+"""
+FROZEN NON-AUTHORITATIVE UTILITY
+
+This adapter is preserved only for narrow compatibility inspection.
+
+It is NOT part of the active canonical control flow.
+
+Rules:
+- read-only only
+- must never mutate canonical state
+- must never be used as dispatcher substitute
+- must not evolve without explicit architectural decision
+
+Status: frozen
+"""
+
 from __future__ import annotations
 
 import argparse

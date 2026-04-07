@@ -1,104 +1,56 @@
-# Read-Only Adapter Usage V1
+# READ-ONLY ADAPTER USAGE V1
 
-## Purpose
+Status: FROZEN HISTORICAL DOCUMENT  
+Branch: `cashflow-mode`
 
-This document defines how the minimal read-only compatibility adapter is intended to be used in Migration v1.
+## Meaning
 
-It is an operational usage note, not a new compatibility rule set.
+This document is preserved only as historical context for how the narrow read-only compatibility adapter was previously described.
 
----
+It is **not** an active Phase 2 execution document.
 
-## Implemented module
+## Current truth
 
-The implemented adapter module is:
+The repository is not currently expanding compatibility-adapter work as an active track.
 
-- `adapters/read_only_compat_adapter.py`
+The active direction is:
+- repository cleanup
+- single-contour stabilization
+- removal of legacy control ambiguity
+- one active control brain
+- one active command surface
+- one active state model
 
-Its role is to build a derived compatibility payload from canonical `PROJECT_STATE.json`.
+## Historical scope
 
----
-
-## What the adapter does
-
-The adapter:
-
-- reads canonical `PROJECT_STATE.json`
-- validates state through canonical validation flow
-- builds a minimal derived compatibility payload
-- optionally writes the derived payload to a separate output file
-- never writes back into canonical state
-
----
-
-## Allowed usage
-
-Allowed usage in Migration v1 includes:
-
-- printing compatibility payload to stdout
-- writing compatibility payload to a separate JSON file
-- using compatibility payload as read-only downstream input
-- using compatibility payload for explicit compatibility inspection
-
----
-
-## Forbidden usage
-
-Forbidden usage includes:
-
-- writing adapter payload back into canonical `PROJECT_STATE.json`
-- treating adapter payload as canonical runtime truth
-- using adapter payload as a dispatcher substitute
-- mutating canonical state based on undocumented adapter-side inference
-- expanding adapter payload without explicit compatibility review
-
----
-
-## Current payload scope
-
-The implemented payload currently exposes:
-
-- `adapter_version`
-- `project_id`
-- `phase`
-- `halted`
-- `approval_status`
-- `approved_for_upload`
-- `mode`
-- `updated_at`
-
-Optional:
-- `halt_reason` when present
-
----
-
-## Operational examples
-
-Stdout mode:
-
-`python3 adapters/read_only_compat_adapter.py --state projects/P2026_CANONICAL_001/PROJECT_STATE.json --pretty`
-
-File output mode:
-
-`python3 adapters/read_only_compat_adapter.py --state projects/P2026_CANONICAL_001/PROJECT_STATE.json --output tmp/compat_P2026_CANONICAL_001.json --pretty`
-
----
-
-## Migration v1 interpretation
-
-This adapter is the first implementation step of the documented read-only compatibility boundary.
-
-It should be treated as:
-
+The read-only adapter was previously treated as:
 - minimal
 - read-only
 - non-authoritative
-- versioned
-- deliberately narrow
+- narrow
+- compatibility-focused
 
----
+That framing may remain as historical context only.
 
-## Final statement
+## What this file may still be used for
 
-The adapter is intended to support compatibility visibility, not mixed control.
+This file may still be referenced only as:
 
-If broader compatibility behavior is needed later, it must be reviewed explicitly before expansion.
+- historical usage context
+- explanation of prior adapter intent
+- evidence that the adapter was designed as non-authoritative read-only tooling
+
+## What this file must NOT be used for
+
+Do not use this file as:
+
+- active adapter roadmap
+- active implementation plan
+- active compatibility strategy
+- justification for restarting migration work as the main track
+
+## Final note
+
+If the read-only adapter remains in the repository, it is frozen, narrow, and non-authoritative.
+
+It is not part of the active canonical control contour.

@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
 """
-FlowMind Manifest Engine (v3.x) — Single-Writer enforced
+FROZEN LEGACY MANIFEST UTILITY
 
-Rule:
-- ExecutionManifest.json is written ONLY via tools/json_write_locked.sh
+This module is preserved only for narrow legacy manifest handling.
+
+It is NOT part of the active canonical control flow.
+
+Rules:
+- utility only
+- must not be treated as dispatcher/control brain
+- must not become a new integration surface
+- must not evolve without explicit architectural decision
+
+Status: frozen
 """
 
 import json
