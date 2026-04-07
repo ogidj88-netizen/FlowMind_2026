@@ -12,6 +12,21 @@ class StateValidationError(ValueError):
     """Raised when PROJECT_STATE.json violates the canonical spec."""
 
 
+CANONICAL_PHASES = frozenset(
+    {
+        "TOPIC",
+        "SCRIPT",
+        "SCENES",
+        "ASSETS",
+        "ASSEMBLY",
+        "QA",
+        "READY_FOR_UPLOAD",
+        "UPLOADED",
+        "ARCHIVED",
+        "HALT",
+    }
+)
+
 REQUIRED_TOP_LEVEL_FIELDS = (
     "project_id",
     "phase",
@@ -101,6 +116,26 @@ def _ensure_iso8601(value: Any, name: str) -> str:
     return text
 
 
+def _ensure_phase(value: Any, name: str) -> str:
+    phase = _ensure_non_empty_string(value, name).strip().upper()
+    if phase not in CANONICAL_PHASES:
+        raise StateValidationError(
+            f"{name} must be one of: {', '.join(sorted(CANONICAL_PHASES))}"
+        )
+    return phase
+
+
+def _validate_phase_history_entry(value: Any, index: int) -> dict[str, Any]:
+    entry_name = f"phase_history[{index}]"
+    entry = dict(_ensure_mapping(value, entry_name))
+    _require_fields(entry, ("from", "to", "at"), entry_name)
+
+    entry["from"] = _ensure_phase(entry["from"], f"{entry_name}.from")
+    entry["to"] = _ensure_phase(entry["to"], f"{entry_name}.to")
+    entry["at"] = _ensure_iso8601(entry["at"], f"{entry_name}.at")
+    return entry
+
+
 def build_manifest_payload_for_hash(manifest: Mapping[str, Any]) -> dict[str, Any]:
     manifest_dict = copy.deepcopy(dict(_ensure_mapping(manifest, "manifest")))
     manifest_dict.pop("manifest_hash", None)
@@ -165,16 +200,21 @@ def validate_state(state: Mapping[str, Any]) -> dict[str, Any]:
     _require_fields(state_dict, REQUIRED_TOP_LEVEL_FIELDS, "PROJECT_STATE")
 
     project_id = _ensure_non_empty_string(state_dict["project_id"], "project_id")
-    _ensure_non_empty_string(state_dict["phase"], "phase")
+    phase = _ensure_phase(state_dict["phase"], "phase")
+
     phase_history = state_dict["phase_history"]
     if not isinstance(phase_history, list):
         raise StateValidationError("phase_history must be a list")
+    state_dict["phase_history"] = [
+        _validate_phase_history_entry(entry, index)
+        for index, entry in enumerate(phase_history)
+    ]
 
     _ensure_iso8601(state_dict["updated_at"], "updated_at")
-    _ensure_boolean(state_dict["halted"], "halted")
-    _ensure_boolean(state_dict["approved_for_upload"], "approved_for_upload")
+    halted = _ensure_boolean(state_dict["halted"], "halted")
+    approved_for_upload = _ensure_boolean(state_dict["approved_for_upload"], "approved_for_upload")
     _ensure_boolean(state_dict["qa_passed"], "qa_passed")
-    _ensure_non_empty_string(state_dict["approval_status"], "approval_status")
+    approval_status = _ensure_non_empty_string(state_dict["approval_status"], "approval_status")
 
     if state_dict["halt_reason"] is not None and not isinstance(state_dict["halt_reason"], str):
         raise StateValidationError("halt_reason must be null or string")
@@ -182,10 +222,26 @@ def validate_state(state: Mapping[str, Any]) -> dict[str, Any]:
     if state_dict["resume_hint"] is not None and not isinstance(state_dict["resume_hint"], str):
         raise StateValidationError("resume_hint must be null or string")
 
+    if phase == "HALT" and halted is not True:
+        raise StateValidationError("halted must be true when phase is 'HALT'")
+
+    if phase != "HALT" and halted is not False:
+        raise StateValidationError("halted must be false when phase is not 'HALT'")
+
+    if approved_for_upload and approval_status != "APPROVED":
+        raise StateValidationError(
+            "approval_status must be 'APPROVED' when approved_for_upload is true"
+        )
+
     artifacts = state_dict["artifacts"]
     if not isinstance(artifacts, dict):
         raise StateValidationError("artifacts must be an object/dict")
 
+    final_video_path = artifacts.get("final_video_path")
+    if final_video_path is not None:
+        _ensure_non_empty_string(final_video_path, "artifacts.final_video_path")
+
+    state_dict["phase"] = phase
     state_dict["manifest"] = validate_manifest(state_dict["manifest"], project_id=project_id)
     return copy.deepcopy(state_dict)
 
@@ -242,6 +298,7 @@ def assert_runtime_mutation_only(
 
 
 __all__ = [
+    "CANONICAL_PHASES",
     "MUTABLE_TOP_LEVEL_FIELDS",
     "REQUIRED_MANIFEST_FIELDS",
     "REQUIRED_TOP_LEVEL_FIELDS",
