@@ -22,32 +22,94 @@ class SeedCandidate(BaseModel):
 
 
 ENTITY_REGISTRY: list[EntityRule] = [
-    EntityRule(entity="Monobank", aliases=["monobank", "mono", "монобанк", "моно"]),
-    EntityRule(entity="PrivatBank", aliases=["privatbank", "privat", "приватбанк", "приват"]),
-    EntityRule(entity="Taxes", aliases=["tax", "taxes", "податок", "податки", "фоп"]),
-    EntityRule(entity="Utilities", aliases=["комуналка", "тариф", "тарифи", "світло", "газ"]),
-    EntityRule(entity="Credits", aliases=["credit", "credits", "кредит", "кредити", "розстрочка"]),
-    EntityRule(entity="OVDP", aliases=["овдп", "obligation", "bond", "bonds"]),
+    EntityRule(
+        entity="Bank of America",
+        aliases=["bank of america", "boa", "bofa"],
+    ),
+    EntityRule(
+        entity="Chase",
+        aliases=["chase", "chase bank", "jp morgan chase", "jpmorgan chase"],
+    ),
+    EntityRule(
+        entity="Wells Fargo",
+        aliases=["wells fargo", "wells"],
+    ),
+    EntityRule(
+        entity="Credit Card Debt",
+        aliases=["credit card", "credit cards", "card debt", "credit card debt", "apr"],
+    ),
+    EntityRule(
+        entity="Student Loans",
+        aliases=["student loan", "student loans", "loan payment", "federal loans"],
+    ),
+    EntityRule(
+        entity="Taxes USA",
+        aliases=["irs", "tax refund", "taxes", "tax bill", "tax return"],
+    ),
+    EntityRule(
+        entity="Rent",
+        aliases=["rent", "rent increase", "landlord", "lease"],
+    ),
+    EntityRule(
+        entity="Healthcare Costs",
+        aliases=["healthcare", "medical bill", "hospital bill", "insurance denial"],
+    ),
+    EntityRule(
+        entity="Insurance",
+        aliases=["insurance", "premium", "claim denied", "coverage"],
+    ),
+    EntityRule(
+        entity="Subscriptions",
+        aliases=["subscription", "subscriptions", "auto renew", "auto-renew", "renewal"],
+    ),
+    EntityRule(
+        entity="Gas Prices",
+        aliases=["gas prices", "gas", "fuel", "gas station"],
+    ),
+    EntityRule(
+        entity="Groceries",
+        aliases=["groceries", "grocery bill", "food prices", "supermarket"],
+    ),
+    EntityRule(
+        entity="Inflation",
+        aliases=["inflation", "price increase", "prices rising", "cost of living"],
+    ),
 ]
 
 TRIGGER_WORDS: tuple[str, ...] = (
-    "зняли",
-    "комісія",
-    "комиссия",
-    "підняли",
-    "подняли",
-    "заблокували",
-    "блок",
-    "ліміт",
-    "лимит",
-    "не прийшло",
-    "списали",
-    "списание",
-    "штраф",
-    "відсоток",
-    "процент",
-    "подорожчало",
-    "дороже",
+    "fee",
+    "fees",
+    "charged",
+    "charge",
+    "overdraft",
+    "late fee",
+    "interest",
+    "apr",
+    "denied",
+    "blocked",
+    "hold",
+    "frozen",
+    "limit",
+    "reduced",
+    "cut",
+    "raised",
+    "increase",
+    "increased",
+    "higher",
+    "spike",
+    "missed",
+    "delay",
+    "delayed",
+    "penalty",
+    "renewal",
+    "auto renew",
+    "auto-renew",
+    "cancel",
+    "canceled",
+    "claim denied",
+    "out of pocket",
+    "medical debt",
+    "rent hike",
 )
 
 
