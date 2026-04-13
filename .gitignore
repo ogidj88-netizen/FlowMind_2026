@@ -7,6 +7,11 @@ __pycache__/
 *.pyo
 *.pyd
 
+# virtual environments
+.venv/
+venv/
+env/
+
 # temp / quarantine
 tmp/
 **/*.tmp
