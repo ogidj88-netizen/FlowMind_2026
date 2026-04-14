@@ -1,5 +1,10 @@
 # --- FlowMind ignores (canon) ---
 
+# secrets / env
+.env
+.env.*
+*.env
+
 # Python runtime / cache
 __pycache__/
 **/__pycache__/
