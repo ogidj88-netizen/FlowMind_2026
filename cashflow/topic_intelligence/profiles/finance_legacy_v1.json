@@ -1,0 +1,373 @@
+{
+  "profile_id": "finance_legacy_v1",
+  "profile_version": "1.0.0",
+  "derived_from_niche_id": "finance_legacy_bootstrap",
+  "profile_mode": "mixed",
+  "source_map": [
+    {
+      "source_id": "reddit_personalfinance",
+      "source_type": "reddit",
+      "source_identifier": "personalfinance",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 100,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_povertyfinance",
+      "source_type": "reddit",
+      "source_identifier": "povertyfinance",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 95,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_frugal",
+      "source_type": "reddit",
+      "source_identifier": "Frugal",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 80,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_creditcards",
+      "source_type": "reddit",
+      "source_identifier": "CreditCards",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 90,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_studentloans",
+      "source_type": "reddit",
+      "source_identifier": "StudentLoans",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 85,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_insurance",
+      "source_type": "reddit",
+      "source_identifier": "Insurance",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 75,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "youtube_search",
+      "source_type": "youtube",
+      "source_identifier": "search_api",
+      "source_domain": "youtube.googleapis.com",
+      "trust_tier": "high",
+      "priority": 100,
+      "enabled": true,
+      "parse_mode": "api",
+      "jurisdiction_scope": "US"
+    }
+  ],
+  "candidate_anchors": {
+    "entities": [
+      {
+        "entity_id": "bank_of_america",
+        "name": "Bank of America",
+        "aliases": ["bank of america", "boa", "bofa"]
+      },
+      {
+        "entity_id": "chase",
+        "name": "Chase",
+        "aliases": ["chase", "chase bank", "jp morgan chase", "jpmorgan chase"]
+      },
+      {
+        "entity_id": "wells_fargo",
+        "name": "Wells Fargo",
+        "aliases": ["wells fargo", "wells"]
+      },
+      {
+        "entity_id": "credit_card_debt",
+        "name": "Credit Card Debt",
+        "aliases": ["credit card", "credit cards", "card debt", "credit card debt", "apr"]
+      },
+      {
+        "entity_id": "student_loans",
+        "name": "Student Loans",
+        "aliases": ["student loan", "student loans", "loan payment", "federal loans"]
+      },
+      {
+        "entity_id": "taxes_usa",
+        "name": "Taxes USA",
+        "aliases": ["irs", "tax refund", "taxes", "tax bill", "tax return"]
+      },
+      {
+        "entity_id": "rent",
+        "name": "Rent",
+        "aliases": ["rent", "rent increase", "landlord", "lease", "rental property", "rental"]
+      },
+      {
+        "entity_id": "healthcare_costs",
+        "name": "Healthcare Costs",
+        "aliases": ["healthcare", "medical bill", "hospital bill", "insurance denial"]
+      },
+      {
+        "entity_id": "insurance",
+        "name": "Insurance",
+        "aliases": ["insurance", "premium", "claim denied", "coverage", "home warranty"]
+      },
+      {
+        "entity_id": "subscriptions",
+        "name": "Subscriptions",
+        "aliases": ["subscription", "subscriptions", "auto renew", "auto-renew", "renewal"]
+      },
+      {
+        "entity_id": "gas_prices",
+        "name": "Gas Prices",
+        "aliases": ["gas prices", "gas", "fuel", "gas station"]
+      },
+      {
+        "entity_id": "groceries",
+        "name": "Groceries",
+        "aliases": ["groceries", "grocery bill", "food prices", "supermarket"]
+      },
+      {
+        "entity_id": "inflation",
+        "name": "Inflation",
+        "aliases": ["inflation", "price increase", "prices rising", "cost of living"]
+      }
+    ],
+    "seed_keywords": [
+      "money",
+      "debt",
+      "bill",
+      "bills",
+      "payment",
+      "payments",
+      "income",
+      "expense",
+      "expenses",
+      "budget",
+      "cost",
+      "costs",
+      "price",
+      "prices",
+      "fee",
+      "fees",
+      "charge",
+      "charged",
+      "overdraft",
+      "interest",
+      "apr",
+      "loan",
+      "loans",
+      "mortgage",
+      "rent",
+      "refund",
+      "tax",
+      "taxes",
+      "irs",
+      "insurance",
+      "premium",
+      "claim",
+      "medical bill",
+      "medical debt",
+      "salary",
+      "paycheck",
+      "paycheck to paycheck",
+      "collections",
+      "credit score",
+      "credit limit",
+      "subscription",
+      "subscriptions",
+      "gas",
+      "grocery",
+      "groceries",
+      "inflation",
+      "cost of living",
+      "bank account",
+      "transaction",
+      "cash back"
+    ],
+    "pattern_families": [
+      "unexpected_fee",
+      "blocked_access",
+      "rate_increase",
+      "auto_renewal",
+      "claim_denial",
+      "debt_pressure",
+      "cost_spike"
+    ],
+    "optional_entities": [
+      "bank account",
+      "credit score",
+      "transaction",
+      "claim",
+      "rent increase"
+    ]
+  },
+  "trigger_lexicon": {
+    "pain": [
+      "fee",
+      "fees",
+      "charged",
+      "charge",
+      "overdraft",
+      "late fee",
+      "interest",
+      "apr",
+      "debt",
+      "collections",
+      "medical debt",
+      "out of pocket"
+    ],
+    "urgency": [
+      "blocked",
+      "frozen",
+      "hold",
+      "denied",
+      "default",
+      "missed",
+      "delay",
+      "delayed"
+    ],
+    "complaint": [
+      "claim denied",
+      "canceled",
+      "cannot pay",
+      "can't pay",
+      "struggling to pay",
+      "payment failed",
+      "lost money",
+      "took money",
+      "took funds"
+    ],
+    "change": [
+      "reduced",
+      "cut",
+      "raised",
+      "increase",
+      "increased",
+      "higher",
+      "spike",
+      "rent hike",
+      "apr increased"
+    ],
+    "friction": [
+      "renewal",
+      "auto renew",
+      "auto-renew",
+      "cancel",
+      "account blocked",
+      "transaction blocked",
+      "transaction declined",
+      "account frozen"
+    ],
+    "risk": [
+      "penalty",
+      "default",
+      "collections",
+      "in collections",
+      "sent to collections",
+      "my score tanked"
+    ]
+  },
+  "exclusion_rules": {
+    "forbidden_topics": [
+      "favorite products",
+      "food hacks",
+      "cheap meals"
+    ],
+    "forbidden_terms": [
+      "what's your favorite",
+      "what is your favorite",
+      "what do you guys think",
+      "best cheap",
+      "go-to meal",
+      "eat out",
+      "coffee bean",
+      "food hacks"
+    ],
+    "forbidden_entities": [],
+    "forbidden_source_types": [],
+    "forbidden_clusters": [
+      "casual_discussion",
+      "non_financial_chatter"
+    ]
+  },
+  "validation_rules": {
+    "min_source_count": 1,
+    "max_age_hours": 168,
+    "require_direct_source": false,
+    "require_official_source_for_mechanism": false,
+    "allow_trends_check": false,
+    "allow_youtube_gap_check": true,
+    "min_signal_strength": 4,
+    "min_production_fit": 50
+  },
+  "scoring_weights": {
+    "pain_signal": 0.2,
+    "source_confidence": 0.15,
+    "recency": 0.1,
+    "competition_gap": 0.2,
+    "novelty": 0.1,
+    "production_fit": 0.25
+  },
+  "formatting_rules": {
+    "human_phrase_patterns": [
+      "{entity} {trigger}",
+      "{entity} issue with {trigger}",
+      "{entity} cost change around {trigger}"
+    ],
+    "video_topic_patterns": [
+      "Why {entity} is causing problems with {trigger}",
+      "What changed with {entity} and {trigger}",
+      "How {entity} users get hit by {trigger}"
+    ],
+    "banned_phrasing": [
+      "get rich",
+      "motivation",
+      "success tips",
+      "manifest",
+      "mindset only"
+    ],
+    "max_human_phrase_length": 160,
+    "max_video_topic_length": 180
+  },
+  "cooldown_rules": {
+    "topic_repeat_days": 30,
+    "anchor_repeat_days": 21,
+    "angle_repeat_days": 14
+  },
+  "health_rules": {
+    "source_zero_signal_days_threshold": 3,
+    "source_error_rate_threshold": 0.5,
+    "profile_refresh_recommended_if_x_sources_fail": 2,
+    "profile_refresh_recommended_if_signal_volume_drops_below": 1
+  },
+  "production_profile": {
+    "stock_fit_required": true,
+    "ui_dependency_allowed": false,
+    "heavy_visual_explainer_allowed": false,
+    "talking_head_dependency_allowed": false
+  },
+  "metadata": {
+    "created_at": "2026-04-15T00:00:00Z",
+    "frozen_at": "2026-04-15T00:00:00Z",
+    "created_by": "chatgpt_contract_first_refactor",
+    "notes": "Initial frozen profile extracted from hardcoded finance-oriented Topic Intelligence Lite logic before universalization."
+  }
+}

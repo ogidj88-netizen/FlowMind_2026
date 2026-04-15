@@ -1,0 +1,575 @@
+{
+  "schema_id": "flowmind.topic_intelligence.frozen_niche_profile",
+  "schema_version": "1.0.0",
+  "description": "Canonical runtime contract for FlowMind Topic Intelligence frozen niche profile.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "profile_version",
+    "derived_from_niche_id",
+    "profile_mode",
+    "source_map",
+    "candidate_anchors",
+    "trigger_lexicon",
+    "exclusion_rules",
+    "validation_rules",
+    "scoring_weights",
+    "formatting_rules",
+    "cooldown_rules",
+    "health_rules",
+    "production_profile",
+    "metadata"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "profile_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "derived_from_niche_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "profile_mode": {
+      "type": "string",
+      "enum": [
+        "entity_driven",
+        "pattern_driven",
+        "mixed"
+      ]
+    },
+    "source_map": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "source_type",
+          "source_identifier",
+          "source_domain",
+          "trust_tier",
+          "priority",
+          "enabled",
+          "parse_mode",
+          "jurisdiction_scope"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "source_type": {
+            "type": "string",
+            "enum": [
+              "reddit",
+              "youtube",
+              "official_page",
+              "help_center",
+              "pricing_page",
+              "policy_page",
+              "trusted_news",
+              "web_page"
+            ]
+          },
+          "source_identifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "source_domain": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "trust_tier": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "parse_mode": {
+            "type": "string",
+            "enum": [
+              "json_feed",
+              "html",
+              "api",
+              "manual_pattern"
+            ]
+          },
+          "jurisdiction_scope": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        }
+      }
+    },
+    "candidate_anchors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entities",
+        "seed_keywords",
+        "pattern_families",
+        "optional_entities"
+      ],
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "entity_id",
+              "name",
+              "aliases"
+            ],
+            "properties": {
+              "entity_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "aliases": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                }
+              }
+            }
+          }
+        },
+        "seed_keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "pattern_families": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "optional_entities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "trigger_lexicon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pain",
+        "urgency",
+        "complaint",
+        "change",
+        "friction",
+        "risk"
+      ],
+      "properties": {
+        "pain": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "urgency": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "complaint": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "change": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "friction": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "risk": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "exclusion_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "forbidden_topics",
+        "forbidden_terms",
+        "forbidden_entities",
+        "forbidden_source_types",
+        "forbidden_clusters"
+      ],
+      "properties": {
+        "forbidden_topics": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        },
+        "forbidden_terms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "forbidden_entities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "forbidden_source_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "reddit",
+              "youtube",
+              "official_page",
+              "help_center",
+              "pricing_page",
+              "policy_page",
+              "trusted_news",
+              "web_page"
+            ]
+          }
+        },
+        "forbidden_clusters": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "validation_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min_source_count",
+        "max_age_hours",
+        "require_direct_source",
+        "require_official_source_for_mechanism",
+        "allow_trends_check",
+        "allow_youtube_gap_check",
+        "min_signal_strength",
+        "min_production_fit"
+      ],
+      "properties": {
+        "min_source_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "max_age_hours": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1440
+        },
+        "require_direct_source": {
+          "type": "boolean"
+        },
+        "require_official_source_for_mechanism": {
+          "type": "boolean"
+        },
+        "allow_trends_check": {
+          "type": "boolean"
+        },
+        "allow_youtube_gap_check": {
+          "type": "boolean"
+        },
+        "min_signal_strength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "min_production_fit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "scoring_weights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pain_signal",
+        "source_confidence",
+        "recency",
+        "competition_gap",
+        "novelty",
+        "production_fit"
+      ],
+      "properties": {
+        "pain_signal": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "source_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "recency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "competition_gap": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "novelty": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "production_fit": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "formatting_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human_phrase_patterns",
+        "video_topic_patterns",
+        "banned_phrasing",
+        "max_human_phrase_length",
+        "max_video_topic_length"
+      ],
+      "properties": {
+        "human_phrase_patterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "video_topic_patterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "banned_phrasing": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "max_human_phrase_length": {
+          "type": "integer",
+          "minimum": 20,
+          "maximum": 300
+        },
+        "max_video_topic_length": {
+          "type": "integer",
+          "minimum": 20,
+          "maximum": 300
+        }
+      }
+    },
+    "cooldown_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "topic_repeat_days",
+        "anchor_repeat_days",
+        "angle_repeat_days"
+      ],
+      "properties": {
+        "topic_repeat_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 365
+        },
+        "anchor_repeat_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 365
+        },
+        "angle_repeat_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 365
+        }
+      }
+    },
+    "health_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_zero_signal_days_threshold",
+        "source_error_rate_threshold",
+        "profile_refresh_recommended_if_x_sources_fail",
+        "profile_refresh_recommended_if_signal_volume_drops_below"
+      ],
+      "properties": {
+        "source_zero_signal_days_threshold": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 365
+        },
+        "source_error_rate_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "profile_refresh_recommended_if_x_sources_fail": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "profile_refresh_recommended_if_signal_volume_drops_below": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      }
+    },
+    "production_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stock_fit_required",
+        "ui_dependency_allowed",
+        "heavy_visual_explainer_allowed",
+        "talking_head_dependency_allowed"
+      ],
+      "properties": {
+        "stock_fit_required": {
+          "type": "boolean"
+        },
+        "ui_dependency_allowed": {
+          "type": "boolean"
+        },
+        "heavy_visual_explainer_allowed": {
+          "type": "boolean"
+        },
+        "talking_head_dependency_allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "frozen_at",
+        "created_by",
+        "notes"
+      ],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "frozen_at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "created_by": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    }
+  }
+}

@@ -20,7 +20,9 @@ class TopicAnalyzer:
             utility=utility,
             gap_status=gap_status,
             pain_evidence=pain_evidence,
-            source_link=None,
+            source_link=candidate.source_link,
+            source_type=candidate.source_type,
+            source_label=candidate.source_label,
             verdict=verdict,
         )
 
@@ -74,8 +76,18 @@ class TopicAnalyzer:
     def _build_initial_verdict(self, candidate: SeedCandidate, utility: str) -> Verdict:
         trigger_count = len(candidate.trigger_words)
         raw_text_length = len(candidate.raw_text.strip())
+        trigger_words = {word.lower() for word in candidate.trigger_words}
+        entity = candidate.entity.lower()
 
         if trigger_count >= 2 and raw_text_length >= 60 and self._is_specific_utility(utility):
+            return Verdict.BACKLOG
+
+        if (
+            entity == "subscriptions"
+            and {"cancel", "renewal", "auto renew", "auto-renew", "canceled"} & trigger_words
+            and raw_text_length >= 60
+            and self._is_specific_utility(utility)
+        ):
             return Verdict.BACKLOG
 
         return Verdict.KILL

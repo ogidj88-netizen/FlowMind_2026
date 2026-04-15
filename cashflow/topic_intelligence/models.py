@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel, Field, HttpUrl
 
@@ -30,8 +29,10 @@ class ValidatedTopic(BaseModel):
     anchor_demand: str = Field(..., min_length=1, max_length=200)
     utility: str = Field(..., min_length=1, max_length=300)
     gap_status: GapStatus
-    pain_evidence: str = Field(..., min_length=1, max_length=500)
-    source_link: Optional[HttpUrl] = None
+    pain_evidence: str = Field(..., min_length=1, max_length=5000)
+    source_link: HttpUrl | None = None
+    source_type: str = Field(default="unknown", min_length=1, max_length=50)
+    source_label: str = Field(default="unknown", min_length=1, max_length=120)
     verdict: Verdict
 
     class Config:

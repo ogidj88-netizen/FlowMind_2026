@@ -1,0 +1,465 @@
+{
+  "profile_id": "hidden_fees_us_v1",
+  "profile_version": "1.0.0",
+  "derived_from_niche_id": "hidden_fees_us_bootstrap",
+  "profile_mode": "mixed",
+  "source_map": [
+    {
+      "source_id": "reddit_frugal",
+      "source_type": "reddit",
+      "source_identifier": "Frugal",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 100,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_cordcutters",
+      "source_type": "reddit",
+      "source_identifier": "cordcutters",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 98,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_nostupidquestions",
+      "source_type": "reddit",
+      "source_identifier": "NoStupidQuestions",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 88,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_mildlyinfuriating",
+      "source_type": "reddit",
+      "source_identifier": "mildlyinfuriating",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 85,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_youshouldknow",
+      "source_type": "reddit",
+      "source_identifier": "YouShouldKnow",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 82,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "youtube_search",
+      "source_type": "youtube",
+      "source_identifier": "search_api",
+      "source_domain": "youtube.googleapis.com",
+      "trust_tier": "high",
+      "priority": 100,
+      "enabled": true,
+      "parse_mode": "api",
+      "jurisdiction_scope": "US"
+    }
+  ],
+  "candidate_anchors": {
+    "entities": [
+      {
+        "entity_id": "subscriptions",
+        "name": "Subscriptions",
+        "aliases": [
+          "subscription",
+          "subscriptions",
+          "monthly subscription",
+          "annual subscription",
+          "auto renew",
+          "auto-renew",
+          "autorenewal",
+          "renewal charge",
+          "recurring charge",
+          "trial charge",
+          "free trial",
+          "cancel subscription",
+          "subscription charge",
+          "netflix",
+          "spotify",
+          "amazon prime",
+          "prime membership",
+          "apple subscription",
+          "google subscription",
+          "app subscription",
+          "trial subscription",
+          "hulu",
+          "disney plus",
+          "disney+",
+          "youtube premium",
+          "apple music",
+          "icloud",
+          "dropbox",
+          "adobe subscription",
+          "siriusxm"
+        ]
+      },
+      {
+        "entity_id": "service_fees",
+        "name": "Service Fees",
+        "aliases": [
+          "service fee",
+          "service fees",
+          "processing fee",
+          "processing fees",
+          "convenience fee",
+          "convenience fees",
+          "admin fee",
+          "administrative fee",
+          "platform fee",
+          "booking fee",
+          "handling fee"
+        ]
+      },
+      {
+        "entity_id": "delivery_fees",
+        "name": "Delivery Fees",
+        "aliases": [
+          "delivery fee",
+          "delivery fees",
+          "delivery charge",
+          "shipping fee",
+          "shipping fees",
+          "small order fee",
+          "service charge delivery"
+        ]
+      },
+      {
+        "entity_id": "hidden_charges",
+        "name": "Hidden Charges",
+        "aliases": [
+          "hidden charge",
+          "hidden charges",
+          "extra charge",
+          "extra charges",
+          "unexpected charge",
+          "unexpected charges",
+          "surprise charge",
+          "surprise charges",
+          "mystery charge",
+          "unknown charge",
+          "unauthorized charge",
+          "charged extra",
+          "random charge"
+        ]
+      },
+      {
+        "entity_id": "bill_shock",
+        "name": "Bill Shock",
+        "aliases": [
+          "bill shock",
+          "billing issue",
+          "billing issues",
+          "billing error",
+          "billing confusion",
+          "charged twice",
+          "double charged",
+          "charged me again",
+          "why was i charged",
+          "what is this charge",
+          "did not authorize"
+        ]
+      },
+      {
+        "entity_id": "junk_fees",
+        "name": "Junk Fees",
+        "aliases": [
+          "junk fee",
+          "junk fees",
+          "hidden fee",
+          "hidden fees",
+          "mandatory fee",
+          "resort fee",
+          "ticket fee",
+          "cleanup fee",
+          "bs fee"
+        ]
+      }
+    ],
+    "seed_keywords": [
+      "fee",
+      "fees",
+      "charge",
+      "charged",
+      "billing",
+      "bill",
+      "renewal",
+      "renewed",
+      "subscription",
+      "subscriptions",
+      "cancel",
+      "trial",
+      "double charged",
+      "unauthorized",
+      "overcharge",
+      "extra",
+      "surprise",
+      "hidden",
+      "mystery",
+      "service fee",
+      "delivery fee",
+      "processing fee",
+      "convenience fee",
+      "what is this charge",
+      "why was i charged",
+      "recurring charge",
+      "free trial",
+      "auto renew",
+      "auto-renew",
+      "small order fee",
+      "mandatory fee",
+      "netflix",
+      "spotify",
+      "amazon prime",
+      "prime membership",
+      "apple subscription",
+      "app subscription",
+      "hard to cancel",
+      "kept charging",
+      "keeps charging",
+      "stop charging",
+      "charged after trial",
+      "free trial turned into",
+      "recurring subscription",
+      "trick you into paying more",
+      "dark pattern",
+      "fine print",
+      "cancelation trick",
+      "cancellation trick",
+      "autopilot"
+    ],
+    "pattern_families": [
+      "unexpected_fee",
+      "auto_renewal",
+      "double_charge",
+      "billing_confusion",
+      "hidden_charge",
+      "service_fee_markup",
+      "delivery_fee_spike",
+      "subscription_trap",
+      "trial_to_paid",
+      "hard_to_cancel"
+    ],
+    "optional_entities": [
+      "receipt",
+      "bank account",
+      "transaction",
+      "checkout",
+      "invoice"
+    ]
+  },
+  "trigger_lexicon": {
+    "pain": [
+      "fee",
+      "fees",
+      "charged",
+      "charge",
+      "double charged",
+      "unauthorized",
+      "overcharge",
+      "extra charge",
+      "surprise charge",
+      "hidden fee",
+      "junk fee",
+      "service fee",
+      "delivery fee",
+      "processing fee",
+      "convenience fee",
+      "charged after trial",
+      "kept charging",
+      "keeps charging",
+      "stop charging"
+    ],
+    "urgency": [
+      "can't cancel",
+      "could not cancel",
+      "did not authorize",
+      "won't let me cancel",
+      "unable to cancel"
+    ],
+    "complaint": [
+      "why was i charged",
+      "what is this charge",
+      "charged me again",
+      "they charged me",
+      "i got charged",
+      "i was billed",
+      "this charge makes no sense",
+      "hidden fee",
+      "mystery charge",
+      "random charge",
+      "trick you into paying more",
+      "dark pattern",
+      "fine print"
+    ],
+    "change": [
+      "renewed",
+      "renewal",
+      "auto renew",
+      "auto-renew",
+      "added",
+      "tacked on",
+      "free trial turned into",
+      "trial converted",
+      "trial ended"
+    ],
+    "friction": [
+      "cancel",
+      "cancellation",
+      "refund refused",
+      "could not cancel",
+      "hard to cancel",
+      "won't let me cancel",
+      "unable to cancel",
+      "checkout surprise",
+      "fine print",
+      "mandatory fee"
+    ],
+    "risk": [
+      "scammy",
+      "deceptive",
+      "ripoff",
+      "waste of money",
+      "took money",
+      "kept charging",
+      "keeps charging",
+      "subscription trap",
+      "cancelation trick",
+      "cancellation trick"
+    ]
+  },
+  "exclusion_rules": {
+    "forbidden_topics": [
+      "investing advice",
+      "crypto discussion",
+      "macro economy",
+      "political debate",
+      "general debt support",
+      "rent discussion",
+      "tax filing help"
+    ],
+    "forbidden_terms": [
+      "inflation",
+      "tax",
+      "taxes",
+      "irs",
+      "debt payoff",
+      "student loan",
+      "student loans",
+      "mortgage",
+      "rent increase",
+      "landlord",
+      "credit score",
+      "portfolio",
+      "stocks",
+      "stock market",
+      "crypto",
+      "bitcoin",
+      "trading",
+      "election",
+      "politics",
+      "recession",
+      "economy",
+      "tariff",
+      "tariffs",
+      "salary negotiation",
+      "career advice",
+      "health insurance premium increase",
+      "car insurance premium increase"
+    ],
+    "forbidden_entities": [
+      "Taxes USA",
+      "Inflation",
+      "Student Loans",
+      "Rent",
+      "Insurance",
+      "Gas Prices",
+      "Groceries",
+      "Credit Card Debt"
+    ],
+    "forbidden_source_types": [],
+    "forbidden_clusters": [
+      "casual_discussion",
+      "non_financial_chatter",
+      "macro_finance",
+      "political_argument"
+    ]
+  },
+  "validation_rules": {
+    "min_source_count": 1,
+    "max_age_hours": 168,
+    "require_direct_source": false,
+    "require_official_source_for_mechanism": false,
+    "allow_trends_check": false,
+    "allow_youtube_gap_check": true,
+    "min_signal_strength": 4,
+    "min_production_fit": 50
+  },
+  "scoring_weights": {
+    "pain_signal": 0.25,
+    "source_confidence": 0.15,
+    "recency": 0.1,
+    "competition_gap": 0.2,
+    "novelty": 0.1,
+    "production_fit": 0.2
+  },
+  "formatting_rules": {
+    "human_phrase_patterns": [
+      "{entity} problem around {trigger}",
+      "{entity} complaint about {trigger}",
+      "{entity} surprise around {trigger}"
+    ],
+    "video_topic_patterns": [
+      "Why people keep getting hit by {entity} and {trigger}",
+      "How {entity} quietly drains money through {trigger}",
+      "What hidden cost shows up when {entity} triggers {trigger}"
+    ],
+    "banned_phrasing": [
+      "get rich",
+      "motivation",
+      "success tips",
+      "manifest",
+      "mindset only"
+    ],
+    "max_human_phrase_length": 160,
+    "max_video_topic_length": 180
+  },
+  "cooldown_rules": {
+    "topic_repeat_days": 30,
+    "anchor_repeat_days": 21,
+    "angle_repeat_days": 14
+  },
+  "health_rules": {
+    "source_zero_signal_days_threshold": 3,
+    "source_error_rate_threshold": 0.5,
+    "profile_refresh_recommended_if_x_sources_fail": 2,
+    "profile_refresh_recommended_if_signal_volume_drops_below": 1
+  },
+  "production_profile": {
+    "stock_fit_required": true,
+    "ui_dependency_allowed": false,
+    "heavy_visual_explainer_allowed": false,
+    "talking_head_dependency_allowed": false
+  },
+  "metadata": {
+    "created_at": "2026-04-15T00:00:00Z",
+    "frozen_at": "2026-04-15T00:00:00Z",
+    "created_by": "chatgpt_profile_refactor_hidden_fees",
+    "notes": "Narrow frozen profile for US consumer hidden fees, subscriptions, service fees, delivery fees, billing confusion, and surprise charges. personalfinance removed to reduce broad personal-finance noise; cleaner consumer pain sources only."
+  }
+}

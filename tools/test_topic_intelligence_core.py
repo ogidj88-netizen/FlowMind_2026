@@ -6,8 +6,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from cashflow.topic_intelligence.collector import TopicSeedCollector
-from cashflow.topic_intelligence.analyzer import TopicAnalyzer
-from cashflow.topic_intelligence.validator import TopicValidator, ValidationInput
+from cashflow.topic_intelligence.pipeline import TopicPipeline
 
 
 def main() -> None:
@@ -18,37 +17,37 @@ def main() -> None:
         "My rent increased again and I can't keep up with payments.",
         "My subscription auto-renewed and I didn't even get a warning.",
         "Gas prices are rising again and it's killing my monthly budget.",
+        "My credit score suddenly dropped and I don't know why.",
+        "My insurance premium went up again for no reason.",
+        "My grocery bill keeps getting higher every month.",
+        "I got hit with another overdraft fee this week.",
     ]
 
     collector = TopicSeedCollector()
-    analyzer = TopicAnalyzer()
-    validator = TopicValidator()
+    pipeline = TopicPipeline()
 
     candidates = collector.collect_from_texts(texts=texts)
 
-    print("SEED CANDIDATES")
-    print("=" * 60)
+    print("RECOMMENDED TOPICS")
+    print("=" * 80)
+
+    recommended_count = 0
+
     for candidate in candidates:
-        print(candidate.model_dump())
-    print()
+        result = pipeline.process(candidate)
 
-    print("VALIDATED TOPICS")
-    print("=" * 60)
-    for candidate in candidates:
-        topic = analyzer.analyze_candidate(candidate)
+        if result is None:
+            continue
 
-        result = validator.validate(
-            ValidationInput(
-                topic=topic,
-                exact_query_volume=0,
-                anchor_query_volume=500,  # більш реалістично для US
-                top_results_count=5,
-                instructional_results_count=0,
-            )
-        )
+        if result.verdict.value not in {"PRIORITY", "BACKLOG"}:
+            continue
 
+        recommended_count += 1
         print(result.model_dump())
-        print("-" * 60)
+        print("-" * 80)
+
+    if recommended_count == 0:
+        print("NO RECOMMENDED TOPICS")
 
 
 if __name__ == "__main__":
