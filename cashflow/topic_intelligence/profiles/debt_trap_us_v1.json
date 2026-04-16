@@ -1,0 +1,284 @@
+{
+  "profile_id": "debt_trap_us_v1",
+  "profile_version": "1.0.0",
+  "derived_from_niche_id": "debt_trap_us_bootstrap",
+  "profile_mode": "mixed",
+  "source_map": [
+    {
+      "source_id": "reddit_povertyfinance",
+      "source_type": "reddit",
+      "source_identifier": "povertyfinance",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 100,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_creditcards",
+      "source_type": "reddit",
+      "source_identifier": "CreditCards",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 95,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "reddit_personalfinance",
+      "source_type": "reddit",
+      "source_identifier": "personalfinance",
+      "source_domain": "reddit.com",
+      "trust_tier": "medium",
+      "priority": 80,
+      "enabled": true,
+      "parse_mode": "json_feed",
+      "jurisdiction_scope": "US"
+    },
+    {
+      "source_id": "youtube_search",
+      "source_type": "youtube",
+      "source_identifier": "search_api",
+      "source_domain": "youtube.googleapis.com",
+      "trust_tier": "high",
+      "priority": 100,
+      "enabled": true,
+      "parse_mode": "api",
+      "jurisdiction_scope": "US"
+    }
+  ],
+  "candidate_anchors": {
+    "entities": [
+      {
+        "entity_id": "credit_card_debt",
+        "name": "Credit Card Debt",
+        "aliases": [
+          "credit card debt",
+          "card debt",
+          "credit card balance",
+          "maxed out card",
+          "maxed out cards",
+          "credit card",
+          "credit cards",
+          "minimum payment",
+          "minimum payments"
+        ]
+      },
+      {
+        "entity_id": "personal_loans",
+        "name": "Personal Loans",
+        "aliases": [
+          "personal loan",
+          "personal loans",
+          "installment loan",
+          "loan payment",
+          "loan payments"
+        ]
+      },
+      {
+        "entity_id": "collections",
+        "name": "Collections",
+        "aliases": [
+          "collections",
+          "debt collector",
+          "debt collectors",
+          "in collections",
+          "sent to collections"
+        ]
+      },
+      {
+        "entity_id": "late_fees",
+        "name": "Late Fees",
+        "aliases": [
+          "late fee",
+          "late fees",
+          "missed payment fee",
+          "penalty fee",
+          "penalty fees"
+        ]
+      }
+    ],
+    "seed_keywords": [
+      "debt",
+      "apr",
+      "interest",
+      "interest charges",
+      "minimum payment",
+      "minimum payments",
+      "late fee",
+      "late fees",
+      "collections",
+      "debt collector",
+      "debt collectors",
+      "sent to collections",
+      "default",
+      "missed payment",
+      "past due",
+      "overdue",
+      "maxed out",
+      "maxed out card",
+      "over limit",
+      "loan payment",
+      "penalty fee",
+      "penalty fees",
+      "balance keeps growing",
+      "payment went up",
+      "rate went up"
+    ],
+    "pattern_families": [
+      "minimum_payment_trap",
+      "late_fee_cycle",
+      "collections_risk",
+      "interest_growth",
+      "debt_spiral"
+    ],
+    "optional_entities": [
+      "credit score",
+      "budget",
+      "paycheck",
+      "bank account"
+    ]
+  },
+  "trigger_lexicon": {
+    "pain": [
+      "debt",
+      "apr",
+      "interest",
+      "interest charges",
+      "late fee",
+      "late fees",
+      "minimum payment",
+      "minimum payments",
+      "collections",
+      "debt collector",
+      "debt collectors",
+      "penalty fee",
+      "penalty fees"
+    ],
+    "urgency": [
+      "missed payment",
+      "past due",
+      "overdue",
+      "default",
+      "sent to collections"
+    ],
+    "complaint": [
+      "can't pay",
+      "cannot pay",
+      "struggling to pay",
+      "payment is too high",
+      "interest is killing me",
+      "balance keeps growing",
+      "stuck in debt"
+    ],
+    "change": [
+      "apr increased",
+      "interest increased",
+      "rate went up",
+      "payment went up"
+    ],
+    "friction": [
+      "minimum payment",
+      "minimum payments",
+      "maxed out",
+      "over limit",
+      "stuck in debt"
+    ],
+    "risk": [
+      "collections",
+      "sent to collections",
+      "default",
+      "my score tanked"
+    ]
+  },
+  "exclusion_rules": {
+    "forbidden_topics": [
+      "investing advice",
+      "crypto discussion",
+      "macro economy",
+      "political debate",
+      "student loan policy"
+    ],
+    "forbidden_terms": [
+      "best travel card",
+      "cash back strategy",
+      "points strategy",
+      "stock market",
+      "crypto",
+      "bitcoin",
+      "portfolio",
+      "investing",
+      "student loan forgiveness"
+    ],
+    "forbidden_entities": [],
+    "forbidden_source_types": [],
+    "forbidden_clusters": [
+      "casual_discussion",
+      "non_financial_chatter"
+    ]
+  },
+  "validation_rules": {
+    "min_source_count": 1,
+    "max_age_hours": 168,
+    "require_direct_source": false,
+    "require_official_source_for_mechanism": false,
+    "allow_trends_check": false,
+    "allow_youtube_gap_check": true,
+    "min_signal_strength": 4,
+    "min_production_fit": 50
+  },
+  "scoring_weights": {
+    "pain_signal": 0.25,
+    "source_confidence": 0.15,
+    "recency": 0.1,
+    "competition_gap": 0.2,
+    "novelty": 0.1,
+    "production_fit": 0.2
+  },
+  "formatting_rules": {
+    "human_phrase_patterns": [
+      "{entity} problem around {trigger}",
+      "{entity} pressure around {trigger}",
+      "{entity} trap around {trigger}"
+    ],
+    "video_topic_patterns": [
+      "Why people get trapped by {entity} and {trigger}",
+      "How {entity} gets worse through {trigger}",
+      "What debt trap shows up when {entity} triggers {trigger}"
+    ],
+    "banned_phrasing": [
+      "get rich",
+      "motivation",
+      "success tips",
+      "manifest",
+      "mindset only"
+    ],
+    "max_human_phrase_length": 160,
+    "max_video_topic_length": 180
+  },
+  "cooldown_rules": {
+    "topic_repeat_days": 30,
+    "anchor_repeat_days": 21,
+    "angle_repeat_days": 14
+  },
+  "health_rules": {
+    "source_zero_signal_days_threshold": 3,
+    "source_error_rate_threshold": 0.5,
+    "profile_refresh_recommended_if_x_sources_fail": 2,
+    "profile_refresh_recommended_if_signal_volume_drops_below": 1
+  },
+  "production_profile": {
+    "stock_fit_required": true,
+    "ui_dependency_allowed": false,
+    "heavy_visual_explainer_allowed": false,
+    "talking_head_dependency_allowed": false
+  },
+  "metadata": {
+    "created_at": "2026-04-15T00:00:00Z",
+    "frozen_at": "2026-04-15T00:00:00Z",
+    "created_by": "chatgpt_profile_test_debt_trap_v3",
+    "notes": "Debt trap test profile without synthetic APR entity. Real entities only; APR and interest retained as triggers."
+  }
+}

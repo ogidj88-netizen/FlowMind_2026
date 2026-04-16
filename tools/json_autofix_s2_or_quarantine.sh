@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# FlowMind JSON AutoFix (limited)
+# FlowMind JSON AutoFix (fail-closed)
 # - Scans projects/**.json
 # - If invalid JSON:
-#   - If file ends with /S2_script.json -> quarantine invalid + install stub
-#   - Else -> quarantine invalid and FAIL (manual action required)
+#   - Quarantine invalid file
+#   - FAIL immediately
+#
+# IMPORTANT:
+# - No stub installation
+# - No placeholder recovery
+# - Invalid production JSON must halt the pipeline
 #
 # Usage:
 #   tools/json_autofix_s2_or_quarantine.sh
@@ -15,18 +20,12 @@ if [[ ! -x "tools/json_repair_or_quarantine.sh" ]]; then
   exit 2
 fi
 
-if [[ ! -f "tools/stub_s2_script_v1.json" ]]; then
-  echo "[ERR] missing: tools/stub_s2_script_v1.json" >&2
-  exit 2
-fi
-
 if [[ ! -d "projects" ]]; then
   echo "[WARN] no projects/ folder; nothing to scan" >&2
   exit 0
 fi
 
 count=0
-fixed=0
 quarantined=0
 failed=0
 
@@ -39,22 +38,18 @@ while IFS= read -r -d '' f; do
 
   echo "[WARN] invalid JSON detected: $f" >&2
 
+  tools/json_repair_or_quarantine.sh "$f" || true
+  quarantined=$((quarantined+1))
+  failed=$((failed+1))
+
   if [[ "$f" == */S2_script.json ]]; then
-    # quarantine invalid
-    tools/json_repair_or_quarantine.sh "$f" || true
-    # install stub
-    cp -f tools/stub_s2_script_v1.json "$f"
-    echo "[OK] stub installed: $f" >&2
-    fixed=$((fixed+1))
+    echo "[FAIL] invalid S2_script.json quarantined; fail-closed enforced; no stub installation allowed: $f" >&2
   else
-    tools/json_repair_or_quarantine.sh "$f" || true
-    quarantined=$((quarantined+1))
-    echo "[FAIL] quarantined non-S2 invalid JSON (manual fix required): $f" >&2
-    failed=$((failed+1))
+    echo "[FAIL] invalid JSON quarantined; manual fix required: $f" >&2
   fi
 done < <(find projects -type f -name "*.json" -print0)
 
-echo "[INFO] scanned=${count} fixed_S2=${fixed} quarantined_other=${quarantined} failed=${failed}" >&2
+echo "[INFO] scanned=${count} quarantined=${quarantined} failed=${failed}" >&2
 
 if [[ "$failed" -gt 0 ]]; then
   exit 1
