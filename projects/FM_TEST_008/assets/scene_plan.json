@@ -1,0 +1,1824 @@
+{
+  "project_id": "FM_TEST_008",
+  "scene_plan": [
+    {
+      "scene_id": "scene_1",
+      "scene_role": "hook"
+    },
+    {
+      "scene_id": "scene_2",
+      "scene_role": "build"
+    },
+    {
+      "scene_id": "scene_3",
+      "scene_role": "payoff"
+    }
+  ],
+  "shot_plan": [
+    {
+      "shot_id": "shot_1",
+      "timing": {
+        "start": 0.0,
+        "end": 3.0,
+        "duration": 3
+      },
+      "scene_role": "hook",
+      "visual": {
+        "asset_type": "video",
+        "query": "person paying expensive car repair bill",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": true,
+        "content": "This tiny decision can cost you $1000",
+        "style": "highlight",
+        "position": "center"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_2",
+      "timing": {
+        "start": 3.0,
+        "end": 6.0,
+        "duration": 3
+      },
+      "scene_role": "hook",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": true,
+        "content": "Imagine this: you're driving down the highway, music blaring, wind rushing throu",
+        "style": "highlight",
+        "position": "center"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_3",
+      "timing": {
+        "start": 6.0,
+        "end": 9.0,
+        "duration": 3
+      },
+      "scene_role": "hook",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Everything feels perfect",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_4",
+      "timing": {
+        "start": 9.0,
+        "end": 12.0,
+        "duration": 3
+      },
+      "scene_role": "build",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "But suddenly, a tiny warning light flickers on your dashboard",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_5",
+      "timing": {
+        "start": 12.0,
+        "end": 15.0,
+        "duration": 3
+      },
+      "scene_role": "build",
+      "visual": {
+        "asset_type": "video",
+        "query": "car dashboard warning light close up",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "It's the \"check engine\" light",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_6",
+      "timing": {
+        "start": 15.0,
+        "end": 18.0,
+        "duration": 3
+      },
+      "scene_role": "build",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "You think to yourself, \"It's probably nothing serious",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_7",
+      "timing": {
+        "start": 18.0,
+        "end": 21.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "I'll deal with it later",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_8",
+      "timing": {
+        "start": 21.0,
+        "end": 24.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "driver perspective city road driving",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "\" That decision, my friend, is the $1000 car repair mistake most drivers make",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_9",
+      "timing": {
+        "start": 24.0,
+        "end": 27.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Most of us have been there",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_10",
+      "timing": {
+        "start": 27.0,
+        "end": 30.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Life gets busy, and it's easy to ignore that little light on the dashboard",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_11",
+      "timing": {
+        "start": 30.0,
+        "end": 33.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Maybe you think you'll get around to it next week, or perhaps it feels like one ",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_12",
+      "timing": {
+        "start": 33.0,
+        "end": 36.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "shocked person holding repair invoice",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "But here's the thing: ignoring that light could lead to a cascade of problems th",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_13",
+      "timing": {
+        "start": 36.0,
+        "end": 39.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Let's break it down",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_14",
+      "timing": {
+        "start": 39.0,
+        "end": 42.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car dashboard check engine light blinking",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "The check engine light is a broad warning system",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_15",
+      "timing": {
+        "start": 42.0,
+        "end": 45.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "It doesn't tell you what's specifically wrong, just that something needs attenti",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_16",
+      "timing": {
+        "start": 45.0,
+        "end": 48.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car dashboard check engine light blinking",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "It could be something as simple as a loose gas cap or something as serious as an",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_17",
+      "timing": {
+        "start": 48.0,
+        "end": 51.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "But ignoring it is like playing a game of Russian roulette with your wallet",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_18",
+      "timing": {
+        "start": 51.0,
+        "end": 54.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Take the catalytic converter, for instance",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_19",
+      "timing": {
+        "start": 54.0,
+        "end": 57.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "It's a crucial component of your vehicle's exhaust system that helps reduce harm",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_20",
+      "timing": {
+        "start": 57.0,
+        "end": 60.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car dashboard check engine light blinking",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "If your check engine light is related to a problem with the catalytic converter ",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_21",
+      "timing": {
+        "start": 60.0,
+        "end": 63.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car repair mechanic working in garage",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "And here's the kicker: if the converter fails completely, it can also damage oth",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_22",
+      "timing": {
+        "start": 63.0,
+        "end": 66.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Now, you might be thinking, \"How can a little light lead to such a big problem",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_23",
+      "timing": {
+        "start": 66.0,
+        "end": 69.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "\" Well, it's all about the cumulative effect",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_24",
+      "timing": {
+        "start": 69.0,
+        "end": 72.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Imagine a tiny crack in a dam",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_25",
+      "timing": {
+        "start": 72.0,
+        "end": 75.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "At first, it's barely noticeable, just a few drops of water",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_26",
+      "timing": {
+        "start": 75.0,
+        "end": 78.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "But over time, that crack widens, allowing more water to seep through, until one",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_27",
+      "timing": {
+        "start": 78.0,
+        "end": 81.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car dashboard warning light close up",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Ignoring the check engine light is like ignoring that initial crack",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_28",
+      "timing": {
+        "start": 81.0,
+        "end": 84.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Consider another example: the oxygen sensor",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_29",
+      "timing": {
+        "start": 84.0,
+        "end": 87.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "This small part monitors the level of oxygen in your car's exhaust and helps man",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_30",
+      "timing": {
+        "start": 87.0,
+        "end": 90.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "driver perspective city road driving",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "If it fails, you might not notice an immediate change in how your car drives",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_31",
+      "timing": {
+        "start": 90.0,
+        "end": 93.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "However, over time, a faulty oxygen sensor can reduce your gas mileage by up to ",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_32",
+      "timing": {
+        "start": 93.0,
+        "end": 96.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "shocked person holding repair invoice",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "That means more trips to the gas station and more money spent on fuel",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_33",
+      "timing": {
+        "start": 96.0,
+        "end": 99.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car repair mechanic working in garage",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Furthermore, if left unchecked, it can damage your catalytic converter, leading ",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_34",
+      "timing": {
+        "start": 99.0,
+        "end": 102.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "shocked person holding repair invoice",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "But what can you do to avoid these costly mistakes",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_35",
+      "timing": {
+        "start": 102.0,
+        "end": 105.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "The first step is to treat that light seriously",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_36",
+      "timing": {
+        "start": 105.0,
+        "end": 108.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "When it comes on, don't panic, but don't procrastinate either",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_37",
+      "timing": {
+        "start": 108.0,
+        "end": 111.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Schedule a diagnostic test as soon as possible",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_38",
+      "timing": {
+        "start": 111.0,
+        "end": 114.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Many auto parts stores even offer this service for free",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_39",
+      "timing": {
+        "start": 114.0,
+        "end": 117.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car interior driver driving city traffic",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "A quick scan could reveal a minor issue that costs just a few dollars to fix, sa",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_40",
+      "timing": {
+        "start": 117.0,
+        "end": 120.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Another smart move is regular maintenance",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_41",
+      "timing": {
+        "start": 120.0,
+        "end": 123.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Follow your vehicle's maintenance schedule religiously",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_42",
+      "timing": {
+        "start": 123.0,
+        "end": 126.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "This can help catch issues before they become serious problems",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_43",
+      "timing": {
+        "start": 126.0,
+        "end": 129.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car interior driver driving city traffic",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Check your oil, replace air filters, and pay attention to any changes in how you",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_44",
+      "timing": {
+        "start": 129.0,
+        "end": 132.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "These small actions can extend the life of your vehicle and help you avoid unexp",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_45",
+      "timing": {
+        "start": 132.0,
+        "end": 135.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Let's talk about another common mistake: thinking that a temporary fix is good e",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_46",
+      "timing": {
+        "start": 135.0,
+        "end": 138.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "shocked person holding repair invoice",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "We've all been tempted to patch things up and keep going, especially if money is",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_47",
+      "timing": {
+        "start": 138.0,
+        "end": 141.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "But temporary fixes can lead to long-term problems",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_48",
+      "timing": {
+        "start": 141.0,
+        "end": 144.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car dashboard check engine light blinking",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Using a cheap sealant to stop a leak might work for a while, but it could also m",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_49",
+      "timing": {
+        "start": 144.0,
+        "end": 147.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "There's also a psychological factor at play here",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_50",
+      "timing": {
+        "start": 147.0,
+        "end": 150.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Many of us tend to operate on an \"out of sight, out of mind\" basis",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_51",
+      "timing": {
+        "start": 150.0,
+        "end": 153.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "If the car is still running, we assume it's fine",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_52",
+      "timing": {
+        "start": 153.0,
+        "end": 156.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "But in reality, the longer you ignore that warning light, the more you risk turn",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_53",
+      "timing": {
+        "start": 156.0,
+        "end": 159.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Let's not forget the safety implications",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_54",
+      "timing": {
+        "start": 159.0,
+        "end": 162.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "A malfunctioning vehicle is not just a financial risk; it's a safety risk too",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_55",
+      "timing": {
+        "start": 162.0,
+        "end": 165.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car interior driver driving city traffic",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Faulty sensors or components can lead to unexpected breakdowns or accidents, put",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_56",
+      "timing": {
+        "start": 165.0,
+        "end": 168.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "driver perspective city road driving",
+        "style": "locked_runtime_style",
+        "motion": "zoom_out",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "In conclusion, the $1000 car repair mistake is one that many drivers ignore, oft",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [
+          "transition_swoosh"
+        ],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_57",
+      "timing": {
+        "start": 168.0,
+        "end": 171.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car dashboard warning light close up",
+        "style": "locked_runtime_style",
+        "motion": "static",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "The next time that check engine light flickers on, remember this: a small decisi",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_58",
+      "timing": {
+        "start": 171.0,
+        "end": 174.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "car diagnostic scan tool close up",
+        "style": "locked_runtime_style",
+        "motion": "zoom_in",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Take action, get a diagnostic test, and keep your vehicle in top shape",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    },
+    {
+      "shot_id": "shot_59",
+      "timing": {
+        "start": 174.0,
+        "end": 177.0,
+        "duration": 3
+      },
+      "scene_role": "payoff",
+      "visual": {
+        "asset_type": "video",
+        "query": "mechanic diagnostic scanner checking car",
+        "style": "locked_runtime_style",
+        "motion": "pan",
+        "priority": "primary"
+      },
+      "text_overlay": {
+        "enabled": false,
+        "content": "Your wallet\u2014and your peace of mind\u2014will thank you",
+        "style": "default",
+        "position": "bottom"
+      },
+      "audio_intent": {
+        "sfx": [],
+        "music_energy": 7
+      },
+      "constraints": {
+        "no_repeat": true,
+        "style_lock": true
+      }
+    }
+  ],
+  "normalized_asset_queries": [
+    "mechanic diagnostic scanner checking car",
+    "driver perspective city road driving",
+    "car dashboard warning light close up",
+    "shocked person holding repair invoice",
+    "person paying expensive car repair bill",
+    "car dashboard check engine light blinking",
+    "car interior driver driving city traffic",
+    "car diagnostic scan tool close up",
+    "car repair mechanic working in garage"
+  ]
+}

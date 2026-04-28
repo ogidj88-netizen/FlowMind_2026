@@ -1,0 +1,27 @@
+{
+  "project_id": "FM_TEST_008",
+  "phase": "SCENES",
+  "mode": "NORMAL",
+  "locked": false,
+  "topic": "The $1000 Car Repair Mistake Most Drivers Ignore",
+  "title": "The $1000 Car Repair Mistake Most Drivers Ignore",
+  "hook": "This tiny decision can cost you $1000.",
+  "script_path": "projects/FM_TEST_008/script.txt",
+  "scene_plan_path": "projects/FM_TEST_008/assets/scene_plan.json",
+  "video_path": null,
+  "thumbnail_path": null,
+  "metrics": {
+    "hook_score": null,
+    "estimated_duration_minutes": 5.29,
+    "word_count": 767,
+    "scene_count": null
+  },
+  "qa_passed": false,
+  "approved_for_upload": false,
+  "numeric_anchor": 1000,
+  "trigger_word": "Mistake",
+  "script_generated": true,
+  "audio_generated": false,
+  "visual_generated": false,
+  "updated_at": "2026-04-17T07:25:53.153581+00:00"
+}
