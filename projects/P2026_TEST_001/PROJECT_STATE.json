@@ -1,0 +1,37 @@
+{
+  "approval_status": "PENDING",
+  "approved_for_upload": false,
+  "artifacts": {},
+  "halt_reason": null,
+  "halted": false,
+  "manifest": {
+    "audience": "Global English",
+    "content_language": "en",
+    "created_at": "2026-05-18T19:52:25Z",
+    "hook": "Your bill can rise before your usage does.",
+    "locked": true,
+    "manifest_hash": "sha256:d87a4c85d40b05ab57bad25e302d9f0d68a28a204b9ac7ddfd417da19887d23a",
+    "manifest_id": "P2026_TEST_001:v1",
+    "manifest_version": 1,
+    "mode": "cashflow-mode",
+    "niche": "Money Mistakes / Invisible Costs",
+    "primary_platform": "youtube",
+    "render_profile": "ffmpeg_stability_standard_v1_2",
+    "stock_policy": "stock_first_no_repeat",
+    "target_duration_sec": 480,
+    "topic": "Why your electricity bill rises even when usage looks normal",
+    "working_title": "Your Power Bill Is Quietly Changing"
+  },
+  "phase": "SCRIPT",
+  "phase_history": [
+    {
+      "at": "2026-05-18T19:53:00Z",
+      "from": "TOPIC",
+      "to": "SCRIPT"
+    }
+  ],
+  "project_id": "P2026_TEST_001",
+  "qa_passed": false,
+  "resume_hint": null,
+  "updated_at": "2026-05-18T19:53:00Z"
+}
