@@ -3,7 +3,8 @@
   "approved_for_upload": false,
   "artifacts": {
     "script_meta_path": "projects/P2026_TEST_001/script/script_meta.json",
-    "script_path": "projects/P2026_TEST_001/script/script.txt"
+    "script_path": "projects/P2026_TEST_001/script/script.txt",
+    "script_qa_path": "projects/P2026_TEST_001/script/script_qa.json"
   },
   "halt_reason": null,
   "halted": false,
@@ -36,5 +37,5 @@
   "project_id": "P2026_TEST_001",
   "qa_passed": false,
   "resume_hint": null,
-  "updated_at": "2026-05-18T20:03:55Z"
+  "updated_at": "2026-05-18T20:09:30Z"
 }

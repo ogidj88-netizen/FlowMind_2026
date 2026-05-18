@@ -1,0 +1,66 @@
+{
+  "checks": [
+    {
+      "detail": "word_count=1000, allowed_range=928-1392, estimated_minutes=6.9",
+      "max_points": 15,
+      "name": "duration_fit",
+      "passed": true,
+      "points": 15
+    },
+    {
+      "detail": "working_title=Your Power Bill Is Quietly Changing",
+      "max_points": 15,
+      "name": "hook_alignment",
+      "passed": true,
+      "points": 15
+    },
+    {
+      "detail": "topic=Why your electricity bill rises even when usage looks normal",
+      "max_points": 15,
+      "name": "topic_match",
+      "passed": true,
+      "points": 15
+    },
+    {
+      "detail": "requires coherent multi-part narration",
+      "max_points": 15,
+      "name": "structure",
+      "passed": true,
+      "points": 15
+    },
+    {
+      "detail": "audience=Global English",
+      "max_points": 15,
+      "name": "practical_payoff",
+      "passed": true,
+      "points": 15
+    },
+    {
+      "detail": "requires spoken-narration-friendly script text",
+      "max_points": 15,
+      "name": "voiceover_usability",
+      "passed": true,
+      "points": 15
+    },
+    {
+      "detail": "blocks unsupported precise claims and fake citation patterns",
+      "max_points": 10,
+      "name": "safety_no_fake_facts",
+      "passed": true,
+      "points": 10
+    }
+  ],
+  "created_at": "2026-05-18T20:09:30Z",
+  "estimated_duration_minutes": 6.9,
+  "failure_reasons": [],
+  "project_id": "P2026_TEST_001",
+  "qa_gate": "script_qa",
+  "qa_version": "1.0.0",
+  "score": 100,
+  "script_meta_path": "projects/P2026_TEST_001/script/script_meta.json",
+  "script_path": "projects/P2026_TEST_001/script/script.txt",
+  "source_phase": "SCRIPT",
+  "verdict": "PASS",
+  "warnings": [],
+  "word_count": 1000
+}
