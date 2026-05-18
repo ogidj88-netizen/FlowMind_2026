@@ -117,6 +117,31 @@ A channel, niche, or style config must not be treated as FlowMind Core.
 | docs/MIGRATION_ADAPTER_PACK_SUMMARY.md | UNVERIFIED | Migration adapter summary. Must not guide active cleanup until reviewed. |
 | docs/MIGRATION_STATUS_V1.md | UNVERIFIED | Migration status document. Must not guide active cleanup until reviewed. |
 
+## Runtime Index — engine/
+
+| Path | Status | Rule |
+|---|---:|---|
+| engine/canonical_dispatcher.py | TRUSTED | Canonical dispatcher logic for phase transitions, HALT/resume, QA approval, and upload approval state transitions. |
+| engine/state_store.py | TRUSTED | Canonical atomic state persistence layer. State writes must go through this layer or approved dispatcher paths. |
+| engine/state_validator.py | TRUSTED | Canonical PROJECT_STATE.json and manifest validation layer. |
+| engine/legacy_guard.py | TRUSTED | Trusted only as fail-fast blocker for frozen legacy station pipeline. Not a production engine. |
+| engine/global_hard_gate_v1.py | TRUSTED | Trusted only as legacy tombstone that imports legacy_guard and blocks frozen station execution. |
+| engine/modules/s1_strategy.py | TRUSTED | Trusted only as frozen legacy module tombstone. Must not be executed as production module. |
+| engine/module_runner.py | UNVERIFIED | Phase-to-module runner that can route to legacy/station-style modules. Must not be used until reviewed. |
+| engine/modules/s2_script.py | UNVERIFIED | Script module with direct PROJECT_STATE.json write path and OpenAI call. Must not be executed until reviewed or converted to canonical executor contract. |
+
+## Runtime Prohibitions — engine/
+
+Do not treat engine/module_runner.py as an active phase runner.
+
+Do not execute engine/modules/s2_script.py as active runtime.
+
+Do not allow direct PROJECT_STATE.json writes outside canonical dispatcher/state_store authority.
+
+Do not treat legacy tombstones as production modules.
+
+Do not reactivate engine/modules/* without explicit review and registry update.
+
 ## Prohibitions
 
 Do not treat unlisted files as trusted.
