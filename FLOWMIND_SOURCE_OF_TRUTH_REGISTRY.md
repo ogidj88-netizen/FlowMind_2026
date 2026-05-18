@@ -57,12 +57,12 @@ A channel, niche, or style config must not be treated as FlowMind Core.
 | FLOWMIND_ACTION_SEQUENCE_V1.md | TRUSTED | Active recovery sequence guidance. |
 | FLOWMIND_REPO_TRUST_BOUNDARY_V1.md | TRUSTED | Repo trust boundary guidance. |
 | docs/FLOWMIND_HARD_RULESET_V1.md | TRUSTED | Work discipline and decision behavior. |
+| FLOWMIND_WORKING_TARGET.md | TRUSTED | Trusted only as target-shape and system-intent guidance. Not trusted as proof of implemented runtime. |
 | cashflow/topic_intelligence/niche_profile_schema.json | TRUSTED | Niche profile structure. |
 | cashflow/topic_intelligence/profiles/debt_trap_us_v1.json | TRUSTED | Reviewed niche profile example. |
 | cashflow/topic_intelligence/profiles/hidden_fees_us_v1.json | TRUSTED | Reviewed niche profile example. |
 | cashflow/topic_intelligence/profiles/finance_legacy_v1.json | UNVERIFIED | Must be reviewed before use. |
 | docs/FLOWMIND_CANONICAL_ARCHITECTURE_V1.md | UNVERIFIED | Contains possible outdated scope. Must not guide decisions until reviewed. |
-| FLOWMIND_WORKING_TARGET.md | UNVERIFIED | Contains possible outdated runtime target. Must not guide decisions until reviewed. |
 | MASTER_PROMPTS_v2_FULL.txt | FROZEN LEGACY | External/old prompt artifact. Not valid as repo truth. |
 | IronCore v3.5 references | FROZEN LEGACY | Historical context only unless explicitly re-approved. |
 | Imagine What If horror rules | UNVERIFIED | May become niche/style config only after review. Not FlowMind Core. |
