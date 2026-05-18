@@ -282,6 +282,31 @@ Do not treat cashflow-mode or Money Mistakes / Invisible Costs defaults as FlowM
 
 Do not use this template directly as a project state without canonical bootstrap replacement.
 
+## Runtime Index — projects/ FROZEN LEGACY
+
+| Path | Status | Rule |
+|---|---:|---|
+| projects/FM_*/ | FROZEN LEGACY | Station-based project artifacts using ExecutionManifest.json and S1/S2-style files. Historical/test evidence only. Must not be treated as active runtime state. |
+
+## Runtime Index — projects/ UNVERIFIED
+
+| Path | Status | Rule |
+|---|---:|---|
+| projects/P2026_CANONICAL_001/PROJECT_STATE.json | UNVERIFIED | Canonical dispatcher runtime verification artifact. May be used as historical evidence only, not as active production state. |
+| projects/P2026_CANONICAL_002/PROJECT_STATE.json | UNVERIFIED | Canonical dispatcher runtime verification artifact. May be used as historical evidence only, not as active production state. |
+
+## Runtime Prohibitions — projects/
+
+Do not treat projects/ as source of active architecture.
+
+Do not treat projects/FM_*/ExecutionManifest.json as active runtime state.
+
+Do not use FM_* station artifacts as current production contracts.
+
+Do not treat placeholder/test fixture language inside projects/ as production permission.
+
+Do not treat P2026_CANONICAL_* states as active production projects unless explicitly re-created or re-approved through canonical bootstrap and registry update.
+
 ## Prohibitions
 
 Do not treat unlisted files as trusted.
