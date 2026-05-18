@@ -26,16 +26,21 @@
     "topic": "Why your electricity bill rises even when usage looks normal",
     "working_title": "Your Power Bill Is Quietly Changing"
   },
-  "phase": "SCRIPT",
+  "phase": "SCENES",
   "phase_history": [
     {
       "at": "2026-05-18T19:53:00Z",
       "from": "TOPIC",
       "to": "SCRIPT"
+    },
+    {
+      "at": "2026-05-18T20:11:25Z",
+      "from": "SCRIPT",
+      "to": "SCENES"
     }
   ],
   "project_id": "P2026_TEST_001",
   "qa_passed": false,
   "resume_hint": null,
-  "updated_at": "2026-05-18T20:09:30Z"
+  "updated_at": "2026-05-18T20:11:25Z"
 }
