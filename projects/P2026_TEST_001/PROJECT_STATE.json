@@ -2,6 +2,7 @@
   "approval_status": "PENDING",
   "approved_for_upload": false,
   "artifacts": {
+    "scenes_path": "projects/P2026_TEST_001/scenes/scenes.json",
     "script_meta_path": "projects/P2026_TEST_001/script/script_meta.json",
     "script_path": "projects/P2026_TEST_001/script/script.txt",
     "script_qa_path": "projects/P2026_TEST_001/script/script_qa.json"
@@ -42,5 +43,5 @@
   "project_id": "P2026_TEST_001",
   "qa_passed": false,
   "resume_hint": null,
-  "updated_at": "2026-05-18T20:11:25Z"
+  "updated_at": "2026-05-18T20:24:12Z"
 }

@@ -1,0 +1,111 @@
+{
+  "audience": "Global English",
+  "content_language": "en",
+  "created_at": "2026-05-18T20:24:12Z",
+  "estimated_total_duration_sec": 413,
+  "executor": "scenes_executor",
+  "executor_version": "1.0.0",
+  "hook": "Your bill can rise before your usage does.",
+  "niche": "Money Mistakes / Invisible Costs",
+  "primary_platform": "youtube",
+  "project_id": "P2026_TEST_001",
+  "scene_count": 9,
+  "scenes": [
+    {
+      "asset_type": "simple_motion_text",
+      "estimated_duration_sec": 52,
+      "on_screen_text": "Your bill can rise before your usage does.",
+      "order": 1,
+      "production_notes": "Use simple_motion_text. Keep pacing clear. Target roughly 52 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_001",
+      "visual_intent": "Use minimal motion text to emphasize the main idea without distracting from the voiceover.",
+      "voiceover_text": "Your bill can rise before your usage does.\n\nThis is a story about why your electricity bill rises even when usage looks normal. It sounds simple, but it is the kind of money leak that hides inside normal life. For Global English, the problem is not always that they use too much. The problem is that the bill can change before the behavior looks different.\n\nThe working title is simple: Your Power Bill Is Quietly Changing. The reason it matters is that people usually look for one obvious explanation. They blame one appliance, one hot week, one mistake, or one bad habit. But in the Money Mistakes / Invisible Costs space, the real cost often comes from a stack of small changes that are easy to miss."
+    },
+    {
+      "asset_type": "screen_style_visual",
+      "estimated_duration_sec": 46,
+      "on_screen_text": "First, there is the rate structure.",
+      "order": 2,
+      "production_notes": "Use screen_style_visual. Keep pacing clear. Target roughly 46 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_002",
+      "visual_intent": "Show a simple checklist or comparison screen that makes the diagnostic step easy to follow.",
+      "voiceover_text": "First, there is the rate structure. A household can use the same amount of electricity and still pay more if the price per unit changes, if peak-hour pricing applies, or if fixed charges increase. That means the number at the bottom of the bill can rise even when the usage chart looks harmless.\n\nSecond, there is timing. Many people compare this month to last month and assume that is enough. It is not. A better comparison is this month against the same month last year, because weather, daylight, heating, cooling, and family routines can shift in predictable seasonal patterns. Without that comparison, a normal seasonal change can look like a mystery."
+    },
+    {
+      "asset_type": "stock_video",
+      "estimated_duration_sec": 44,
+      "on_screen_text": "Third, there are silent load changes.",
+      "order": 3,
+      "production_notes": "Use stock_video. Keep pacing clear. Target roughly 44 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_003",
+      "visual_intent": "Show everyday household devices or home energy use that can quietly increase costs over time.",
+      "voiceover_text": "Third, there are silent load changes. A refrigerator that works harder, an old water heater, a computer that stays on, a dehumidifier, a space heater, or small devices left running all day can create a slow rise. None of these feel dramatic in the moment. That is why they are easy to ignore.\n\nFourth, there are billing details most people skip. Delivery charges, service fees, taxes, minimum charges, and plan changes can move the total even when the usage line looks stable. If someone only checks the total amount due, they miss the difference between using more power and being charged differently for the same power."
+    },
+    {
+      "asset_type": "screen_style_visual",
+      "estimated_duration_sec": 48,
+      "on_screen_text": "The practical move is to split the bill into...",
+      "order": 4,
+      "production_notes": "Use screen_style_visual. Keep pacing clear. Target roughly 48 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_004",
+      "visual_intent": "Show a simple checklist or comparison screen that makes the diagnostic step easy to follow.",
+      "voiceover_text": "The practical move is to split the bill into three parts: usage, rate, and fixed charges. If usage went up, the question is what changed inside the home. If the rate went up, the question is whether the plan, time-of-use window, or provider pricing changed. If fixed charges went up, the issue is not behavior at all. It is the structure of the bill.\n\nA simple check can save a lot of confusion. Look at kilowatt-hours, not just dollars. Compare the same month last year. Check whether peak pricing applies. Look for new fees. Then list anything in the home that runs for long periods without attention. This turns a vague money problem into a clear investigation."
+    },
+    {
+      "asset_type": "screen_style_visual",
+      "estimated_duration_sec": 31,
+      "on_screen_text": "Here is a simple way to diagnose it.",
+      "order": 5,
+      "production_notes": "Use screen_style_visual. Keep pacing clear. Target roughly 31 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_005",
+      "visual_intent": "Show a simple checklist or comparison screen that makes the diagnostic step easy to follow.",
+      "voiceover_text": "Here is a simple way to diagnose it. Take the latest bill and write down three numbers: total cost, kilowatt-hours, and fixed charges. Then take the same month from last year and write down the same three numbers. Do not start with the total cost. Start with kilowatt-hours. If kilowatt-hours are nearly the same but the total is higher, the problem is probably not your behavior. It is pricing, fees, or the structure of the plan."
+    },
+    {
+      "asset_type": "stock_video",
+      "estimated_duration_sec": 44,
+      "on_screen_text": "Then check the rate.",
+      "order": 6,
+      "production_notes": "Use stock_video. Keep pacing clear. Target roughly 44 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_006",
+      "visual_intent": "Show everyday household devices or home energy use that can quietly increase costs over time.",
+      "voiceover_text": "Then check the rate. Some bills show the cost per kilowatt-hour clearly. Others hide it across multiple lines. If the rate changed, your usage can look normal while the final bill moves up. This is why many people feel confused. They are looking at the usage chart, but the cost moved somewhere else.\n\nAfter that, look at time-of-use pricing. If your plan charges more during peak hours, the same appliance can cost more depending on when it runs. A dishwasher, dryer, air conditioner, or heater can become more expensive without being used more often. The question becomes not only what you use, but when you use it."
+    },
+    {
+      "asset_type": "stock_video",
+      "estimated_duration_sec": 48,
+      "on_screen_text": "Next, check for always-on devices.",
+      "order": 7,
+      "production_notes": "Use stock_video. Keep pacing clear. Target roughly 48 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_007",
+      "visual_intent": "Show everyday household devices or home energy use that can quietly increase costs over time.",
+      "voiceover_text": "Next, check for always-on devices. The expensive problem is not always a dramatic one. It can be a device that runs quietly every day. A second fridge in the garage, an old freezer, a gaming computer, a pool pump, a dehumidifier, or a water heater can create a background cost that nobody notices until the bill arrives.\n\nYou also want to separate one-time events from repeat patterns. If the bill jumped once, it may be weather, guests, repairs, or a temporary change. If it rises for three months in a row, that is a pattern. A pattern deserves investigation. This is where many households lose money: they treat a pattern like a random bad month."
+    },
+    {
+      "asset_type": "screen_style_visual",
+      "estimated_duration_sec": 49,
+      "on_screen_text": "The fastest useful experiment is a seven-day reset.",
+      "order": 8,
+      "production_notes": "Use screen_style_visual. Keep pacing clear. Target roughly 49 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_008",
+      "visual_intent": "Show a simple checklist or comparison screen that makes the diagnostic step easy to follow.",
+      "voiceover_text": "The fastest useful experiment is a seven-day reset. Pick one week and reduce the biggest invisible loads. Run laundry outside peak hours if your plan uses peak pricing. Turn off devices that stay on all day. Check thermostat schedules. Then compare daily usage if your provider gives that data. You are not trying to solve everything. You are trying to identify which category moves.\n\nIf nothing changes, the issue may be outside your behavior. That is when it makes sense to call the provider, ask whether the rate plan changed, ask about fixed charges, and compare available plans. Many people skip this because they assume the bill is purely a usage problem. Sometimes it is a contract problem."
+    },
+    {
+      "asset_type": "chart_or_bill_visual",
+      "estimated_duration_sec": 51,
+      "on_screen_text": "The point is not to panic over every bill.",
+      "order": 9,
+      "production_notes": "Use chart_or_bill_visual. Keep pacing clear. Target roughly 51 seconds. Do not add new factual claims beyond the script.",
+      "scene_id": "SCENE_009",
+      "visual_intent": "Show a clean utility bill or simple cost breakdown visual with usage, rate, and fixed charges separated.",
+      "voiceover_text": "The point is not to panic over every bill. The point is to stop treating the final number as the whole story. A higher electricity bill is not one question. It is three questions: did you use more, did the price change, or did the bill structure change?\n\nOnce you separate those three, the problem becomes easier to act on. You can reduce usage, change timing, question the provider, adjust the plan, or replace the device that is quietly wasting power. But you cannot fix what you have not separated.\n\nSo if your power bill rises even when usage looks normal, do not start with guilt. Start with the structure. The bill may be telling you that the rules changed before your habits did."
+    }
+  ],
+  "source_phase": "SCENES",
+  "source_script_path": "projects/P2026_TEST_001/script/script.txt",
+  "source_script_qa_path": "projects/P2026_TEST_001/script/script_qa.json",
+  "target_duration_sec": 480,
+  "topic": "Why your electricity bill rises even when usage looks normal",
+  "working_title": "Your Power Bill Is Quietly Changing"
+}
