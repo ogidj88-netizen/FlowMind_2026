@@ -268,6 +268,20 @@ Do not cross from Topic Intelligence into script generation without explicit rev
 
 Do not treat cashflow/topic_intelligence script-generation files as active production layer.
 
+## Runtime Index — templates/
+
+| Path | Status | Rule |
+|---|---:|---|
+| templates/PROJECT_STATE.template.json | TRUSTED | Canonical PROJECT_STATE bootstrap template. Trusted for state shape only. Manifest defaults must be replaced by bootstrap inputs and must not define active niche, business truth, or FlowMind identity. |
+
+## Runtime Prohibitions — templates/
+
+Do not treat templates/PROJECT_STATE.template.json manifest defaults as active business truth.
+
+Do not treat cashflow-mode or Money Mistakes / Invisible Costs defaults as FlowMind Core identity.
+
+Do not use this template directly as a project state without canonical bootstrap replacement.
+
 ## Prohibitions
 
 Do not treat unlisted files as trusted.
