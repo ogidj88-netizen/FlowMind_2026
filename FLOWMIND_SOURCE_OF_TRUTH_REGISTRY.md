@@ -142,6 +142,73 @@ Do not treat legacy tombstones as production modules.
 
 Do not reactivate engine/modules/* without explicit review and registry update.
 
+## Runtime Index — tools/ TRUSTED
+
+| Path | Status | Rule |
+|---|---:|---|
+| tools/dispatcher.sh | TRUSTED | Official user-facing canonical dispatcher shell entrypoint. |
+| tools/dispatcher_cli.py | TRUSTED | Canonical dispatcher CLI implementation used by tools/dispatcher.sh. |
+| tools/check_dispatcher.sh | TRUSTED | Canonical dispatcher validation entrypoint. |
+| tools/run_dispatcher_checks.py | TRUSTED | Dispatcher smoke/guard checks using canonical dispatcher and state_store. |
+| tools/smoke_test_dispatcher.py | TRUSTED | Dispatcher smoke test using canonical dispatcher and state_store. |
+| tools/bootstrap_project.sh | TRUSTED | Shell wrapper for canonical PROJECT_STATE bootstrap. |
+| tools/bootstrap_project_state.py | TRUSTED | Canonical PROJECT_STATE bootstrap implementation using state_store and manifest hash logic. |
+| tools/preflight.sh | TRUSTED | Pre-commit/preflight safety runner. |
+| tools/shell_lint_quick.sh | TRUSTED | Shell syntax lint helper for tools/*.sh. |
+| tools/json_lint_quick.sh | TRUSTED | JSON lint helper for repository JSON files. |
+| tools/manifest_guard_scan.py | TRUSTED | Guard scanner for direct ExecutionManifest.json write risks. |
+| tools/code_check.py | TRUSTED | Code check helper. Trusted only as validation support, not runtime authority. |
+
+## Runtime Index — tools/ FROZEN LEGACY
+
+| Path | Status | Rule |
+|---|---:|---|
+| tools/contract_validation.py | FROZEN LEGACY | Frozen station-pipeline validator blocked through legacy_guard. Must not be used as active validation. |
+
+## Runtime Index — tools/ UNVERIFIED
+
+| Path | Status | Rule |
+|---|---:|---|
+| tools/README_SAFE_EDITING.md | UNVERIFIED | Conflicts with active no-heredoc editing discipline. Must not guide editing until rewritten and reviewed. |
+| tools/build_compat_payload.sh | UNVERIFIED | Compatibility payload helper. Must not guide active cleanup until reviewed. |
+| tools/cleanup_manifest_guard_worktree.sh | UNVERIFIED | Worktree cleanup helper for manifest guard work. Must not be used until reviewed. |
+| tools/fm_edit.sh | UNVERIFIED | Editing helper. Must not guide file edits until reviewed against full-replacement/no-heredoc rule. |
+| tools/git_commit_core_tools.sh | UNVERIFIED | Git helper. Must not be used until reviewed. |
+| tools/git_stage_core_tools.sh | UNVERIFIED | Git staging helper. Must not be used until reviewed. |
+| tools/git_stage_manifest_single_writer_fix.sh | UNVERIFIED | Git staging helper for manifest single-writer changes. Must not be used until reviewed. |
+| tools/install_githooks.sh | UNVERIFIED | Git hook installer. Must not be used until reviewed. |
+| tools/json_autofix_s2_or_quarantine.sh | UNVERIFIED | JSON autofix/quarantine helper. Must be reviewed before use. |
+| tools/json_repair_or_quarantine.sh | UNVERIFIED | JSON repair/quarantine helper. Must be reviewed before use. |
+| tools/json_write_locked.sh | UNVERIFIED | JSON writer helper. Must be reviewed before use as approved write path. |
+| tools/json_write_safe.sh | UNVERIFIED | JSON writer helper. Must be reviewed before use as approved write path. |
+| tools/manifest_write.py | UNVERIFIED | Manifest writer helper. Must be reviewed before use. |
+| tools/rewrite_json_write_safe.sh | UNVERIFIED | Regenerates json_write_safe.sh using heredoc. Must not be used under active no-heredoc discipline until reviewed. |
+| tools/run_topic_pipeline.sh | UNVERIFIED | Topic intelligence runner. Must not be treated as production entrypoint until reviewed. |
+| tools/safe_write.sh | UNVERIFIED | Base64 write helper. Must not guide active editing until reviewed. |
+| tools/selftest_manifest_single_writer.sh | UNVERIFIED | ExecutionManifest single-writer selftest. Must not guide active runtime until reviewed. |
+| tools/semantic_validation.py | UNVERIFIED | Legacy S1/S2 semantic validator. Must not guide active validation until reviewed. |
+| tools/structural_validation.py | UNVERIFIED | Legacy S1/S2 structural validator. Must not guide active validation until reviewed. |
+| tools/test_profile_runtime_collector.py | UNVERIFIED | Topic intelligence profile test using finance_legacy profile. Must not guide active runtime until reviewed. |
+| tools/test_topic_intelligence_core.py | UNVERIFIED | Topic intelligence test helper. Must not guide active runtime until reviewed. |
+| tools/verify_canonical_map.sh | UNVERIFIED | Verifies frozen historical canonical map. Must not guide current architecture until reviewed. |
+| tools/write_text_atomic.sh | UNVERIFIED | Text writer helper using stdin flow and heredoc-style usage comments. Must not guide active editing until reviewed. |
+
+## Runtime Prohibitions — tools/
+
+Do not use tools/README_SAFE_EDITING.md as active editing policy.
+
+Do not use heredoc-based editing instructions as active FlowMind workflow.
+
+Do not use tools/rewrite_json_write_safe.sh under active no-heredoc discipline until reviewed.
+
+Do not use tools/safe_write.sh or tools/write_text_atomic.sh as active editing standard until reviewed.
+
+Do not treat tools/run_topic_pipeline.sh as production topic runtime until reviewed.
+
+Do not treat legacy S1/S2 validators as active validation for current FlowMind Core.
+
+Do not use git helper scripts unless explicitly reviewed and listed as trusted.
+
 ## Prohibitions
 
 Do not treat unlisted files as trusted.
