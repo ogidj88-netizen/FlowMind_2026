@@ -209,6 +209,65 @@ Do not treat legacy S1/S2 validators as active validation for current FlowMind C
 
 Do not use git helper scripts unless explicitly reviewed and listed as trusted.
 
+## Runtime Index — cashflow/ TRUSTED
+
+| Path | Status | Rule |
+|---|---:|---|
+| cashflow/topic_intelligence/niche_profile_schema.json | TRUSTED | Canonical niche profile schema for Topic Intelligence profile contracts. |
+| cashflow/topic_intelligence/profiles/debt_trap_us_v1.json | TRUSTED | Reviewed niche profile example for debt-trap topic discovery. |
+| cashflow/topic_intelligence/profiles/hidden_fees_us_v1.json | TRUSTED | Reviewed niche profile example for hidden-fees topic discovery. |
+| cashflow/topic_intelligence/models.py | TRUSTED | Topic Intelligence data models for seed and validated topic contracts. |
+| cashflow/topic_intelligence/profile_loader.py | TRUSTED | Frozen profile loader with structural validation for niche profiles. |
+| cashflow/topic_intelligence/profile_runtime_adapter.py | TRUSTED | Adapter that converts reviewed niche profiles into collector runtime config. |
+| cashflow/topic_intelligence/collector.py | TRUSTED | Topic seed collector for validated-source signal collection. |
+| cashflow/topic_intelligence/analyzer.py | TRUSTED | Topic analyzer that converts seed candidates into validated topic objects. |
+| cashflow/topic_intelligence/topic_pool_builder.py | TRUSTED | Topic pool builder that ranks analyzed BACKLOG topics for downstream review. |
+
+## Runtime Index — cashflow/ FROZEN LEGACY
+
+| Path | Status | Rule |
+|---|---:|---|
+| cashflow/README.md | FROZEN LEGACY | Declares cashflow subtree as frozen/deprecated. Not active architecture. |
+| cashflow/dispatcher/engine.py | FROZEN LEGACY | Legacy cashflow dispatcher tombstone blocked by legacy_guard. Must not be executed. |
+| cashflow/PROJECT_STATE_TEMPLATE.json | FROZEN LEGACY | Deprecated legacy template. Canonical PROJECT_STATE template lives outside cashflow. |
+| cashflow/modules/ | FROZEN LEGACY | Frozen station-style module subtree. Must not be used as active production modules. |
+| cashflow/projects/ | FROZEN LEGACY | Legacy project area inside frozen cashflow subtree. Must not be used as active state source. |
+| cashflow/tools/ | FROZEN LEGACY | Legacy tools area inside frozen cashflow subtree. Must not guide active tooling. |
+| cashflow/_archive/ | FROZEN LEGACY | Archive subtree only. Historical context, no active authority. |
+
+## Runtime Index — cashflow/ UNVERIFIED
+
+| Path | Status | Rule |
+|---|---:|---|
+| cashflow/topic_intelligence/profiles/finance_legacy_v1.json | UNVERIFIED | Legacy-derived broad finance profile. Must be reviewed before use. |
+| cashflow/topic_intelligence/pipeline.py | UNVERIFIED | Topic intelligence runner. Must not be treated as production runtime until reviewed. |
+| cashflow/topic_intelligence/validator.py | UNVERIFIED | YouTube validation helper with external API/quota behavior. Must be reviewed before use. |
+| cashflow/topic_intelligence/script_input_builder.py | UNVERIFIED | Converts validated topics into script input. Crosses from intelligence into production. Must be reviewed. |
+| cashflow/topic_intelligence/script_generator.py | UNVERIFIED | Deterministic script draft generator. Crosses into production layer. Must be reviewed. |
+| cashflow/topic_intelligence/topic_intelligence_lite.py | UNVERIFIED | Older deterministic Cashflow Mode topic generator. Must not guide current Topic Intelligence until reviewed. |
+| cashflow/topic_intelligence/runtime_seed_smoke.py | UNVERIFIED | Runtime smoke script using finance_legacy profile. Not production runtime. |
+| cashflow/topic_intelligence/runtime_analyzer_smoke.py | UNVERIFIED | Runtime smoke script using finance_legacy profile. Not production runtime. |
+| cashflow/topic_intelligence/script_input_smoke.py | UNVERIFIED | Smoke script for script-input payloads. Not production runtime. |
+| cashflow/topic_intelligence/topic_pool_smoke.py | UNVERIFIED | Smoke script for topic-pool payloads. Not production runtime. |
+
+## Runtime Prohibitions — cashflow/
+
+Do not treat cashflow/ as active FlowMind Core.
+
+Do not execute cashflow/dispatcher/engine.py.
+
+Do not use cashflow/PROJECT_STATE_TEMPLATE.json as canonical state template.
+
+Do not treat cashflow/modules/ as active production modules.
+
+Do not treat cashflow/topic_intelligence/pipeline.py as production topic runtime until reviewed.
+
+Do not use finance_legacy_v1.json as active profile until reviewed.
+
+Do not cross from Topic Intelligence into script generation without explicit review and registry update.
+
+Do not treat cashflow/topic_intelligence script-generation files as active production layer.
+
 ## Prohibitions
 
 Do not treat unlisted files as trusted.
