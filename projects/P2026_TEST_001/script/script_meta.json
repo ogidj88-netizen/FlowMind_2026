@@ -1,0 +1,17 @@
+{
+  "audience": "Global English",
+  "content_language": "en",
+  "created_at": "2026-05-18T20:03:55Z",
+  "estimated_duration_minutes": 6.9,
+  "executor": "script_executor",
+  "executor_version": "1.0.0",
+  "niche": "Money Mistakes / Invisible Costs",
+  "primary_platform": "youtube",
+  "project_id": "P2026_TEST_001",
+  "qa_status": "PASS",
+  "source_phase": "SCRIPT",
+  "target_duration_sec": 480,
+  "topic": "Why your electricity bill rises even when usage looks normal",
+  "word_count": 1000,
+  "working_title": "Your Power Bill Is Quietly Changing"
+}

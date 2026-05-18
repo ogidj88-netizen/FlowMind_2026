@@ -1,7 +1,10 @@
 {
   "approval_status": "PENDING",
   "approved_for_upload": false,
-  "artifacts": {},
+  "artifacts": {
+    "script_meta_path": "projects/P2026_TEST_001/script/script_meta.json",
+    "script_path": "projects/P2026_TEST_001/script/script.txt"
+  },
   "halt_reason": null,
   "halted": false,
   "manifest": {
@@ -33,5 +36,5 @@
   "project_id": "P2026_TEST_001",
   "qa_passed": false,
   "resume_hint": null,
-  "updated_at": "2026-05-18T19:53:00Z"
+  "updated_at": "2026-05-18T20:03:55Z"
 }
