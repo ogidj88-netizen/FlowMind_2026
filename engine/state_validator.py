@@ -19,6 +19,7 @@ CANONICAL_PHASES = frozenset(
         "SCENES",
         "ASSETS",
         "ASSEMBLY",
+        "AUDIO",
         "QA",
         "READY_FOR_UPLOAD",
         "UPLOADED",
@@ -310,3 +311,4 @@ __all__ = [
     "validate_manifest",
     "validate_state",
 ]
+

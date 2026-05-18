@@ -87,17 +87,20 @@ def main() -> None:
         state = dispatcher.transition("ASSEMBLY")
         assert state["phase"] == "ASSEMBLY"
 
+        state = dispatcher.transition("AUDIO")
+        assert state["phase"] == "AUDIO"
+
         expect_failure(
             lambda: dispatcher.transition("QA"),
-            "cannot transition ASSEMBLY -> QA without artifacts.final_video_path",
+            "cannot transition AUDIO -> QA without artifacts.audio_plan_path",
         )
 
         state = dispatcher.transition(
             "QA",
-            artifacts_patch={"final_video_path": "/tmp/final.mp4"},
+            artifacts_patch={"audio_plan_path": "/tmp/audio_plan.json"},
         )
         assert state["phase"] == "QA"
-        assert state["artifacts"]["final_video_path"] == "/tmp/final.mp4"
+        assert state["artifacts"]["audio_plan_path"] == "/tmp/audio_plan.json"
 
         expect_failure(
             lambda: dispatcher.transition("READY_FOR_UPLOAD"),
@@ -127,7 +130,7 @@ def main() -> None:
 
         reloaded = load_state(state_path)
         assert reloaded["phase"] == "ARCHIVED"
-        assert len(reloaded["phase_history"]) == 8
+        assert len(reloaded["phase_history"]) == 9
 
         print("SMOKE_TEST_OK")
         print(f"state_path={state_path}")

@@ -18,7 +18,8 @@ ALLOWED_PHASE_TRANSITIONS: dict[str, set[str]] = {
     "SCRIPT": {"SCENES", "HALT"},
     "SCENES": {"ASSETS", "HALT"},
     "ASSETS": {"ASSEMBLY", "HALT"},
-    "ASSEMBLY": {"QA", "HALT"},
+    "ASSEMBLY": {"AUDIO", "HALT"},
+    "AUDIO": {"QA", "HALT"},
     "QA": {"READY_FOR_UPLOAD", "HALT"},
     "READY_FOR_UPLOAD": {"UPLOADED", "HALT"},
     "UPLOADED": {"ARCHIVED"},
@@ -32,15 +33,37 @@ PHASE_ORDER: dict[str, int] = {
     "SCENES": 30,
     "ASSETS": 40,
     "ASSEMBLY": 50,
-    "QA": 60,
-    "READY_FOR_UPLOAD": 70,
-    "UPLOADED": 80,
-    "ARCHIVED": 90,
+    "AUDIO": 60,
+    "QA": 70,
+    "READY_FOR_UPLOAD": 80,
+    "UPLOADED": 90,
+    "ARCHIVED": 100,
     "HALT": 999,
 }
 
-NO_ROLLBACK_AFTER_PHASES = frozenset({"ASSEMBLY", "QA", "READY_FOR_UPLOAD", "UPLOADED", "ARCHIVED"})
-RESUMABLE_PHASES = frozenset({"TOPIC", "SCRIPT", "SCENES", "ASSETS", "ASSEMBLY", "QA", "READY_FOR_UPLOAD"})
+NO_ROLLBACK_AFTER_PHASES = frozenset(
+    {
+        "ASSEMBLY",
+        "AUDIO",
+        "QA",
+        "READY_FOR_UPLOAD",
+        "UPLOADED",
+        "ARCHIVED",
+    }
+)
+
+RESUMABLE_PHASES = frozenset(
+    {
+        "TOPIC",
+        "SCRIPT",
+        "SCENES",
+        "ASSETS",
+        "ASSEMBLY",
+        "AUDIO",
+        "QA",
+        "READY_FOR_UPLOAD",
+    }
+)
 
 
 def utc_now_iso() -> str:
@@ -234,11 +257,11 @@ class CanonicalDispatcher:
         target_phase: str,
         candidate_state: Mapping[str, Any],
     ) -> None:
-        if previous_phase == "ASSEMBLY" and target_phase == "QA":
+        if previous_phase == "AUDIO" and target_phase == "QA":
             artifacts = candidate_state.get("artifacts", {})
-            if "final_video_path" not in artifacts:
+            if "audio_plan_path" not in artifacts:
                 raise DispatcherTransitionError(
-                    "cannot transition ASSEMBLY -> QA without artifacts.final_video_path"
+                    "cannot transition AUDIO -> QA without artifacts.audio_plan_path"
                 )
 
         if previous_phase == "QA" and target_phase == "READY_FOR_UPLOAD":

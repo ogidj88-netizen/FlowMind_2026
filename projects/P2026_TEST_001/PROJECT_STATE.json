@@ -4,6 +4,7 @@
   "artifacts": {
     "assembly_plan_path": "projects/P2026_TEST_001/assembly/assembly_plan.json",
     "assets_path": "projects/P2026_TEST_001/assets/assets.json",
+    "audio_plan_path": "projects/P2026_TEST_001/audio/audio_plan.json",
     "scenes_path": "projects/P2026_TEST_001/scenes/scenes.json",
     "script_meta_path": "projects/P2026_TEST_001/script/script_meta.json",
     "script_path": "projects/P2026_TEST_001/script/script.txt",
@@ -29,7 +30,7 @@
     "topic": "Why your electricity bill rises even when usage looks normal",
     "working_title": "Your Power Bill Is Quietly Changing"
   },
-  "phase": "ASSEMBLY",
+  "phase": "AUDIO",
   "phase_history": [
     {
       "at": "2026-05-18T19:53:00Z",
@@ -50,10 +51,15 @@
       "at": "2026-05-18T20:33:49Z",
       "from": "ASSETS",
       "to": "ASSEMBLY"
+    },
+    {
+      "at": "2026-05-18T20:54:00Z",
+      "from": "ASSEMBLY",
+      "to": "AUDIO"
     }
   ],
   "project_id": "P2026_TEST_001",
   "qa_passed": false,
   "resume_hint": null,
-  "updated_at": "2026-05-18T20:33:49Z"
+  "updated_at": "2026-05-18T20:54:00Z"
 }

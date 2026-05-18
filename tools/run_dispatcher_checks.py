@@ -87,13 +87,14 @@ def run_smoke_test() -> None:
         dispatcher.transition("SCENES")
         dispatcher.transition("ASSETS")
         dispatcher.transition("ASSEMBLY")
+        dispatcher.transition("AUDIO")
 
         expect_failure(
             lambda: dispatcher.transition("QA"),
-            "cannot transition ASSEMBLY -> QA without artifacts.final_video_path",
+            "cannot transition AUDIO -> QA without artifacts.audio_plan_path",
         )
 
-        dispatcher.transition("QA", artifacts_patch={"final_video_path": "/tmp/final.mp4"})
+        dispatcher.transition("QA", artifacts_patch={"audio_plan_path": "/tmp/audio_plan.json"})
 
         expect_failure(
             lambda: dispatcher.transition("READY_FOR_UPLOAD"),
@@ -114,7 +115,7 @@ def run_smoke_test() -> None:
 
         reloaded = load_state(state_path)
         assert reloaded["phase"] == "ARCHIVED"
-        assert len(reloaded["phase_history"]) == 8
+        assert len(reloaded["phase_history"]) == 9
 
         print("SMOKE_TEST_OK")
 
@@ -128,7 +129,7 @@ def run_rollback_guard_test() -> None:
                 "P2026_ROLLBACK_ALL",
                 "QA",
                 qa_passed=True,
-                artifacts={"final_video_path": "/tmp/final.mp4"},
+                artifacts={"audio_plan_path": "/tmp/audio_plan.json"},
             ),
         )
 
@@ -155,14 +156,14 @@ def run_resume_test() -> None:
                 "HALT",
                 halted=True,
                 halt_reason="TEST_HALT",
-                resume_hint="resume_to_assets",
+                resume_hint="resume_to_audio",
             ),
         )
 
         dispatcher = CanonicalDispatcher(state_path)
-        resumed = dispatcher.resume_from_halt("ASSETS")
+        resumed = dispatcher.resume_from_halt("AUDIO")
 
-        assert resumed["phase"] == "ASSETS"
+        assert resumed["phase"] == "AUDIO"
         assert resumed["halted"] is False
         assert resumed["halt_reason"] is None
         assert resumed["resume_hint"] is None
