@@ -47,6 +47,57 @@ Imagine What If is not equal to FlowMind Core.
 
 A channel, niche, or style config must not be treated as FlowMind Core.
 
+## Root Index — TRUSTED
+
+| Path | Status | Rule |
+|---|---:|---|
+| CANONICAL_DISPATCHER_SPEC.md | TRUSTED | Trusted as control-policy and architectural-alignment document. Not automatic proof that every referenced implementation is valid. |
+| FLOWMIND_ACTION_SEQUENCE_V1.md | TRUSTED | Active recovery sequence guidance. |
+| FLOWMIND_REPO_TRUST_BOUNDARY_V1.md | TRUSTED | Repo trust boundary guidance. |
+| FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md | TRUSTED | Operational authority index. Subordinate to FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md. |
+| FLOWMIND_SYSTEM_MAP_V1.md | TRUSTED | Active system map for the current recovery contour. |
+| FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md | TRUSTED | Primary authority for trust boundaries. |
+| FLOWMIND_WORKING_TARGET.md | TRUSTED | Trusted only as target-shape and system-intent guidance. Not trusted as proof of implemented runtime. |
+| FLOWMIND_FILE_AUDIT_CANONICAL_DISPATCHER_SPEC_V1.md | TRUSTED | Audit record for CANONICAL_DISPATCHER_SPEC.md classification. |
+| FLOWMIND_FILE_AUDIT_FLOWMIND_CANONICAL_MAP_V1.md | TRUSTED | Audit record for FLOWMIND_CANONICAL_MAP.md classification. |
+| FLOWMIND_FILE_AUDIT_MAIN_PY_V1.md | TRUSTED | Audit record for main.py classification. |
+| FLOWMIND_FILE_AUDIT_WORKING_TARGET_V1.md | TRUSTED | Audit record for FLOWMIND_WORKING_TARGET.md classification. |
+| main.py | TRUSTED | Trusted only as blocking tombstone for retired legacy entrypoint. Not an active runtime launcher. |
+| Makefile | TRUSTED | Developer command surface helper. Trusted only for explicit reviewed commands, not architecture authority. |
+| .gitignore | TRUSTED | Repository ignore policy. Trusted only for git hygiene, not architecture authority. |
+
+## Root Index — FROZEN LEGACY
+
+| Path | Status | Rule |
+|---|---:|---|
+| FLOWMIND_CANONICAL_MAP.md | FROZEN LEGACY | Historical dual-system snapshot only. Must not guide current architecture. |
+
+## Root Index — UNVERIFIED
+
+| Path | Status | Rule |
+|---|---:|---|
+| FLOWMIND_CANONICAL_STATUS.md | UNVERIFIED | Status document. Must not guide active architecture until reviewed against current registry. |
+| FLOWMIND_CANONICAL_STRUCTURE.md | UNVERIFIED | Older structural description. Must not guide active architecture until reviewed. |
+| FLOWMIND_LEGACY_FREEZE_V1.md | UNVERIFIED | Legacy-freeze decision document. Must be reviewed before it can override current registry classifications. |
+| FLOWMIND_TOPIC_INTELLIGENCE_LITE_V1.md | UNVERIFIED | Topic Intelligence concept document. Must not guide runtime implementation until reviewed against current Topic Intelligence core. |
+| FLOWMIND_TOPLEVEL_CLASSIFICATION_V1.md | UNVERIFIED | Earlier top-level classification. Must not guide current authority unless reconciled with this registry. |
+| TOPIC_QUALITY_GATE_V1.md | UNVERIFIED | Topic scoring gate concept. Must be reviewed before becoming active production gate. |
+| .env | UNVERIFIED | Local ignored configuration only. Not tracked, not architecture authority, not source of truth, and must not be printed or committed. |
+
+## Root Prohibitions
+
+Do not treat root-level files as trusted unless explicitly listed here.
+
+Do not treat .env as architecture, business truth, or source of active system identity.
+
+Do not print .env contents unless explicitly required for a narrow safety check.
+
+Do not commit .env.
+
+Do not allow old authority-shaped root documents to override FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md or this registry.
+
+Do not use unverified root documents to guide implementation until reviewed and reclassified.
+
 ## Current Document Index
 
 | Document | Status | Rule |
