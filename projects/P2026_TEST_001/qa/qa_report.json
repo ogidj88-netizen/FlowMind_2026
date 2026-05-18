@@ -1,0 +1,133 @@
+{
+  "approved_for_upload": false,
+  "artifact_summary": {
+    "assembly_plan_path": "projects/P2026_TEST_001/assembly/assembly_plan.json",
+    "asset_count": 9,
+    "assets_path": "projects/P2026_TEST_001/assets/assets.json",
+    "audio_plan_path": "projects/P2026_TEST_001/audio/audio_plan.json",
+    "audio_segment_count": 9,
+    "scene_count": 9,
+    "scenes_path": "projects/P2026_TEST_001/scenes/scenes.json",
+    "script_meta_path": "projects/P2026_TEST_001/script/script_meta.json",
+    "script_path": "projects/P2026_TEST_001/script/script.txt",
+    "script_qa_path": "projects/P2026_TEST_001/script/script_qa.json",
+    "timeline_count": 9
+  },
+  "audience": "Global English",
+  "blockers": [
+    "assets_resolved",
+    "asset_licenses_cleared",
+    "assembly_render_ready",
+    "audio_ready",
+    "final_video_exists",
+    "upload_readiness"
+  ],
+  "checks": [
+    {
+      "check_id": "script_qa_passed",
+      "detail": "script_qa.verdict=PASS",
+      "name": "Script QA passed",
+      "severity": "HIGH",
+      "status": "PASS"
+    },
+    {
+      "check_id": "scenes_valid",
+      "detail": "scene_count=9",
+      "name": "Scenes artifact valid",
+      "severity": "HIGH",
+      "status": "PASS"
+    },
+    {
+      "check_id": "assets_valid",
+      "detail": "asset_count=9",
+      "name": "Assets artifact valid",
+      "severity": "HIGH",
+      "status": "PASS"
+    },
+    {
+      "check_id": "assets_resolved",
+      "detail": "assets are planning-only; resolved local media files are missing",
+      "name": "Assets resolved",
+      "severity": "CRITICAL",
+      "status": "BLOCKED"
+    },
+    {
+      "check_id": "asset_licenses_cleared",
+      "detail": "asset licenses are not cleared",
+      "name": "Asset licenses cleared",
+      "severity": "CRITICAL",
+      "status": "BLOCKED"
+    },
+    {
+      "check_id": "assembly_plan_valid",
+      "detail": "timeline_items=9",
+      "name": "Assembly plan valid",
+      "severity": "HIGH",
+      "status": "PASS"
+    },
+    {
+      "check_id": "assembly_render_ready",
+      "detail": "assembly render_ready=false",
+      "name": "Assembly render ready",
+      "severity": "CRITICAL",
+      "status": "BLOCKED"
+    },
+    {
+      "check_id": "audio_plan_valid",
+      "detail": "audio_segments=9",
+      "name": "Audio plan valid",
+      "severity": "HIGH",
+      "status": "PASS"
+    },
+    {
+      "check_id": "audio_ready",
+      "detail": "audio_ready=false",
+      "name": "Audio ready",
+      "severity": "CRITICAL",
+      "status": "BLOCKED"
+    },
+    {
+      "check_id": "final_video_exists",
+      "detail": "final video file is missing",
+      "name": "Final video exists",
+      "severity": "CRITICAL",
+      "status": "BLOCKED"
+    },
+    {
+      "check_id": "upload_readiness",
+      "detail": "project is not upload-ready",
+      "name": "Upload readiness",
+      "severity": "CRITICAL",
+      "status": "BLOCKED"
+    }
+  ],
+  "content_language": "en",
+  "created_at": "2026-05-18T21:00:08Z",
+  "executor": "qa_executor",
+  "executor_version": "1.0.0",
+  "missing_requirements": [
+    "resolved media asset files",
+    "cleared asset licenses",
+    "rendered audio files",
+    "audio duration validation",
+    "loudness validation",
+    "final render executor",
+    "final video file",
+    "upload readiness approval",
+    "audio artifact",
+    "selected TTS provider",
+    "selected voice profile",
+    "TTS API key"
+  ],
+  "niche": "Money Mistakes / Invisible Costs",
+  "primary_platform": "youtube",
+  "project_id": "P2026_TEST_001",
+  "qa_passed": false,
+  "readiness_score": 40,
+  "source_phase": "QA",
+  "target_duration_sec": 480,
+  "topic": "Why your electricity bill rises even when usage looks normal",
+  "verdict": "BLOCKED",
+  "warnings": [],
+  "working_title": "Your Power Bill Is Quietly Changing"
+}
