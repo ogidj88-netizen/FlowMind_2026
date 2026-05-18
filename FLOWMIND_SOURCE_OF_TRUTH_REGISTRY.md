@@ -1,30 +1,35 @@
-# FLOWMIND_SOURCE_OF_TRUTH_REGISTRY
+# FLOWMIND SOURCE OF TRUTH REGISTRY
 
-Status: ACTIVE
-Purpose: Defines which documents are allowed to guide FlowMind decisions.
+Status: ACTIVE INDEX
+Authority: Subordinate to FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md
 
-## Core Rule
+## Purpose
 
-Any document not listed here has no architectural authority.
+This file is an operational index of document authority.
 
-A file may exist in the repository without being allowed to guide current FlowMind decisions.
+It does not replace FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md.
 
-## Status Definitions
+The trusted boundary file remains the higher authority for deciding what is trusted, frozen, or unverified.
 
-### ACTIVE
-Current source of truth. Can guide architecture, implementation, and decisions.
+## Authority Rule
 
-### REVIEW
-Potentially useful, but must not guide decisions until re-approved.
+Primary authority:
 
-### DONOR
-Can provide ideas or historical reasoning, but cannot define active architecture.
+- FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md
 
-### ARCHIVE
-Historical context only. Cannot guide current decisions.
+This registry must not contradict the trusted boundary list.
 
-### DELETE_CANDIDATE
-Candidate for removal after runtime reference check.
+If this registry and the trusted boundary list disagree, the trusted boundary list wins.
+
+## Status Model
+
+This registry uses the same trust model as the trusted boundary list:
+
+- TRUSTED
+- FROZEN LEGACY
+- UNVERIFIED
+
+No separate authority model is allowed here.
 
 ## Active Truth
 
@@ -40,30 +45,36 @@ FlowMind is not a horror-content system.
 
 Imagine What If is not equal to FlowMind Core.
 
-## Current Registry
+A channel, niche, or style config must not be treated as FlowMind Core.
+
+## Current Document Index
 
 | Document | Status | Rule |
 |---|---:|---|
-| FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md | ACTIVE | Governs document authority. |
-| docs/FLOWMIND_HARD_RULESET_V1.md | ACTIVE | Governs work discipline and decision behavior. |
-| cashflow/topic_intelligence/niche_profile_schema.json | ACTIVE | Defines niche profile structure. |
-| cashflow/topic_intelligence/profiles/debt_trap_us_v1.json | ACTIVE | Active niche profile example. |
-| cashflow/topic_intelligence/profiles/hidden_fees_us_v1.json | ACTIVE | Active niche profile example. |
-| cashflow/topic_intelligence/profiles/finance_legacy_v1.json | REVIEW | Must be reviewed before use. |
-| docs/FLOWMIND_CANONICAL_ARCHITECTURE_V1.md | REVIEW | Contains possible outdated scope. Must not guide decisions until re-approved. |
-| FLOWMIND_WORKING_TARGET.md | REVIEW | Contains possible outdated crossposting scope. Must not guide decisions until re-approved. |
-| MASTER_PROMPTS_v2_FULL.txt | ARCHIVE | External/old prompt artifact. Not valid as repo truth. |
-| IronCore v3.5 references | ARCHIVE | Historical context only unless explicitly re-approved. |
-| Imagine What If horror rules | DONOR | Allowed only as niche/style config, not FlowMind Core. |
+| FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md | TRUSTED | Primary authority for trust boundaries. |
+| FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md | TRUSTED | Operational index only; subordinate to trusted boundary list. |
+| FLOWMIND_SYSTEM_MAP_V1.md | TRUSTED | Active recovery guidance. |
+| FLOWMIND_ACTION_SEQUENCE_V1.md | TRUSTED | Active recovery sequence guidance. |
+| FLOWMIND_REPO_TRUST_BOUNDARY_V1.md | TRUSTED | Repo trust boundary guidance. |
+| docs/FLOWMIND_HARD_RULESET_V1.md | TRUSTED | Work discipline and decision behavior. |
+| cashflow/topic_intelligence/niche_profile_schema.json | TRUSTED | Niche profile structure. |
+| cashflow/topic_intelligence/profiles/debt_trap_us_v1.json | TRUSTED | Reviewed niche profile example. |
+| cashflow/topic_intelligence/profiles/hidden_fees_us_v1.json | TRUSTED | Reviewed niche profile example. |
+| cashflow/topic_intelligence/profiles/finance_legacy_v1.json | UNVERIFIED | Must be reviewed before use. |
+| docs/FLOWMIND_CANONICAL_ARCHITECTURE_V1.md | UNVERIFIED | Contains possible outdated scope. Must not guide decisions until reviewed. |
+| FLOWMIND_WORKING_TARGET.md | UNVERIFIED | Contains possible outdated runtime target. Must not guide decisions until reviewed. |
+| MASTER_PROMPTS_v2_FULL.txt | FROZEN LEGACY | External/old prompt artifact. Not valid as repo truth. |
+| IronCore v3.5 references | FROZEN LEGACY | Historical context only unless explicitly re-approved. |
+| Imagine What If horror rules | UNVERIFIED | May become niche/style config only after review. Not FlowMind Core. |
 
-## Active Prohibitions
+## Prohibitions
 
-Do not treat unlisted files as architectural authority.
+Do not treat unlisted files as trusted.
 
-Do not use archive or review files to define FlowMind Core.
+Do not treat unverified files as architecture.
+
+Do not treat frozen legacy as active guidance.
 
 Do not treat a channel, niche, or style config as equal to FlowMind Core.
-
-Do not build automation before the active system boundary is clear.
 
 Do not delete files before runtime reference check.
