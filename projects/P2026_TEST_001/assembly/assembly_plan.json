@@ -1,25 +1,29 @@
 {
   "assembly_status": "planned",
+  "assets_ready": true,
   "audience": "Global English",
+  "audio_ready": true,
   "content_language": "en",
   "created_at": "2026-05-18T20:33:49Z",
   "estimated_total_duration_sec": 413,
   "executor": "assembly_executor",
   "executor_version": "1.0.0",
   "missing_requirements": [
-    "resolved media asset files",
-    "cleared asset licenses",
-    "audio artifact",
     "final render executor"
   ],
   "niche": "Money Mistakes / Invisible Costs",
   "primary_platform": "youtube",
   "project_id": "P2026_TEST_001",
+  "readiness_applied_by": "apply_assembly_readiness",
+  "readiness_applied_tool_version": "1.0.0",
+  "readiness_status": "blocked_by_final_render_executor",
   "render_profile": "ffmpeg_stability_standard_v1_2",
   "render_ready": false,
   "scene_count": 9,
   "source_assets_path": "projects/P2026_TEST_001/assets/assets.json",
+  "source_audio_render_path": "projects/P2026_TEST_001/audio/audio_render.json",
   "source_phase": "ASSEMBLY",
+  "source_resolved_assets_path": "projects/P2026_TEST_001/assets/resolved_assets.json",
   "source_scenes_path": "projects/P2026_TEST_001/scenes/scenes.json",
   "target_duration_sec": 480,
   "timeline": [
@@ -178,5 +182,6 @@
     }
   ],
   "topic": "Why your electricity bill rises even when usage looks normal",
+  "updated_at": "2026-05-19T09:15:46Z",
   "working_title": "Your Power Bill Is Quietly Changing"
 }
