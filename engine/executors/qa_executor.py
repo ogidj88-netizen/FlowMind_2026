@@ -17,7 +17,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "qa_executor"
-EXECUTOR_VERSION = "1.0.3"
+EXECUTOR_VERSION = "1.0.4"
 
 FORBIDDEN_MARKERS = (
     "PLACEHOLDER",
@@ -67,6 +67,37 @@ def require_positive_int(value: Any, field_name: str) -> int:
 
     if value <= 0:
         raise QaExecutorError(f"{field_name} must be > 0")
+
+    return value
+
+
+def require_non_negative_int(value: Any, field_name: str) -> int:
+    if not isinstance(value, int):
+        raise QaExecutorError(f"{field_name} must be an integer")
+
+    if value < 0:
+        raise QaExecutorError(f"{field_name} must be >= 0")
+
+    return value
+
+
+def require_positive_number(value: Any, field_name: str) -> float:
+    if isinstance(value, bool):
+        raise QaExecutorError(f"{field_name} must be a number")
+
+    if not isinstance(value, int | float):
+        raise QaExecutorError(f"{field_name} must be a number")
+
+    normalized = float(value)
+    if normalized <= 0:
+        raise QaExecutorError(f"{field_name} must be > 0")
+
+    return normalized
+
+
+def require_bool(value: Any, field_name: str) -> bool:
+    if not isinstance(value, bool):
+        raise QaExecutorError(f"{field_name} must be boolean")
 
     return value
 
@@ -389,7 +420,7 @@ def validate_assembly_plan(
 def validate_audio_plan(
     audio_plan: dict[str, Any],
     expected_segment_count: int,
-) -> tuple[list[dict[str, Any]], list[dict[str, str]], list[str]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
     audio_segments = audio_plan.get("audio_segments")
     if not isinstance(audio_segments, list):
         raise QaExecutorError("audio_plan.audio_segments must be a list")
@@ -399,38 +430,30 @@ def validate_audio_plan(
 
     if len(audio_segments) != expected_segment_count:
         raise QaExecutorError(
-            f"audio segment count mismatch: audio={len(audio_segments)}, expected={expected_segment_count}"
+            f"audio plan segment count mismatch: audio_plan={len(audio_segments)}, expected={expected_segment_count}"
         )
-
-    audio_ready = audio_plan.get("audio_ready")
-    if not isinstance(audio_ready, bool):
-        raise QaExecutorError("audio_plan.audio_ready must be boolean")
-
-    missing_requirements = audio_plan.get("missing_requirements", [])
-    if not isinstance(missing_requirements, list):
-        raise QaExecutorError("audio_plan.missing_requirements must be a list")
 
     for index, segment in enumerate(audio_segments, start=1):
         if not isinstance(segment, dict):
-            raise QaExecutorError(f"audio segment index {index} must be an object")
+            raise QaExecutorError(f"audio plan segment index {index} must be an object")
 
-        require_non_empty_string(segment.get("segment_id"), f"audio_segment[{index}].segment_id")
-        require_non_empty_string(segment.get("source_scene_id"), f"audio_segment[{index}].source_scene_id")
-        require_positive_int(segment.get("order"), f"audio_segment[{index}].order")
-        require_non_empty_string(segment.get("voiceover_text"), f"audio_segment[{index}].voiceover_text")
+        require_non_empty_string(segment.get("segment_id"), f"audio_plan_segment[{index}].segment_id")
+        require_non_empty_string(segment.get("source_scene_id"), f"audio_plan_segment[{index}].source_scene_id")
+        require_positive_int(segment.get("order"), f"audio_plan_segment[{index}].order")
+        require_non_empty_string(segment.get("voiceover_text"), f"audio_plan_segment[{index}].voiceover_text")
         require_positive_int(
             segment.get("estimated_word_count"),
-            f"audio_segment[{index}].estimated_word_count",
+            f"audio_plan_segment[{index}].estimated_word_count",
         )
         require_positive_int(
             segment.get("estimated_duration_sec"),
-            f"audio_segment[{index}].estimated_duration_sec",
+            f"audio_plan_segment[{index}].estimated_duration_sec",
         )
-        require_non_empty_string(segment.get("tts_status"), f"audio_segment[{index}].tts_status")
+        require_non_empty_string(segment.get("tts_status"), f"audio_plan_segment[{index}].tts_status")
 
         fail_if_forbidden_markers(
             json.dumps(segment, ensure_ascii=False),
-            f"audio_segment[{index}]",
+            f"audio_plan_segment[{index}]",
         )
 
     checks = [
@@ -441,13 +464,6 @@ def validate_audio_plan(
             "HIGH",
             f"audio_segments={len(audio_segments)}",
         ),
-        make_check(
-            "audio_ready",
-            "Audio ready",
-            "PASS" if audio_ready else "BLOCKED",
-            "CRITICAL",
-            "audio_ready=true" if audio_ready else "audio_ready=false",
-        ),
     ]
 
     fail_if_forbidden_markers(
@@ -455,7 +471,155 @@ def validate_audio_plan(
         "audio_plan",
     )
 
-    return audio_segments, checks, [str(item) for item in missing_requirements]
+    return audio_segments, checks
+
+
+def validate_audio_render(
+    audio_render: dict[str, Any],
+    expected_segment_count: int,
+) -> tuple[list[dict[str, Any]], list[dict[str, str]], list[str]]:
+    audio_status = require_non_empty_string(
+        audio_render.get("audio_status"),
+        "audio_render.audio_status",
+    )
+    audio_ready = require_bool(audio_render.get("audio_ready"), "audio_render.audio_ready")
+    duration_validated = require_bool(
+        audio_render.get("duration_validated"),
+        "audio_render.duration_validated",
+    )
+    loudness_validated = require_bool(
+        audio_render.get("loudness_validated"),
+        "audio_render.loudness_validated",
+    )
+
+    rendered_segment_count = require_non_negative_int(
+        audio_render.get("rendered_segment_count"),
+        "audio_render.rendered_segment_count",
+    )
+    segment_count = require_positive_int(
+        audio_render.get("segment_count"),
+        "audio_render.segment_count",
+    )
+    failed_segment_count = require_non_negative_int(
+        audio_render.get("failed_segment_count"),
+        "audio_render.failed_segment_count",
+    )
+
+    missing_requirements = audio_render.get("missing_requirements", [])
+    if not isinstance(missing_requirements, list):
+        raise QaExecutorError("audio_render.missing_requirements must be a list")
+
+    blockers = audio_render.get("blockers", [])
+    if not isinstance(blockers, list):
+        raise QaExecutorError("audio_render.blockers must be a list")
+
+    segments = audio_render.get("segments")
+    if not isinstance(segments, list):
+        raise QaExecutorError("audio_render.segments must be a list")
+
+    if segment_count != expected_segment_count:
+        raise QaExecutorError(
+            f"audio_render.segment_count mismatch: audio_render={segment_count}, expected={expected_segment_count}"
+        )
+
+    if len(segments) != segment_count:
+        raise QaExecutorError(
+            f"audio_render.segments length mismatch: segment_count={segment_count}, actual={len(segments)}"
+        )
+
+    audio_files_ready = True
+
+    for index, segment in enumerate(segments, start=1):
+        if not isinstance(segment, dict):
+            raise QaExecutorError(f"audio render segment index {index} must be an object")
+
+        segment_id = require_non_empty_string(
+            segment.get("segment_id"),
+            f"audio_render_segment[{index}].segment_id",
+        )
+        require_non_empty_string(
+            segment.get("source_scene_id"),
+            f"audio_render_segment[{index}].source_scene_id",
+        )
+        require_positive_int(segment.get("order"), f"audio_render_segment[{index}].order")
+        audio_path = require_non_empty_string(
+            segment.get("audio_path"),
+            f"audio_render_segment[{index}].audio_path",
+        )
+        require_positive_number(
+            segment.get("duration_sec"),
+            f"audio_render_segment[{index}].duration_sec",
+        )
+        tts_status = require_non_empty_string(
+            segment.get("tts_status"),
+            f"audio_render_segment[{index}].tts_status",
+        )
+        provider_status = require_non_empty_string(
+            segment.get("provider_status"),
+            f"audio_render_segment[{index}].provider_status",
+        )
+        segment_duration_validated = require_bool(
+            segment.get("duration_validated"),
+            f"audio_render_segment[{index}].duration_validated",
+        )
+
+        if tts_status != "rendered":
+            audio_files_ready = False
+
+        if provider_status != "rendered":
+            audio_files_ready = False
+
+        if segment_duration_validated is not True:
+            audio_files_ready = False
+
+        if not Path(audio_path).exists():
+            audio_files_ready = False
+
+        fail_if_forbidden_markers(
+            json.dumps(segment, ensure_ascii=False),
+            f"audio_render_segment[{index}]",
+        )
+
+        if not segment_id.startswith("AUDIO_SEGMENT_"):
+            raise QaExecutorError(f"unexpected audio segment id format: {segment_id}")
+
+    audio_ready_pass = (
+        audio_status == "ready"
+        and audio_ready is True
+        and duration_validated is True
+        and loudness_validated is True
+        and rendered_segment_count == segment_count
+        and failed_segment_count == 0
+        and not missing_requirements
+        and not blockers
+        and audio_files_ready
+    )
+
+    checks = [
+        make_check(
+            "audio_render_valid",
+            "Audio render artifact valid",
+            "PASS",
+            "HIGH",
+            f"rendered_segments={rendered_segment_count}/{segment_count}",
+        ),
+        make_check(
+            "audio_ready",
+            "Audio ready",
+            "PASS" if audio_ready_pass else "BLOCKED",
+            "CRITICAL",
+            "audio_render ready with rendered files"
+            if audio_ready_pass
+            else "audio_render is not ready",
+        ),
+    ]
+
+    fail_if_forbidden_markers(
+        json.dumps(audio_render, ensure_ascii=False),
+        "audio_render",
+    )
+
+    return segments, checks, [str(item) for item in missing_requirements]
 
 
 def compute_readiness_score(checks: list[dict[str, str]], final_video_exists: bool) -> int:
@@ -609,6 +773,9 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
     audio_plan_path = Path(
         require_non_empty_string(artifacts.get("audio_plan_path"), "artifacts.audio_plan_path")
     )
+    audio_render_path = Path(
+        require_non_empty_string(artifacts.get("audio_render_path"), "artifacts.audio_render_path")
+    )
 
     validate_artifact_text(script_path, "script.txt")
     script_meta = read_json_file(script_meta_path)
@@ -617,6 +784,7 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
     assets_payload = read_json_file(resolved_assets_path)
     assembly_plan = read_json_file(assembly_plan_path)
     audio_plan = read_json_file(audio_plan_path)
+    audio_render = read_json_file(audio_render_path)
 
     fail_if_forbidden_markers(json.dumps(script_meta, ensure_ascii=False), "script_meta")
     fail_if_forbidden_markers(json.dumps(script_qa, ensure_ascii=False), "script_qa")
@@ -639,11 +807,17 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
     )
     checks.extend(assembly_checks)
 
-    audio_segments, audio_checks, audio_missing = validate_audio_plan(
+    audio_segments, audio_plan_checks = validate_audio_plan(
         audio_plan,
         len(timeline),
     )
-    checks.extend(audio_checks)
+    checks.extend(audio_plan_checks)
+
+    audio_render_segments, audio_render_checks, audio_missing = validate_audio_render(
+        audio_render,
+        len(timeline),
+    )
+    checks.extend(audio_render_checks)
 
     final_video_path = artifacts.get("final_video_path")
     final_video_exists = (
@@ -729,10 +903,12 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
             "resolved_assets_path": str(resolved_assets_path),
             "assembly_plan_path": str(assembly_plan_path),
             "audio_plan_path": str(audio_plan_path),
+            "audio_render_path": str(audio_render_path),
             "scene_count": len(scenes),
             "asset_count": len(assets),
             "timeline_count": len(timeline),
-            "audio_segment_count": len(audio_segments),
+            "audio_plan_segment_count": len(audio_segments),
+            "audio_render_segment_count": len(audio_render_segments),
         },
         "created_at": now,
     }

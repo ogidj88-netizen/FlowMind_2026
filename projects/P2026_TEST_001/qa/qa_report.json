@@ -4,7 +4,9 @@
     "assembly_plan_path": "projects/P2026_TEST_001/assembly/assembly_plan.json",
     "asset_count": 9,
     "audio_plan_path": "projects/P2026_TEST_001/audio/audio_plan.json",
-    "audio_segment_count": 9,
+    "audio_plan_segment_count": 9,
+    "audio_render_path": "projects/P2026_TEST_001/audio/audio_render.json",
+    "audio_render_segment_count": 9,
     "planning_assets_path": "projects/P2026_TEST_001/assets/assets.json",
     "resolved_assets_path": "projects/P2026_TEST_001/assets/resolved_assets.json",
     "scene_count": 9,
@@ -16,9 +18,6 @@
   },
   "audience": "Global English",
   "blockers": [
-    "assembly_render_ready",
-    "audio_ready",
-    "final_video_exists",
     "upload_readiness"
   ],
   "checks": [
@@ -66,10 +65,10 @@
     },
     {
       "check_id": "assembly_render_ready",
-      "detail": "assembly render_ready=false",
+      "detail": "assembly render_ready=true",
       "name": "Assembly render ready",
       "severity": "CRITICAL",
-      "status": "BLOCKED"
+      "status": "PASS"
     },
     {
       "check_id": "audio_plan_valid",
@@ -79,18 +78,25 @@
       "status": "PASS"
     },
     {
+      "check_id": "audio_render_valid",
+      "detail": "rendered_segments=9/9",
+      "name": "Audio render artifact valid",
+      "severity": "HIGH",
+      "status": "PASS"
+    },
+    {
       "check_id": "audio_ready",
-      "detail": "audio_ready=false",
+      "detail": "audio_render ready with rendered files",
       "name": "Audio ready",
       "severity": "CRITICAL",
-      "status": "BLOCKED"
+      "status": "PASS"
     },
     {
       "check_id": "final_video_exists",
-      "detail": "final video file is missing",
+      "detail": "final video file exists",
       "name": "Final video exists",
       "severity": "CRITICAL",
-      "status": "BLOCKED"
+      "status": "PASS"
     },
     {
       "check_id": "upload_readiness",
@@ -101,26 +107,17 @@
     }
   ],
   "content_language": "en",
-  "created_at": "2026-05-19T08:04:30Z",
+  "created_at": "2026-05-19T10:01:10Z",
   "executor": "qa_executor",
-  "executor_version": "1.0.3",
+  "executor_version": "1.0.4",
   "missing_requirements": [
-    "final render executor",
-    "rendered audio files",
-    "final video file",
-    "upload readiness approval",
-    "audio artifact",
-    "selected TTS provider",
-    "selected voice profile",
-    "TTS API key",
-    "audio duration validation",
-    "loudness validation"
+    "upload readiness approval"
   ],
   "niche": "Money Mistakes / Invisible Costs",
   "primary_platform": "youtube",
   "project_id": "P2026_TEST_001",
   "qa_passed": false,
-  "readiness_score": 56,
+  "readiness_score": 88,
   "source_phase": "QA",
   "target_duration_sec": 480,
   "topic": "Why your electricity bill rises even when usage looks normal",
