@@ -7,6 +7,8 @@
     "audio_loudness_report_path": "projects/P2026_TEST_001/audio/audio_loudness_report.json",
     "audio_plan_path": "projects/P2026_TEST_001/audio/audio_plan.json",
     "audio_render_path": "projects/P2026_TEST_001/audio/audio_render.json",
+    "final_render_report_path": "projects/P2026_TEST_001/final_render/final_render_report.json",
+    "final_video_path": "projects/P2026_TEST_001/final_render/final_video.mp4",
     "qa_report_path": "projects/P2026_TEST_001/qa/qa_report.json",
     "resolved_assets_path": "projects/P2026_TEST_001/assets/resolved_assets.json",
     "scenes_path": "projects/P2026_TEST_001/scenes/scenes.json",
@@ -70,5 +72,5 @@
   "project_id": "P2026_TEST_001",
   "qa_passed": false,
   "resume_hint": null,
-  "updated_at": "2026-05-19T09:15:46Z"
+  "updated_at": "2026-05-19T09:39:18Z"
 }
