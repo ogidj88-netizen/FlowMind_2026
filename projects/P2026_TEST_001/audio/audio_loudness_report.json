@@ -1,0 +1,152 @@
+{
+  "created_at": "2026-05-19T09:06:00Z",
+  "fail_count": 0,
+  "loudness_validated": true,
+  "pass_count": 9,
+  "project_id": "P2026_TEST_001",
+  "report": "audio_loudness_report",
+  "report_version": "1.0.0",
+  "segment_count": 9,
+  "segments": [
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_001.mp3",
+      "duration_sec": 52.193,
+      "measurement": {
+        "input_i": -15.63,
+        "input_lra": 2.2,
+        "input_thresh": -26.09,
+        "input_tp": -0.73,
+        "target_offset": -0.05
+      },
+      "segment_id": "AUDIO_SEGMENT_001",
+      "status": "PASS",
+      "warnings": []
+    },
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_002.mp3",
+      "duration_sec": 43.964,
+      "measurement": {
+        "input_i": -16.07,
+        "input_lra": 2.5,
+        "input_thresh": -26.38,
+        "input_tp": -1.18,
+        "target_offset": 0.11
+      },
+      "segment_id": "AUDIO_SEGMENT_002",
+      "status": "PASS",
+      "warnings": []
+    },
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_003.mp3",
+      "duration_sec": 41.744,
+      "measurement": {
+        "input_i": -16.89,
+        "input_lra": 2.8,
+        "input_thresh": -27.22,
+        "input_tp": -1.25,
+        "target_offset": 0.18
+      },
+      "segment_id": "AUDIO_SEGMENT_003",
+      "status": "PASS",
+      "warnings": []
+    },
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_004.mp3",
+      "duration_sec": 45.401,
+      "measurement": {
+        "input_i": -15.9,
+        "input_lra": 2.5,
+        "input_thresh": -26.36,
+        "input_tp": -0.77,
+        "target_offset": 0.33
+      },
+      "segment_id": "AUDIO_SEGMENT_004",
+      "status": "PASS",
+      "warnings": []
+    },
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_005.mp3",
+      "duration_sec": 30.171,
+      "measurement": {
+        "input_i": -16.25,
+        "input_lra": 3.3,
+        "input_thresh": -26.9,
+        "input_tp": -0.82,
+        "target_offset": 0.23
+      },
+      "segment_id": "AUDIO_SEGMENT_005",
+      "status": "PASS",
+      "warnings": []
+    },
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_006.mp3",
+      "duration_sec": 38.478,
+      "measurement": {
+        "input_i": -15.96,
+        "input_lra": 1.7,
+        "input_thresh": -26.37,
+        "input_tp": -1.12,
+        "target_offset": -0.07
+      },
+      "segment_id": "AUDIO_SEGMENT_006",
+      "status": "PASS",
+      "warnings": []
+    },
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_007.mp3",
+      "duration_sec": 46.759,
+      "measurement": {
+        "input_i": -15.99,
+        "input_lra": 2.4,
+        "input_thresh": -26.51,
+        "input_tp": -0.83,
+        "target_offset": -0.21
+      },
+      "segment_id": "AUDIO_SEGMENT_007",
+      "status": "PASS",
+      "warnings": []
+    },
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_008.mp3",
+      "duration_sec": 46.002,
+      "measurement": {
+        "input_i": -15.97,
+        "input_lra": 2.5,
+        "input_thresh": -26.47,
+        "input_tp": -1.01,
+        "target_offset": 0.24
+      },
+      "segment_id": "AUDIO_SEGMENT_008",
+      "status": "PASS",
+      "warnings": []
+    },
+    {
+      "audio_path": "projects/P2026_TEST_001/audio/rendered_segments/AUDIO_SEGMENT_009.mp3",
+      "duration_sec": 45.793,
+      "measurement": {
+        "input_i": -15.61,
+        "input_lra": 2.3,
+        "input_thresh": -26.1,
+        "input_tp": -0.73,
+        "target_offset": -0.09
+      },
+      "segment_id": "AUDIO_SEGMENT_009",
+      "status": "PASS",
+      "warnings": []
+    }
+  ],
+  "source_audio_render_path": "projects/P2026_TEST_001/audio/audio_render.json",
+  "source_audio_renderer_version": "1.1.1",
+  "target": {
+    "integrated_lufs": -16.0,
+    "lra_lu": 11.0,
+    "true_peak_dbtp": -1.5
+  },
+  "thresholds": {
+    "max_integrated_deviation_lu": 1.0,
+    "max_lra_lu": 8.0,
+    "max_true_peak_dbtp": -0.5
+  },
+  "verdict": "PASS",
+  "warn_count": 0
+}

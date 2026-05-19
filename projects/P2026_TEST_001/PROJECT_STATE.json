@@ -4,6 +4,7 @@
   "artifacts": {
     "assembly_plan_path": "projects/P2026_TEST_001/assembly/assembly_plan.json",
     "assets_path": "projects/P2026_TEST_001/assets/assets.json",
+    "audio_loudness_report_path": "projects/P2026_TEST_001/audio/audio_loudness_report.json",
     "audio_plan_path": "projects/P2026_TEST_001/audio/audio_plan.json",
     "audio_render_path": "projects/P2026_TEST_001/audio/audio_render.json",
     "qa_report_path": "projects/P2026_TEST_001/qa/qa_report.json",
@@ -69,5 +70,5 @@
   "project_id": "P2026_TEST_001",
   "qa_passed": false,
   "resume_hint": null,
-  "updated_at": "2026-05-19T08:59:54Z"
+  "updated_at": "2026-05-19T09:08:32Z"
 }

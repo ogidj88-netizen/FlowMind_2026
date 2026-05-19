@@ -1,15 +1,14 @@
 {
-  "audio_ready": false,
-  "audio_status": "partial",
-  "blockers": [
-    "loudness validation was not performed"
-  ],
+  "audio_loudness_report_path": "projects/P2026_TEST_001/audio/audio_loudness_report.json",
+  "audio_ready": true,
+  "audio_status": "ready",
+  "blockers": [],
   "duration_validated": true,
   "failed_segment_count": 0,
-  "loudness_validated": false,
-  "missing_requirements": [
-    "loudness validation"
-  ],
+  "loudness_applied_by": "apply_audio_loudness_report",
+  "loudness_applied_tool_version": "1.0.0",
+  "loudness_validated": true,
+  "missing_requirements": [],
   "model_id": "eleven_multilingual_v2",
   "project_id": "P2026_TEST_001",
   "provider_voice_id": "Cz0K1kOv9tD8l0b5Qu53",
@@ -169,6 +168,7 @@
   "target_duration_sec": 480,
   "total_duration_sec": 390.505,
   "tts_provider": "elevenlabs",
+  "updated_at": "2026-05-19T09:08:32Z",
   "voice_profile": "default_elevenlabs_voice",
   "voiceover_path": null,
   "warnings": []
