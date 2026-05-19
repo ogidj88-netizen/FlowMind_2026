@@ -3,7 +3,11 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import ssl
+import subprocess
 import sys
+import urllib.error
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -17,11 +21,17 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 RENDERER_NAME = "audio_renderer"
-RENDERER_VERSION = "1.0.2"
+RENDERER_VERSION = "1.1.1"
 SUPPORTED_PROVIDER = "elevenlabs"
-DEFAULT_VOICE_PROFILE_ENV = "FLOWMIND_TTS_VOICE_PROFILE"
-DEFAULT_VOICE_ID_ENV = "ELEVENLABS_VOICE_ID"
+
 API_KEY_ENV = "ELEVENLABS_API_KEY"
+VOICE_ID_ENV = "ELEVENLABS_VOICE_ID"
+VOICE_PROFILE_ENV = "FLOWMIND_TTS_VOICE_PROFILE"
+RENDER_LIMIT_ENV = "FLOWMIND_AUDIO_RENDER_LIMIT"
+MODEL_ID_ENV = "ELEVENLABS_MODEL_ID"
+
+DEFAULT_MODEL_ID = "eleven_multilingual_v2"
+OUTPUT_AUDIO_DIRNAME = "rendered_segments"
 
 FORBIDDEN_MARKERS = (
     "PLACEHOLDER",
@@ -106,6 +116,23 @@ def fail_if_forbidden_markers(value: str, source_name: str) -> None:
         )
 
 
+def load_env_file_if_present(path: Path) -> None:
+    if not path.exists():
+        return
+
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        normalized_key = key.strip()
+        normalized_value = value.strip().strip('"').strip("'")
+
+        if normalized_key and normalized_key not in os.environ:
+            os.environ[normalized_key] = normalized_value
+
+
 def optional_env_value(name: str) -> str | None:
     value = os.environ.get(name)
     if not isinstance(value, str):
@@ -116,6 +143,29 @@ def optional_env_value(name: str) -> str | None:
         return None
 
     return normalized
+
+
+def parse_render_limit(segment_count: int) -> int:
+    raw_value = optional_env_value(RENDER_LIMIT_ENV)
+    if raw_value is None:
+        return 0
+
+    try:
+        parsed = int(raw_value)
+    except ValueError as exc:
+        raise AudioRendererError(f"{RENDER_LIMIT_ENV} must be an integer") from exc
+
+    if parsed < 0:
+        raise AudioRendererError(f"{RENDER_LIMIT_ENV} must be >= 0")
+
+    return min(parsed, segment_count)
+
+
+def repo_relative_path(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(REPO_ROOT))
+    except ValueError as exc:
+        raise AudioRendererError(f"path is outside repo root: {path}") from exc
 
 
 def validate_audio_plan(audio_plan: dict[str, Any]) -> list[dict[str, Any]]:
@@ -172,10 +222,101 @@ def validate_audio_plan(audio_plan: dict[str, Any]) -> list[dict[str, Any]]:
     return audio_segments
 
 
+def render_segment_with_elevenlabs(
+    segment: dict[str, Any],
+    api_key: str,
+    voice_id: str,
+    model_id: str,
+    output_path: Path,
+) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+    payload = {
+        "text": segment["voiceover_text"],
+        "model_id": model_id,
+        "voice_settings": {
+            "stability": 0.5,
+            "similarity_boost": 0.75,
+        },
+    }
+
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "xi-api-key": api_key,
+            "Accept": "audio/mpeg",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=120, context=ssl.create_default_context()) as response:
+            body = response.read()
+
+            if response.status != 200:
+                raise AudioRendererError(f"ElevenLabs unexpected HTTP status: {response.status}")
+
+            if not body:
+                raise AudioRendererError(f"ElevenLabs returned empty body for {segment['segment_id']}")
+
+            output_path.write_bytes(body)
+
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")[:500]
+        raise AudioRendererError(f"ElevenLabs HTTP error {exc.code}: {body}") from exc
+    except urllib.error.URLError as exc:
+        raise AudioRendererError(f"ElevenLabs URL error: {exc}") from exc
+
+
+def probe_duration_sec(audio_path: Path) -> float:
+    command = [
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_entries",
+        "format=duration",
+        "-of",
+        "json",
+        str(audio_path),
+    ]
+
+    completed = subprocess.run(
+        command,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    if completed.returncode != 0:
+        raise AudioRendererError(
+            f"ffprobe failed for {audio_path}: {completed.stderr.strip()}"
+        )
+
+    try:
+        payload = json.loads(completed.stdout)
+        duration_raw = payload["format"]["duration"]
+        duration = float(duration_raw)
+    except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        raise AudioRendererError(f"ffprobe duration parse failed for {audio_path}") from exc
+
+    if duration <= 0:
+        raise AudioRendererError(f"ffprobe duration must be positive for {audio_path}")
+
+    return round(duration, 3)
+
+
 def build_blockers(
     api_key_present: bool,
     voice_profile: str | None,
     voice_id: str | None,
+    render_limit: int,
+    rendered_segment_count: int,
+    segment_count: int,
+    duration_validated: bool,
+    loudness_validated: bool,
 ) -> list[str]:
     blockers: list[str] = []
 
@@ -188,10 +329,17 @@ def build_blockers(
     if voice_id is None:
         blockers.append("provider voice id is missing from environment")
 
-    blockers.append("TTS provider call is not implemented in audio_renderer v1.0.2")
-    blockers.append("audio files were not rendered")
-    blockers.append("duration validation was not performed")
-    blockers.append("loudness validation was not performed")
+    if render_limit <= 0:
+        blockers.append("audio render limit is not enabled")
+
+    if rendered_segment_count < segment_count:
+        blockers.append("audio files were not fully rendered")
+
+    if not duration_validated:
+        blockers.append("project duration validation was not completed")
+
+    if not loudness_validated:
+        blockers.append("loudness validation was not performed")
 
     return blockers
 
@@ -201,6 +349,9 @@ def build_missing_requirements(
     provider_selected: bool,
     voice_profile: str | None,
     voice_id: str | None,
+    all_segments_rendered: bool,
+    duration_validated: bool,
+    loudness_validated: bool,
 ) -> list[str]:
     missing = list(REQUIRED_MISSING_REQUIREMENTS)
 
@@ -214,34 +365,146 @@ def build_missing_requirements(
         if "selected voice profile" in missing:
             missing.remove("selected voice profile")
 
+    if all_segments_rendered and "rendered audio files" in missing:
+        missing.remove("rendered audio files")
+
+    if duration_validated and "audio duration validation" in missing:
+        missing.remove("audio duration validation")
+
+    if loudness_validated and "loudness validation" in missing:
+        missing.remove("loudness validation")
+
     return missing
 
 
-def build_segments(audio_segments: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def output_path_for_segment(audio_dir: Path, segment: dict[str, Any]) -> Path:
+    segment_id = require_non_empty_string(segment["segment_id"], "segment.segment_id")
+    return audio_dir / OUTPUT_AUDIO_DIRNAME / f"{segment_id}.mp3"
+
+
+def build_rendered_segment(
+    segment: dict[str, Any],
+    audio_output_path: Path,
+    duration_sec: float,
+    reused_existing_file: bool,
+) -> dict[str, Any]:
+    duration_delta_sec = round(duration_sec - float(segment["estimated_duration_sec"]), 3)
+
+    return {
+        "segment_id": segment["segment_id"],
+        "source_scene_id": segment["source_scene_id"],
+        "order": segment["order"],
+        "tts_status": "rendered",
+        "voiceover_text": segment["voiceover_text"],
+        "audio_path": repo_relative_path(audio_output_path),
+        "provider_job_id": None,
+        "duration_sec": duration_sec,
+        "estimated_duration_sec": segment["estimated_duration_sec"],
+        "duration_delta_sec": duration_delta_sec,
+        "duration_validated": True,
+        "provider_status": "rendered",
+        "reused_existing_file": reused_existing_file,
+        "error_message": None,
+    }
+
+
+def build_failed_segment(segment: dict[str, Any], error_message: str) -> dict[str, Any]:
+    return {
+        "segment_id": segment["segment_id"],
+        "source_scene_id": segment["source_scene_id"],
+        "order": segment["order"],
+        "tts_status": "failed",
+        "voiceover_text": segment["voiceover_text"],
+        "audio_path": None,
+        "provider_job_id": None,
+        "duration_sec": 0,
+        "estimated_duration_sec": segment["estimated_duration_sec"],
+        "duration_delta_sec": None,
+        "duration_validated": False,
+        "provider_status": "failed",
+        "reused_existing_file": False,
+        "error_message": error_message,
+    }
+
+
+def build_pending_segment(segment: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "segment_id": segment["segment_id"],
+        "source_scene_id": segment["source_scene_id"],
+        "order": segment["order"],
+        "tts_status": "pending",
+        "voiceover_text": segment["voiceover_text"],
+        "audio_path": None,
+        "provider_job_id": None,
+        "duration_sec": 0,
+        "estimated_duration_sec": segment["estimated_duration_sec"],
+        "duration_delta_sec": None,
+        "duration_validated": False,
+        "provider_status": "not_rendered",
+        "reused_existing_file": False,
+        "error_message": "segment was not selected by render limit",
+    }
+
+
+def build_segments(
+    audio_segments: list[dict[str, Any]],
+    render_limit: int,
+    api_key: str | None,
+    voice_id: str | None,
+    model_id: str,
+    audio_dir: Path,
+) -> tuple[list[dict[str, Any]], int, int, float]:
     rendered_segments: list[dict[str, Any]] = []
+    rendered_segment_count = 0
+    failed_segment_count = 0
+    total_duration_sec = 0.0
 
-    for segment in audio_segments:
-        rendered_segments.append(
-            {
-                "segment_id": segment["segment_id"],
-                "source_scene_id": segment["source_scene_id"],
-                "order": segment["order"],
-                "tts_status": "blocked",
-                "voiceover_text": segment["voiceover_text"],
-                "audio_path": None,
-                "provider_job_id": None,
-                "duration_sec": 0,
-                "estimated_duration_sec": segment["estimated_duration_sec"],
-                "duration_delta_sec": None,
-                "provider_status": "blocked",
-                "error_message": "TTS provider call is not implemented in audio_renderer v1.0.2.",
-            }
-        )
+    can_render = api_key is not None and voice_id is not None and render_limit > 0
 
-    return rendered_segments
+    for index, segment in enumerate(audio_segments, start=1):
+        should_render = can_render and index <= render_limit
+        audio_output_path = output_path_for_segment(audio_dir, segment)
+
+        if should_render:
+            try:
+                reused_existing_file = False
+
+                if audio_output_path.exists() and audio_output_path.stat().st_size > 0:
+                    duration_sec = probe_duration_sec(audio_output_path)
+                    reused_existing_file = True
+                else:
+                    render_segment_with_elevenlabs(
+                        segment=segment,
+                        api_key=api_key,
+                        voice_id=voice_id,
+                        model_id=model_id,
+                        output_path=audio_output_path,
+                    )
+                    duration_sec = probe_duration_sec(audio_output_path)
+
+                rendered_segment_count += 1
+                total_duration_sec = round(total_duration_sec + duration_sec, 3)
+
+                rendered_segments.append(
+                    build_rendered_segment(
+                        segment=segment,
+                        audio_output_path=audio_output_path,
+                        duration_sec=duration_sec,
+                        reused_existing_file=reused_existing_file,
+                    )
+                )
+            except (AudioRendererError, OSError) as exc:
+                failed_segment_count += 1
+                rendered_segments.append(build_failed_segment(segment, str(exc)))
+        else:
+            rendered_segments.append(build_pending_segment(segment))
+
+    return rendered_segments, rendered_segment_count, failed_segment_count, total_duration_sec
 
 
 def run_audio_renderer(state_path: Path) -> dict[str, Any]:
+    load_env_file_if_present(REPO_ROOT / ".env")
+
     state = load_state(state_path)
 
     if state["phase"] != "QA":
@@ -269,24 +532,53 @@ def run_audio_renderer(state_path: Path) -> dict[str, Any]:
         "manifest.target_duration_sec",
     )
 
-    api_key_present = optional_env_value(API_KEY_ENV) is not None
-    voice_profile = optional_env_value(DEFAULT_VOICE_PROFILE_ENV)
-    voice_id = optional_env_value(DEFAULT_VOICE_ID_ENV)
-    provider_selected = api_key_present
+    api_key = optional_env_value(API_KEY_ENV)
+    voice_profile = optional_env_value(VOICE_PROFILE_ENV)
+    voice_id = optional_env_value(VOICE_ID_ENV)
+    model_id = optional_env_value(MODEL_ID_ENV) or DEFAULT_MODEL_ID
 
-    blockers = build_blockers(api_key_present, voice_profile, voice_id)
-    missing_requirements = build_missing_requirements(
-        api_key_present,
-        provider_selected,
-        voice_profile,
-        voice_id,
-    )
+    api_key_present = api_key is not None
+    provider_selected = api_key_present
+    render_limit = parse_render_limit(segment_count)
 
     now = utc_now_iso()
     audio_dir = state_path.parent / "audio"
     audio_render_path = audio_dir / "audio_render.json"
 
-    rendered_segments = build_segments(audio_segments)
+    rendered_segments, rendered_segment_count, failed_segment_count, total_duration_sec = build_segments(
+        audio_segments=audio_segments,
+        render_limit=render_limit,
+        api_key=api_key,
+        voice_id=voice_id,
+        model_id=model_id,
+        audio_dir=audio_dir,
+    )
+
+    all_segments_rendered = rendered_segment_count == segment_count and failed_segment_count == 0
+    duration_validated = all_segments_rendered
+    loudness_validated = False
+    audio_ready = all_segments_rendered and duration_validated and loudness_validated
+
+    blockers = build_blockers(
+        api_key_present=api_key_present,
+        voice_profile=voice_profile,
+        voice_id=voice_id,
+        render_limit=render_limit,
+        rendered_segment_count=rendered_segment_count,
+        segment_count=segment_count,
+        duration_validated=duration_validated,
+        loudness_validated=loudness_validated,
+    )
+
+    missing_requirements = build_missing_requirements(
+        api_key_present=api_key_present,
+        provider_selected=provider_selected,
+        voice_profile=voice_profile,
+        voice_id=voice_id,
+        all_segments_rendered=all_segments_rendered,
+        duration_validated=duration_validated,
+        loudness_validated=loudness_validated,
+    )
 
     audio_render = {
         "project_id": project_id,
@@ -296,16 +588,18 @@ def run_audio_renderer(state_path: Path) -> dict[str, Any]:
         "tts_provider": SUPPORTED_PROVIDER if provider_selected else None,
         "voice_profile": voice_profile,
         "provider_voice_id": voice_id,
-        "audio_status": "blocked",
-        "audio_ready": False,
+        "model_id": model_id,
+        "audio_status": "ready" if audio_ready else "partial" if rendered_segment_count > 0 else "blocked",
+        "audio_ready": audio_ready,
         "rendered_at": now,
         "segment_count": segment_count,
-        "rendered_segment_count": 0,
-        "failed_segment_count": 0,
-        "total_duration_sec": 0,
+        "render_limit": render_limit,
+        "rendered_segment_count": rendered_segment_count,
+        "failed_segment_count": failed_segment_count,
+        "total_duration_sec": total_duration_sec,
         "target_duration_sec": target_duration_sec,
-        "duration_validated": False,
-        "loudness_validated": False,
+        "duration_validated": duration_validated,
+        "loudness_validated": loudness_validated,
         "voiceover_path": None,
         "segments": rendered_segments,
         "warnings": [],
@@ -334,7 +628,9 @@ def run_audio_renderer(state_path: Path) -> dict[str, Any]:
         "audio_status": audio_render["audio_status"],
         "audio_ready": audio_render["audio_ready"],
         "segment_count": audio_render["segment_count"],
+        "render_limit": audio_render["render_limit"],
         "rendered_segment_count": audio_render["rendered_segment_count"],
+        "failed_segment_count": audio_render["failed_segment_count"],
         "missing_requirements": audio_render["missing_requirements"],
         "blockers": audio_render["blockers"],
     }
