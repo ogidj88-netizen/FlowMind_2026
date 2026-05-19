@@ -17,7 +17,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 RENDERER_NAME = "audio_renderer"
-RENDERER_VERSION = "1.0.1"
+RENDERER_VERSION = "1.0.2"
 SUPPORTED_PROVIDER = "elevenlabs"
 DEFAULT_VOICE_PROFILE_ENV = "FLOWMIND_TTS_VOICE_PROFILE"
 DEFAULT_VOICE_ID_ENV = "ELEVENLABS_VOICE_ID"
@@ -188,7 +188,7 @@ def build_blockers(
     if voice_id is None:
         blockers.append("provider voice id is missing from environment")
 
-    blockers.append("TTS provider call is not implemented in audio_renderer v1.0.1")
+    blockers.append("TTS provider call is not implemented in audio_renderer v1.0.2")
     blockers.append("audio files were not rendered")
     blockers.append("duration validation was not performed")
     blockers.append("loudness validation was not performed")
@@ -198,10 +198,14 @@ def build_blockers(
 
 def build_missing_requirements(
     api_key_present: bool,
+    provider_selected: bool,
     voice_profile: str | None,
     voice_id: str | None,
 ) -> list[str]:
     missing = list(REQUIRED_MISSING_REQUIREMENTS)
+
+    if provider_selected and "selected TTS provider" in missing:
+        missing.remove("selected TTS provider")
 
     if api_key_present and "TTS API key" in missing:
         missing.remove("TTS API key")
@@ -230,7 +234,7 @@ def build_segments(audio_segments: list[dict[str, Any]]) -> list[dict[str, Any]]
                 "estimated_duration_sec": segment["estimated_duration_sec"],
                 "duration_delta_sec": None,
                 "provider_status": "blocked",
-                "error_message": "TTS provider call is not implemented in audio_renderer v1.0.1.",
+                "error_message": "TTS provider call is not implemented in audio_renderer v1.0.2.",
             }
         )
 
@@ -268,10 +272,12 @@ def run_audio_renderer(state_path: Path) -> dict[str, Any]:
     api_key_present = optional_env_value(API_KEY_ENV) is not None
     voice_profile = optional_env_value(DEFAULT_VOICE_PROFILE_ENV)
     voice_id = optional_env_value(DEFAULT_VOICE_ID_ENV)
+    provider_selected = api_key_present
 
     blockers = build_blockers(api_key_present, voice_profile, voice_id)
     missing_requirements = build_missing_requirements(
         api_key_present,
+        provider_selected,
         voice_profile,
         voice_id,
     )
@@ -287,7 +293,7 @@ def run_audio_renderer(state_path: Path) -> dict[str, Any]:
         "renderer": RENDERER_NAME,
         "renderer_version": RENDERER_VERSION,
         "source_audio_plan_path": str(audio_plan_path),
-        "tts_provider": SUPPORTED_PROVIDER if api_key_present else None,
+        "tts_provider": SUPPORTED_PROVIDER if provider_selected else None,
         "voice_profile": voice_profile,
         "provider_voice_id": voice_id,
         "audio_status": "blocked",
