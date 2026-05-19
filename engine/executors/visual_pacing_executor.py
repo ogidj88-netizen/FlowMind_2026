@@ -17,7 +17,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "visual_pacing_executor"
-EXECUTOR_VERSION = "1.0.0"
+EXECUTOR_VERSION = "1.0.1"
 
 TARGET_BEAT_DURATION_SEC = 5.0
 MIN_BEAT_DURATION_SEC = 3.0
@@ -274,16 +274,35 @@ def choose_motion_profile(visual_action: str) -> str:
     return "static_safe"
 
 
-def first_sentence(value: str) -> str:
+def split_sentences(value: str) -> list[str]:
     normalized = " ".join(value.strip().split())
     if not normalized:
+        return []
+
+    sentences: list[str] = []
+    current = ""
+
+    for char in normalized:
+        current += char
+        if char in ".?!":
+            candidate = current.strip()
+            if candidate:
+                sentences.append(candidate)
+            current = ""
+
+    tail = current.strip()
+    if tail:
+        sentences.append(tail)
+
+    return sentences
+
+
+def first_sentence(value: str) -> str:
+    sentences = split_sentences(value)
+    if not sentences:
         return ""
 
-    for separator in (". ", "? ", "! "):
-        if separator in normalized:
-            return normalized.split(separator, 1)[0].strip() + separator.strip()
-
-    return normalized
+    return sentences[0]
 
 
 def shorten_to_words(value: str, max_words: int) -> str:
@@ -297,23 +316,22 @@ def shorten_to_words(value: str, max_words: int) -> str:
 def select_display_text(scene: dict[str, Any], beat_order: int) -> tuple[str, str]:
     on_screen_text = scene.get("on_screen_text")
     voiceover_text = require_non_empty_string(scene.get("voiceover_text"), "scene.voiceover_text")
+    sentences = split_sentences(voiceover_text)
 
     if beat_order == 1 and isinstance(on_screen_text, str) and on_screen_text.strip():
-        text = shorten_to_words(on_screen_text, 12)
+        text = shorten_to_words(on_screen_text, 10)
         if text:
             return text, "single_focus_line"
 
-    sentence = first_sentence(voiceover_text)
-    text = shorten_to_words(sentence, 12)
-
-    if beat_order == 1 and text:
-        return text, "single_focus_line"
-
-    if beat_order % 3 == 0:
+    if beat_order % 2 == 0:
         return "", "none"
 
-    if text:
-        return text, "short_label"
+    sentence_index = max(0, min(len(sentences) - 1, beat_order // 2))
+
+    if sentences:
+        text = shorten_to_words(sentences[sentence_index], 10)
+        if text:
+            return text, "short_label"
 
     return "", "none"
 
@@ -407,6 +425,7 @@ def build_beats(
 
             if beat_index == len(beat_durations):
                 scene_end = round(duration_sec, 3)
+                global_end = round(global_start + (scene_end - scene_start), 3)
 
             display_text, text_mode = select_display_text(scene, beat_index)
             visual_action = choose_visual_action(beat_index, asset_type, text_mode)
@@ -463,11 +482,11 @@ def validate_beats(beats: list[dict[str, Any]], expected_scene_count: int) -> No
 
     previous_end = 0.0
     for index, beat in enumerate(beats, start=1):
-        global_start = require_positive_number(
-            beat.get("global_start_sec") if beat.get("global_start_sec") != 0 else 0.001,
-            f"beats[{index}].global_start_sec",
-        )
-        global_start = 0.0 if beat.get("global_start_sec") == 0 else global_start
+        raw_global_start = beat.get("global_start_sec")
+        if raw_global_start == 0:
+            global_start = 0.0
+        else:
+            global_start = require_positive_number(raw_global_start, f"beats[{index}].global_start_sec")
 
         global_end = require_positive_number(beat.get("global_end_sec"), f"beats[{index}].global_end_sec")
 
