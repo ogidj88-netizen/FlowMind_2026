@@ -17,7 +17,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "qa_executor"
-EXECUTOR_VERSION = "1.0.0"
+EXECUTOR_VERSION = "1.0.3"
 
 FORBIDDEN_MARKERS = (
     "PLACEHOLDER",
@@ -32,16 +32,14 @@ FORBIDDEN_MARKERS = (
     "MOCK",
 )
 
-REQUIRED_BLOCKERS = (
-    "resolved media asset files",
-    "cleared asset licenses",
-    "rendered audio files",
-    "audio duration validation",
-    "loudness validation",
-    "final render executor",
-    "final video file",
-    "upload readiness approval",
-)
+BLOCKER_MISSING_REQUIREMENTS = {
+    "assets_resolved": "resolved media asset files",
+    "asset_licenses_cleared": "cleared asset licenses",
+    "assembly_render_ready": "final render executor",
+    "audio_ready": "rendered audio files",
+    "final_video_exists": "final video file",
+    "upload_readiness": "upload readiness approval",
+}
 
 
 class QaExecutorError(RuntimeError):
@@ -228,12 +226,12 @@ def validate_assets(
 ) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
     asset_count = require_positive_int(
         assets_payload.get("asset_count"),
-        "assets.asset_count",
+        "resolved_assets.asset_count",
     )
 
     assets = assets_payload.get("assets")
     if not isinstance(assets, list):
-        raise QaExecutorError("assets.assets must be a list")
+        raise QaExecutorError("resolved_assets.assets must be a list")
 
     if asset_count != len(assets):
         raise QaExecutorError(
@@ -253,12 +251,14 @@ def validate_assets(
         "asset_query",
         "visual_intent",
         "usage_role",
-        "estimated_duration_sec",
         "required",
         "provider_status",
+        "resolution_status",
         "local_path",
+        "source_provider",
         "source_url",
         "license_status",
+        "license_note",
         "production_notes",
     }
 
@@ -279,11 +279,8 @@ def validate_assets(
         require_non_empty_string(asset["asset_query"], f"asset[{index}].asset_query")
         require_non_empty_string(asset["visual_intent"], f"asset[{index}].visual_intent")
         require_non_empty_string(asset["usage_role"], f"asset[{index}].usage_role")
-        require_positive_int(
-            asset["estimated_duration_sec"],
-            f"asset[{index}].estimated_duration_sec",
-        )
         require_non_empty_string(asset["provider_status"], f"asset[{index}].provider_status")
+        require_non_empty_string(asset["resolution_status"], f"asset[{index}].resolution_status")
         require_non_empty_string(asset["license_status"], f"asset[{index}].license_status")
         require_non_empty_string(asset["production_notes"], f"asset[{index}].production_notes")
 
@@ -294,6 +291,7 @@ def validate_assets(
 
     assets_resolved = all(
         asset.get("provider_status") == "resolved"
+        and asset.get("resolution_status") == "ready"
         and isinstance(asset.get("local_path"), str)
         and bool(asset.get("local_path", "").strip())
         and Path(str(asset.get("local_path"))).exists()
@@ -305,7 +303,7 @@ def validate_assets(
     checks = [
         make_check(
             "assets_valid",
-            "Assets artifact valid",
+            "Resolved assets artifact valid",
             "PASS",
             "HIGH",
             f"asset_count={asset_count}",
@@ -315,7 +313,7 @@ def validate_assets(
             "Assets resolved",
             "PASS" if assets_resolved else "BLOCKED",
             "CRITICAL",
-            "all required assets have local media files" if assets_resolved else "assets are planning-only; resolved local media files are missing",
+            "all required assets have local media files" if assets_resolved else "resolved local media files are missing",
         ),
         make_check(
             "asset_licenses_cleared",
@@ -511,6 +509,43 @@ def unique_strings(values: list[str]) -> list[str]:
     return unique
 
 
+def build_missing_requirements(
+    checks: list[dict[str, str]],
+    blockers: list[str],
+    assembly_missing: list[str],
+    audio_missing: list[str],
+) -> list[str]:
+    passed_check_ids = {
+        check["check_id"]
+        for check in checks
+        if check["status"] == "PASS"
+    }
+
+    closed_requirements = {
+        BLOCKER_MISSING_REQUIREMENTS[check_id]
+        for check_id in passed_check_ids
+        if check_id in BLOCKER_MISSING_REQUIREMENTS
+    }
+
+    raw_missing_requirements = (
+        [
+            BLOCKER_MISSING_REQUIREMENTS[blocker]
+            for blocker in blockers
+            if blocker in BLOCKER_MISSING_REQUIREMENTS
+        ]
+        + assembly_missing
+        + audio_missing
+    )
+
+    return unique_strings(
+        [
+            requirement
+            for requirement in raw_missing_requirements
+            if requirement not in closed_requirements
+        ]
+    )
+
+
 def run_qa_executor(state_path: Path) -> dict[str, Any]:
     state = load_state(state_path)
 
@@ -556,8 +591,14 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
     scenes_path = Path(
         require_non_empty_string(artifacts.get("scenes_path"), "artifacts.scenes_path")
     )
-    assets_path = Path(
+    planning_assets_path = Path(
         require_non_empty_string(artifacts.get("assets_path"), "artifacts.assets_path")
+    )
+    resolved_assets_path = Path(
+        require_non_empty_string(
+            artifacts.get("resolved_assets_path"),
+            "artifacts.resolved_assets_path",
+        )
     )
     assembly_plan_path = Path(
         require_non_empty_string(
@@ -573,14 +614,14 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
     script_meta = read_json_file(script_meta_path)
     script_qa = read_json_file(script_qa_path)
     scenes_payload = read_json_file(scenes_path)
-    assets_payload = read_json_file(assets_path)
+    assets_payload = read_json_file(resolved_assets_path)
     assembly_plan = read_json_file(assembly_plan_path)
     audio_plan = read_json_file(audio_plan_path)
 
     fail_if_forbidden_markers(json.dumps(script_meta, ensure_ascii=False), "script_meta")
     fail_if_forbidden_markers(json.dumps(script_qa, ensure_ascii=False), "script_qa")
     fail_if_forbidden_markers(json.dumps(scenes_payload, ensure_ascii=False), "scenes")
-    fail_if_forbidden_markers(json.dumps(assets_payload, ensure_ascii=False), "assets")
+    fail_if_forbidden_markers(json.dumps(assets_payload, ensure_ascii=False), "resolved_assets")
 
     checks: list[dict[str, str]] = []
 
@@ -643,10 +684,11 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
         if check["status"] in {"BLOCKED", "FAIL"}
     ]
 
-    missing_requirements = unique_strings(
-        list(REQUIRED_BLOCKERS)
-        + assembly_missing
-        + audio_missing
+    missing_requirements = build_missing_requirements(
+        checks,
+        blockers,
+        assembly_missing,
+        audio_missing,
     )
 
     readiness_score = compute_readiness_score(checks, final_video_exists)
@@ -683,7 +725,8 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
             "script_meta_path": str(script_meta_path),
             "script_qa_path": str(script_qa_path),
             "scenes_path": str(scenes_path),
-            "assets_path": str(assets_path),
+            "planning_assets_path": str(planning_assets_path),
+            "resolved_assets_path": str(resolved_assets_path),
             "assembly_plan_path": str(assembly_plan_path),
             "audio_plan_path": str(audio_plan_path),
             "scene_count": len(scenes),
