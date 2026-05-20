@@ -1,31 +1,30 @@
 #!/usr/bin/env python3
-import subprocess
+from __future__ import annotations
+
 import sys
 
-PHASE_TO_MODULE = {
-    "TOPIC": "engine/modules/s1_strategy.py",
-    "SCRIPT": "engine/modules/s2_script.py",
-}
+
+MESSAGE = """\
+FLOWMIND_LEGACY_RUNNER_DISABLED
+
+engine/module_runner.py is frozen legacy and must not be used as an active phase runner.
+
+Reason:
+- it can route phases to engine/modules/*
+- engine/modules/s2_script.py has a direct PROJECT_STATE.json write path
+- active FlowMind state must be updated only through canonical guarded paths
+
+Use instead:
+- tools/flowmind_run_phase.py for active phase executor dry-run/run
+- tools/dispatcher.sh for canonical phase transitions
+
+This file intentionally fails closed.
+"""
 
 
 def main() -> None:
-    if len(sys.argv) != 3:
-        print("Usage: python engine/module_runner.py <PROJECT_ID> <PHASE>", file=sys.stderr)
-        sys.exit(1)
-
-    project_id = sys.argv[1]
-    phase = sys.argv[2].strip().upper()
-
-    module_path = PHASE_TO_MODULE.get(phase)
-
-    if not module_path:
-        print(f"[ERROR] No execution module mapped for phase: {phase}", file=sys.stderr)
-        sys.exit(2)
-
-    print(f"[MODULE RUNNER] Executing {module_path} for {project_id}")
-
-    result = subprocess.run(["python3", module_path, project_id])
-    sys.exit(result.returncode)
+    print(MESSAGE, file=sys.stderr)
+    raise SystemExit(2)
 
 
 if __name__ == "__main__":
