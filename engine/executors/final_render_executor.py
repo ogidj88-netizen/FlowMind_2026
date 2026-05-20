@@ -20,7 +20,6 @@ from engine.state_validator import StateValidationError, load_state
 EXECUTOR_NAME = "final_render_executor"
 EXECUTOR_VERSION = "1.0.0"
 
-DEFAULT_STATE_PATH = Path("projects/P2026_TEST_001/PROJECT_STATE.json")
 
 FINAL_RENDER_DIRNAME = "final_render"
 SEGMENTS_DIRNAME = "segments"
@@ -1023,7 +1022,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="FlowMind final render executor v1")
     parser.add_argument(
         "--state",
-        default=str(DEFAULT_STATE_PATH),
+        required=True,
         help="Path to canonical PROJECT_STATE.json relative to repo root",
     )
     return parser
