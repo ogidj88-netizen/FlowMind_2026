@@ -228,6 +228,9 @@ def run_script_executor(state_path: Path) -> dict[str, Any]:
         "word_count": word_count,
         "estimated_duration_minutes": estimated_duration_minutes,
         "created_at": now,
+        "status": "SCRIPT_EXECUTOR_OK",
+        "script_path": str(script_path),
+        "script_meta_path": str(script_meta_path),
         "qa_status": qa_status,
     }
 
