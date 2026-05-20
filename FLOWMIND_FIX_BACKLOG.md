@@ -274,23 +274,37 @@ Keep legacy frozen until cleanup phase.
 
 ### FIX-011: hardcoded P2026_TEST_001 defaults exist in tools and executor defaults
 
-Status: OPEN
+Status: IMPLEMENTED V1 / PARTIAL
 Priority: MEDIUM
 Area: project isolation / multi-project safety
 
 Problem:
-Several tools and at least one executor default reference projects/P2026_TEST_001 directly.
+Several tools and previously one executor default referenced projects/P2026_TEST_001 directly.
 
 Risk:
 Future runs may accidentally operate on the test project instead of an explicit project state path.
 
-Evidence:
-- engine/executors/final_render_executor.py has DEFAULT_STATE_PATH for P2026_TEST_001
-- apply_* tools and preview tools reference P2026_TEST_001
-- docs use P2026_TEST_001 as target examples
+Fixed in V1:
+- engine/executors/final_render_executor.py no longer has DEFAULT_STATE_PATH for P2026_TEST_001
+- final_render_executor.py now requires explicit --state
+- running final_render_executor.py without --state exits with argparse error code 2
 
-Do not fix yet:
-This belongs after active command surface design.
+Remaining:
+- apply_* tools still reference P2026_TEST_001
+- audio_loudness_report.py still references P2026_TEST_001
+- render_visual_pacing_preview.py still references P2026_TEST_001
+- elevenlabs_probe_short.py still writes under P2026_TEST_001
+- docs still use P2026_TEST_001 as examples/evidence
+
+Evidence:
+- commit f83a0da fix: require explicit state for final render executor
+- grep in final_render_executor.py shows --state and required=True only
+- DEFAULT_STATE_PATH is no longer present in final_render_executor.py
+- P2026_TEST_001 is no longer present in final_render_executor.py
+- preflight passed after the change
+
+Do not expand yet:
+Helper tools cleanup is a separate future scope.
 
 ## Current next action
 
