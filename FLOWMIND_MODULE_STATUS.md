@@ -9,7 +9,18 @@ FlowMind skeleton exists.
 
 The active test project reached QA.
 
-The nervous system is partial but improved.
+The nervous system is partial but now verified for the two critical dispatcher upload gates.
+
+Confirmed:
+
+- PROJECT_STATE artifact paths exist
+- qa_report artifact_summary matches PROJECT_STATE artifacts
+- QA blocks upload while qa_passed=false
+- dispatcher blocks QA -> READY_FOR_UPLOAD when qa_passed=false
+- dispatcher blocks READY_FOR_UPLOAD -> UPLOADED when approved_for_upload=false
+- real PROJECT_STATE stayed unchanged during failed QA gate check
+- upload gate was tested on /tmp state only
+- git status stayed clean after checks
 
 Main confirmed gap:
 Minimal command surface v1 exists via tools/flowmind_run_phase.py; QA-compatible executors still require explicit commands.
@@ -46,7 +57,7 @@ blocker: upload_readiness
 
 ## Command surface status
 
-Status: IMPLEMENTED V1 / VERIFYING
+Status: VERIFIED V1
 
 Runner:
 tools/flowmind_run_phase.py
@@ -71,6 +82,13 @@ Runner v1 does not:
 - upload to YouTube
 - call engine/module_runner.py
 - call engine/modules/*
+
+Verified runtime gates:
+- QA -> READY_FOR_UPLOAD refuses when qa_passed=false
+- READY_FOR_UPLOAD -> UPLOADED refuses when approved_for_upload=false
+- real PROJECT_STATE stayed unchanged during failed QA gate check
+- upload gate was tested on /tmp state only
+- git status stayed clean after checks
 
 ## Module status summary
 
@@ -98,13 +116,19 @@ Most important current risks:
 
 - FIX-002: Legacy module runner still exists
 - FIX-003: Upload / approval surface missing
-- FIX-009: asset_resolver can produce zero resolved assets without blockers
+- FIX-005: script_meta artifact contract was improved in generator, but existing artifact may remain old until regenerated
+- FIX-006: script_qa artifact lacks explicit status and blockers
+- FIX-007: scenes artifact lacks explicit status and consistent source paths
+- FIX-008: assets artifact lacks explicit status and consistent source fields
 - FIX-010: legacy s2_script has direct PROJECT_STATE write path
 - FIX-011: hardcoded P2026_TEST_001 defaults exist in tools and executor defaults
 
 ## Current next action
 
-Finish verifying FIX-001.
+Continue SYSTEM LOGIC AUDIT.
+
+Next audit target:
+Build module inventory table with module name, file path, input artifact, output artifact, downstream consumer, runtime proof, status, readiness percentage, and next action.
 
 Do not expand runner v1 yet.
 
