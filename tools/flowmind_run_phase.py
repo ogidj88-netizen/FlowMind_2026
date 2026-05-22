@@ -21,6 +21,14 @@ PHASE_TO_EXECUTOR: dict[str, str] = {
     "ASSETS": "engine/executors/assets_executor.py",
     "ASSEMBLY": "engine/executors/assembly_executor.py",
     "AUDIO": "engine/executors/audio_executor.py",
+    "QA": "engine/executors/qa_executor.py",
+}
+
+
+REFUSED_PHASES = {
+    "READY_FOR_UPLOAD",
+    "UPLOADED",
+    "ARCHIVED",
 }
 
 
@@ -36,7 +44,7 @@ class FlowMindRunPhaseError(RuntimeError):
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="FlowMind minimal active phase runner v1"
+        description="FlowMind minimal active phase runner v1.1"
     )
     parser.add_argument(
         "--state",
@@ -58,12 +66,17 @@ def resolve_python_bin() -> str:
     return sys.executable
 
 
+def supported_phases_message() -> str:
+    supported = ", ".join(sorted(PHASE_TO_EXECUTOR))
+    return f"This runner v1.1 supports only {supported}."
+
+
 def resolve_executor_for_phase(phase: str) -> Path:
     executor_value = PHASE_TO_EXECUTOR.get(phase)
     if not executor_value:
         raise FlowMindRunPhaseError(
             f"No active executor mapped for phase '{phase}'. "
-            "This runner v1 supports only SCRIPT, SCENES, ASSETS, ASSEMBLY, AUDIO."
+            f"{supported_phases_message()}"
         )
 
     if any(fragment in executor_value for fragment in FORBIDDEN_EXECUTOR_FRAGMENTS):
@@ -102,10 +115,10 @@ def run_phase(state_path: Path, dry_run: bool = False) -> int:
     if phase == "HALT":
         raise FlowMindRunPhaseError("Refusing to run while PROJECT_STATE.phase is HALT")
 
-    if phase in {"QA", "READY_FOR_UPLOAD", "UPLOADED", "ARCHIVED"}:
+    if phase in REFUSED_PHASES:
         raise FlowMindRunPhaseError(
-            f"Runner v1 refuses phase '{phase}'. "
-            "QA-compatible tools and upload/archive phases require explicit commands."
+            f"Runner v1.1 refuses phase '{phase}'. "
+            "Upload/archive phases require explicit approval commands."
         )
 
     executor_path = resolve_executor_for_phase(phase)
