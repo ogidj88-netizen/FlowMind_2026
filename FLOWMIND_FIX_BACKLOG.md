@@ -21,6 +21,7 @@ Do not fix items immediately unless the active map says this is the current step
 
 - OPEN
 - IMPLEMENTED V1 / VERIFYING
+- IMPLEMENTED V1 / PARTIAL
 - DONE
 - INVALID / REPLACED
 - DEFERRED
@@ -30,7 +31,7 @@ Do not fix items immediately unless the active map says this is the current step
 
 ### FIX-001: Missing single active command surface
 
-Status: IMPLEMENTED V1 / VERIFYING
+Status: DONE
 Priority: HIGH
 Area: nervous system / execution control
 
@@ -41,25 +42,38 @@ Current reality:
 - tools/flowmind_run_phase.py exists
 - runner requires explicit --state
 - runner reads PROJECT_STATE through canonical load_state
-- runner maps SCRIPT, SCENES, ASSETS, ASSEMBLY, AUDIO to active executors
-- runner refuses QA, READY_FOR_UPLOAD, UPLOADED, ARCHIVED, and HALT
+- runner maps SCRIPT, SCENES, ASSETS, ASSEMBLY, AUDIO, and QA to active executors
+- runner supports QA dry-run
+- runner refuses READY_FOR_UPLOAD, UPLOADED, ARCHIVED, and HALT
 - runner does not auto-transition phase
 - runner does not approve upload
+- runner does not upload to YouTube
 - runner does not call legacy module_runner.py
 - runner does not call engine/modules/*
 
 Evidence:
 - SCRIPT dry-run maps to engine/executors/script_executor.py
-- READY_FOR_UPLOAD dry-run fails closed with exit code 2
-- preflight passes after adding tools/flowmind_run_phase.py
+- QA dry-run maps to engine/executors/qa_executor.py
+- READY_FOR_UPLOAD transition still fails closed through dispatcher when qa_passed=false
+- dispatcher blocks QA -> READY_FOR_UPLOAD while qa_passed=false
+- real PROJECT_STATE stayed unchanged during failed upload gate check
+- commit e212793 add active phase runner and freeze legacy runner
+- commit 411f83c allow active runner QA dry-run mapping
+- commit e882728 updates module status after runner QA checkpoint
+- preflight passed after runner changes
 
-Remaining:
-- add focused smoke tests later
-- decide QA-compatible command surface separately
-- keep legacy runner frozen
+Closed scope:
+Command surface v1.1 is verified for active execution mapping and QA dry-run mapping.
 
-Do not expand yet:
-No QA auto-run, no upload, no Telegram, no provider integration.
+Not included in this fix:
+- approval command surface
+- upload command surface
+- QA auto-run
+- Telegram integration
+- YouTube upload
+
+Do not expand here:
+Upload / approval belongs to FIX-003.
 
 ### FIX-002: Legacy module runner still exists
 
@@ -74,15 +88,17 @@ Current reality:
 - engine/module_runner.py maps TOPIC and SCRIPT to engine/modules/*
 - registry says engine/module_runner.py must not be active phase runner
 - registry says engine/modules/* must not be executed as active runtime
+- active runner blocks engine/module_runner.py and engine/modules/* through forbidden executor fragments
 
 Risk:
-It can create a second active contour.
+It can create a second active contour if executed manually or accidentally outside the active runner.
 
 Evidence:
 - engine/module_runner.py
 - engine/modules/s1_strategy.py
 - engine/modules/s2_script.py
 - FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md warnings
+- tools/flowmind_run_phase.py forbids engine/module_runner.py and engine/modules/*
 
 Do not fix yet:
 Keep frozen until cleanup phase.
@@ -90,7 +106,7 @@ Keep frozen until cleanup phase.
 ### FIX-003: Upload / approval surface missing
 
 Status: OPEN
-Priority: MEDIUM
+Priority: HIGH
 Area: human review / upload gate
 
 Problem:
@@ -102,17 +118,25 @@ Current reality:
 - approved_for_upload=false
 - approval_status=PENDING
 - QA verdict is BLOCKED by upload_readiness
+- dispatcher blocks QA -> READY_FOR_UPLOAD while qa_passed=false
+- dispatcher blocks READY_FOR_UPLOAD -> UPLOADED while approved_for_upload=false
+- runner supports QA dry-run but does not approve upload
 
 Risk:
-System can render video but cannot complete safe review/upload workflow.
+System can render video and run gates, but cannot complete safe review/upload workflow through a controlled human approval surface.
 
 Evidence:
 - PROJECT_STATE.json
 - qa_report.json
 - QA_EXECUTOR_CONTRACT_V1.md
+- dispatcher failed closed on QA -> READY_FOR_UPLOAD while qa_passed=false
+- runner dry-run resolves QA without mutating PROJECT_STATE
 
 Do not fix yet:
 Telegram / YouTube upload are forbidden in current SYSTEM MAP MODE.
+
+Next possible design target:
+Define a minimal human review / approval surface that can record approval explicitly without uploading.
 
 ### FIX-004: Visual pacing is prototype only
 
@@ -136,27 +160,38 @@ Evidence:
 - user review: video became worse on info-card motion
 
 Do not fix yet:
-Video-quality tuning is forbidden until module inventory is complete.
+Video-quality tuning is forbidden during SYSTEM MAP MODE.
 
 ### FIX-005: script_meta is not self-contained
 
-Status: OPEN
+Status: IMPLEMENTED V1 / PARTIAL
 Priority: MEDIUM
 Area: script executor / artifact contract
 
 Problem:
-script_executor creates script.txt and script_meta.json, but script_meta.json does not include script_path or explicit status.
+script_executor created script.txt and script_meta.json, but previous script_meta.json did not include script_path or explicit status.
+
+Current reality:
+- script_executor.py now writes script_path
+- script_executor.py now writes script_meta_path
+- script_executor.py now writes status
+- updated SCRIPT chain passed isolated /tmp runtime test
+- existing active artifact under projects/P2026_TEST_001 may remain old until regenerated
 
 Risk:
-Downstream modules may need to depend on PROJECT_STATE or script_qa to locate the script.
+Existing active artifacts may still reflect older schema until SCRIPT is regenerated for the active project.
 
 Evidence:
-- engine/executors/script_executor.py writes script_path to PROJECT_STATE artifacts
-- projects/P2026_TEST_001/script/script_meta.json summary showed script_path=None
-- projects/P2026_TEST_001/script/script_meta.json summary showed status=None
+- commit bdd4bf7 fix: make script meta artifact self-contained
+- commit 40a6abf fix: align script executor with retention qa
+- isolated /tmp SCRIPT chain passed after executor update
 
-Do not fix yet:
-This belongs to module hardening after inventory is complete.
+Remaining:
+- regenerate active project artifacts only when system phase discipline allows it
+- do not mutate active QA project just to refresh historical artifacts
+
+Do not expand yet:
+This is not the current system-control blocker.
 
 ### FIX-006: script_qa artifact lacks explicit status and blockers
 
@@ -167,6 +202,11 @@ Area: script QA / gate artifact contract
 Problem:
 script_qa writes verdict and warnings, but the artifact does not expose explicit status or blockers.
 
+Current reality:
+- engine/executors/script_qa.py returns status SCRIPT_QA_OK
+- script_qa.json contains verdict, score, checks, failure_reasons, warnings
+- existing artifact may not expose explicit status or blockers as top-level fields
+
 Risk:
 Downstream modules may need to infer gate state from missing fields.
 
@@ -176,7 +216,7 @@ Evidence:
 - projects/P2026_TEST_001/script/script_qa.json summary showed blockers=None
 
 Do not fix yet:
-This belongs to module hardening after inventory is complete.
+This belongs to module hardening after system-control audit.
 
 ### FIX-007: scenes artifact lacks explicit status and consistent source paths
 
@@ -198,7 +238,7 @@ Evidence:
 - projects/P2026_TEST_001/scenes/scenes.json summary showed status=None, verdict=None, blockers=None
 
 Do not fix yet:
-This belongs to module hardening after inventory is complete.
+This belongs to module hardening after system-control audit.
 
 ### FIX-008: assets artifact lacks explicit status and consistent source fields
 
@@ -218,7 +258,7 @@ Evidence:
 - projects/P2026_TEST_001/assets/assets.json summary showed status=None, verdict=None, blockers=None
 
 Do not fix yet:
-This belongs to module hardening after inventory is complete.
+This belongs to module hardening after system-control audit.
 
 ### FIX-009: asset_resolver zero-assets finding was invalid
 
@@ -268,6 +308,8 @@ If legacy module_runner or engine/modules/s2_script.py is accidentally executed,
 Evidence:
 - engine/modules/s2_script.py contains direct PROJECT_STATE.json write path
 - engine/module_runner.py can route SCRIPT to engine/modules/s2_script.py
+- active runner does not call engine/module_runner.py
+- active runner does not call engine/modules/*
 
 Do not fix yet:
 Keep legacy frozen until cleanup phase.
@@ -308,8 +350,15 @@ Helper tools cleanup is a separate future scope.
 
 ## Current next action
 
-Do not code FIX-009.
+Continue SYSTEM LOGIC AUDIT.
 
-Next safe repair target should be chosen from real open items, not invalidated audit findings.
+Next safe target:
+Design, but do not implement yet, the minimal human review / approval surface for FIX-003.
+
+Do not code upload.
+
+Do not open YouTube integration.
+
+Do not auto-approve QA.
 
 End.
