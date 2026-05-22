@@ -17,10 +17,10 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 QA_GATE_NAME = "script_qa"
-QA_VERSION = "1.0.0"
+QA_VERSION = "1.1.0"
 WORDS_PER_MINUTE = 145.0
 ALLOWED_DURATION_DRIFT = 0.20
-MIN_PASS_SCORE = 80
+MIN_PASS_SCORE = 85
 
 FORBIDDEN_MARKERS = (
     "PLACEHOLDER",
@@ -110,6 +110,15 @@ def normalize_text(value: str) -> str:
     return re.sub(r"\s+", " ", value.strip().lower())
 
 
+def get_paragraphs(script_text: str) -> list[str]:
+    return [paragraph.strip() for paragraph in script_text.split("\n\n") if paragraph.strip()]
+
+
+def first_words(script_text: str, word_limit: int) -> str:
+    words = re.findall(r"\b[\w'-]+\b", script_text)
+    return " ".join(words[:word_limit])
+
+
 def has_forbidden_marker(script_text: str) -> list[str]:
     upper_text = script_text.upper()
     return [marker for marker in FORBIDDEN_MARKERS if marker in upper_text]
@@ -185,7 +194,7 @@ def check_niche_match(script_text: str, niche: str) -> bool:
 
 
 def check_structure(script_text: str) -> bool:
-    paragraphs = [paragraph.strip() for paragraph in script_text.split("\n\n") if paragraph.strip()]
+    paragraphs = get_paragraphs(script_text)
     if len(paragraphs) < 8:
         return False
 
@@ -234,7 +243,7 @@ def check_voiceover_usability(script_text: str) -> bool:
         return False
 
     repeated_paragraphs = set()
-    for paragraph in [p.strip() for p in script_text.split("\n\n") if p.strip()]:
+    for paragraph in get_paragraphs(script_text):
         key = normalize_text(paragraph)
         if key in repeated_paragraphs:
             return False
@@ -262,6 +271,276 @@ def check_fake_fact_risk(script_text: str) -> bool:
             return False
 
     return True
+
+
+def check_first_30_seconds_hook_pressure(script_text: str) -> bool:
+    opening = normalize_text(first_words(script_text, 90))
+
+    if not opening:
+        return False
+
+    weak_openings = (
+        "this video is about",
+        "today we will discuss",
+        "today we're going to discuss",
+        "it is important to understand",
+        "the working title is",
+        "here is an overview",
+        "in this video",
+    )
+    if any(phrase in opening for phrase in weak_openings):
+        return False
+
+    pressure_terms = (
+        "hidden",
+        "risk",
+        "wrong",
+        "mistake",
+        "quietly",
+        "leak",
+        "before",
+        "but",
+        "not",
+        "rise",
+        "rises",
+        "cost",
+        "bill",
+        "missing",
+        "problem",
+        "changed",
+        "changes",
+        "normal",
+        "already",
+    )
+    hits = sum(1 for term in pressure_terms if term in opening)
+
+    has_contradiction = bool(re.search(r"\b(but|not|before|even when|instead|looks normal)\b", opening))
+    has_personal_cost = bool(re.search(r"\b(your|you|household|bill|cost|money)\b", opening))
+
+    return hits >= 3 and (has_contradiction or has_personal_cost)
+
+
+def check_retention_loop(script_text: str) -> bool:
+    normalized_script = normalize_text(script_text)
+    words = re.findall(r"\b[\w'-]+\b", normalized_script)
+
+    if len(words) < 120:
+        return False
+
+    early = " ".join(words[: max(80, len(words) // 3)])
+    later = " ".join(words[len(words) // 3 :])
+
+    loop_terms = (
+        "but",
+        "not always",
+        "the real",
+        "before",
+        "wrong",
+        "mystery",
+        "hidden",
+        "question",
+        "clue",
+        "missing",
+        "instead",
+        "looks normal",
+    )
+    resolution_terms = (
+        "the point",
+        "once you",
+        "so if",
+        "this means",
+        "the answer",
+        "separate",
+        "check",
+        "diagnose",
+        "turns",
+        "becomes",
+    )
+
+    early_hits = sum(1 for term in loop_terms if term in early)
+    later_hits = sum(1 for term in resolution_terms if term in later)
+
+    return early_hits >= 2 and later_hits >= 2
+
+
+def check_curiosity_gap(script_text: str) -> bool:
+    normalized_script = normalize_text(script_text)
+    words = re.findall(r"\b[\w'-]+\b", normalized_script)
+
+    if len(words) < 120:
+        return False
+
+    early = " ".join(words[: max(90, len(words) // 3)])
+    later = " ".join(words[len(words) // 3 :])
+
+    banned_fake_mystery = (
+        "you will not believe",
+        "this secret will change everything",
+        "experts do not want you to know",
+        "one weird trick",
+    )
+    if any(phrase in normalized_script for phrase in banned_fake_mystery):
+        return False
+
+    curiosity_terms = (
+        "not the real clue",
+        "not always",
+        "wrong part",
+        "before changing",
+        "the real clue",
+        "the obvious explanation",
+        "but",
+        "before",
+        "mystery",
+        "hidden",
+        "missing",
+        "why",
+    )
+    payoff_terms = (
+        "separate",
+        "split",
+        "check",
+        "compare",
+        "diagnose",
+        "payoff",
+        "the point",
+        "so if",
+    )
+
+    early_hits = sum(1 for term in curiosity_terms if term in early)
+    later_hits = sum(1 for term in payoff_terms if term in later)
+
+    return early_hits >= 2 and later_hits >= 2
+
+
+def classify_paragraph(paragraph: str) -> str:
+    normalized = normalize_text(paragraph)
+
+    if any(term in normalized for term in ("your bill", "hidden", "quietly", "before", "mistake")):
+        return "hook"
+
+    if any(term in normalized for term in ("problem", "blame", "mystery", "confusion", "rises")):
+        return "problem"
+
+    if any(term in normalized for term in ("rate", "structure", "pricing", "fixed charges", "time-of-use", "usage")):
+        return "mechanism"
+
+    if any(term in normalized for term in ("refrigerator", "water heater", "dishwasher", "dryer", "computer", "dehumidifier", "appliance")):
+        return "example"
+
+    if any(term in normalized for term in ("check", "compare", "write down", "list", "diagnose", "seven-day")):
+        return "diagnostic"
+
+    if any(term in normalized for term in ("the point", "once you", "so if", "you can", "start with")):
+        return "payoff"
+
+    return "explanation"
+
+
+def check_scene_beat_readiness(script_text: str) -> bool:
+    paragraphs = get_paragraphs(script_text)
+    if len(paragraphs) < 7:
+        return False
+
+    beat_types = {classify_paragraph(paragraph) for paragraph in paragraphs}
+
+    required_any = (
+        "hook",
+        "problem",
+        "mechanism",
+        "diagnostic",
+        "payoff",
+    )
+    required_hits = sum(1 for beat in required_any if beat in beat_types)
+
+    return required_hits >= 4 and len(beat_types) >= 5
+
+
+def check_pattern_interrupt(script_text: str) -> bool:
+    paragraphs = get_paragraphs(script_text)
+    if len(paragraphs) < 7:
+        return False
+
+    beat_sequence = [classify_paragraph(paragraph) for paragraph in paragraphs]
+    unique_beats = set(beat_sequence)
+    transitions = sum(
+        1
+        for index in range(1, len(beat_sequence))
+        if beat_sequence[index] != beat_sequence[index - 1]
+    )
+
+    return len(unique_beats) >= 5 and transitions >= 4
+
+
+def check_no_article_mode(script_text: str) -> bool:
+    normalized_script = normalize_text(script_text)
+    paragraphs = get_paragraphs(script_text)
+
+    ordinal_terms = ("first", "second", "third", "fourth")
+    ordinal_hits = sum(1 for term in ordinal_terms if re.search(rf"\b{term}\b", normalized_script))
+
+    hard_article_markers = (
+        "the working title is",
+        "this article",
+        "in this essay",
+        "in conclusion",
+    )
+    if any(marker in normalized_script for marker in hard_article_markers):
+        return False
+
+    if ordinal_hits >= 3:
+        has_reversal = bool(re.search(r"\b(but|instead|not always|the real clue|wrong|before)\b", normalized_script))
+        has_scene_variety = check_scene_beat_readiness(script_text)
+        if not has_reversal or not has_scene_variety:
+            return False
+
+    if len(paragraphs) >= 10:
+        paragraph_types = [classify_paragraph(paragraph) for paragraph in paragraphs]
+        explanation_ratio = paragraph_types.count("explanation") / len(paragraph_types)
+        if explanation_ratio > 0.55:
+            return False
+
+    has_direct_consequence = bool(re.search(r"\b(your bill|your cost|you pay|you miss|your money|your usage)\b", normalized_script))
+    has_delayed_payoff = check_retention_loop(script_text) and check_payoff_strength(script_text)
+
+    return has_direct_consequence and has_delayed_payoff
+
+
+def check_payoff_strength(script_text: str) -> bool:
+    normalized_script = normalize_text(script_text)
+    words = re.findall(r"\b[\w'-]+\b", normalized_script)
+
+    if len(words) < 100:
+        return False
+
+    ending = " ".join(words[int(len(words) * 0.70) :])
+
+    general_payoff_terms = (
+        "separate",
+        "check",
+        "compare",
+        "diagnose",
+        "start with",
+        "what changed",
+        "what should",
+        "false assumption",
+        "understanding",
+    )
+    money_cost_terms = (
+        "behavior",
+        "pricing",
+        "rate",
+        "structure",
+        "usage",
+        "fixed charges",
+        "bill-structure",
+        "bill structure",
+    )
+
+    general_hits = sum(1 for term in general_payoff_terms if term in ending)
+    money_hits = sum(1 for term in money_cost_terms if term in ending)
+
+    return general_hits >= 2 and money_hits >= 2
 
 
 def build_check(
@@ -312,10 +591,16 @@ def evaluate_script(
     hook_ok = check_hook_alignment(script_text, hook)
     topic_ok = check_topic_match(script_text, topic)
     niche_ok = check_niche_match(script_text, niche)
-    structure_ok = check_structure(script_text)
     payoff_ok = check_practical_payoff(script_text)
     voiceover_ok = check_voiceover_usability(script_text)
     fake_fact_ok = check_fake_fact_risk(script_text)
+    hook_pressure_ok = check_first_30_seconds_hook_pressure(script_text)
+    retention_loop_ok = check_retention_loop(script_text)
+    article_mode_ok = check_no_article_mode(script_text)
+    scene_beat_ok = check_scene_beat_readiness(script_text)
+    curiosity_gap_ok = check_curiosity_gap(script_text)
+    pattern_interrupt_ok = check_pattern_interrupt(script_text)
+    payoff_strength_ok = check_payoff_strength(script_text)
 
     meta_word_count = script_meta.get("word_count")
     meta_qa_status = script_meta.get("qa_status")
@@ -325,37 +610,37 @@ def evaluate_script(
         build_check(
             name="duration_fit",
             passed=duration_ok,
-            points=15,
+            points=10,
             detail=f"word_count={word_count}, allowed_range={min_words}-{max_words}, estimated_minutes={estimated_duration_minutes}",
         ),
         build_check(
             name="hook_alignment",
             passed=hook_ok,
-            points=15,
+            points=10,
             detail=f"working_title={working_title}",
         ),
         build_check(
             name="topic_match",
             passed=topic_ok,
-            points=15,
+            points=10,
             detail=f"topic={topic}",
         ),
         build_check(
-            name="structure",
-            passed=structure_ok,
-            points=15,
-            detail="requires coherent multi-part narration",
+            name="niche_match",
+            passed=niche_ok,
+            points=10,
+            detail=f"niche={niche}",
         ),
         build_check(
             name="practical_payoff",
             passed=payoff_ok,
-            points=15,
+            points=10,
             detail=f"audience={audience}",
         ),
         build_check(
             name="voiceover_usability",
             passed=voiceover_ok,
-            points=15,
+            points=10,
             detail="requires spoken-narration-friendly script text",
         ),
         build_check(
@@ -363,6 +648,48 @@ def evaluate_script(
             passed=fake_fact_ok,
             points=10,
             detail="blocks unsupported precise claims and fake citation patterns",
+        ),
+        build_check(
+            name="first_30_seconds_hook_pressure",
+            passed=hook_pressure_ok,
+            points=10,
+            detail="opening must create urgency, contradiction, risk, curiosity, or personal consequence",
+        ),
+        build_check(
+            name="retention_loop",
+            passed=retention_loop_ok,
+            points=10,
+            detail="requires an early unresolved tension and later resolution",
+        ),
+        build_check(
+            name="scene_beat_readiness",
+            passed=scene_beat_ok,
+            points=5,
+            detail="requires distinct narration beats that can become scenes",
+        ),
+        build_check(
+            name="pattern_interrupt",
+            passed=pattern_interrupt_ok,
+            points=5,
+            detail="requires shifts in paragraph function to avoid flat pacing",
+        ),
+        build_check(
+            name="no_article_mode",
+            passed=article_mode_ok,
+            points=0,
+            detail="fails flat essay/blog-post pacing",
+        ),
+        build_check(
+            name="curiosity_gap",
+            passed=curiosity_gap_ok,
+            points=0,
+            detail="requires relevant unresolved curiosity before practical payoff",
+        ),
+        build_check(
+            name="payoff_strength",
+            passed=payoff_strength_ok,
+            points=0,
+            detail="ending must deliver clear cognitive or practical payoff",
         ),
     ]
 
