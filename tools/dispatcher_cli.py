@@ -17,12 +17,15 @@ from engine.state_validator import StateValidationError
 def parse_artifacts_patch(raw: str | None) -> dict | None:
     if not raw:
         return None
+
     try:
         value = json.loads(raw)
     except json.JSONDecodeError as exc:
         raise SystemExit(f"Invalid JSON for --artifacts-patch: {exc}") from exc
+
     if not isinstance(value, dict):
         raise SystemExit("--artifacts-patch must decode to JSON object")
+
     return value
 
 
@@ -44,9 +47,6 @@ def build_parser() -> argparse.ArgumentParser:
     transition_parser.add_argument("--to", required=True, help="Target phase")
     transition_parser.add_argument("--halt-reason", default=None)
     transition_parser.add_argument("--resume-hint", default=None)
-    transition_parser.add_argument("--approval-status", default=None)
-    transition_parser.add_argument("--approved-for-upload", choices=("true", "false"), default=None)
-    transition_parser.add_argument("--qa-passed", choices=("true", "false"), default=None)
     transition_parser.add_argument(
         "--artifacts-patch",
         default=None,
@@ -64,12 +64,6 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("approve-upload", help="Mark approved_for_upload=true")
 
     return parser
-
-
-def parse_optional_bool(value: str | None) -> bool | None:
-    if value is None:
-        return None
-    return value == "true"
 
 
 def print_state(state: dict) -> None:
@@ -91,9 +85,6 @@ def main() -> None:
                 args.to,
                 halt_reason=args.halt_reason,
                 resume_hint=args.resume_hint,
-                approval_status=args.approval_status,
-                approved_for_upload=parse_optional_bool(args.approved_for_upload),
-                qa_passed=parse_optional_bool(args.qa_passed),
                 artifacts_patch=parse_artifacts_patch(args.artifacts_patch),
             )
 
