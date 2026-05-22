@@ -17,7 +17,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 QA_GATE_NAME = "script_qa"
-QA_VERSION = "1.1.0"
+QA_VERSION = "1.1.1"
 WORDS_PER_MINUTE = 145.0
 ALLOWED_DURATION_DRIFT = 0.20
 MIN_PASS_SCORE = 85
@@ -279,7 +279,7 @@ def check_first_30_seconds_hook_pressure(script_text: str) -> bool:
     if not opening:
         return False
 
-    weak_openings = (
+    weak_opening_prefixes = (
         "this video is about",
         "today we will discuss",
         "today we're going to discuss",
@@ -288,7 +288,7 @@ def check_first_30_seconds_hook_pressure(script_text: str) -> bool:
         "here is an overview",
         "in this video",
     )
-    if any(phrase in opening for phrase in weak_openings):
+    if any(opening.startswith(phrase) for phrase in weak_opening_prefixes):
         return False
 
     pressure_terms = (
@@ -416,23 +416,23 @@ def check_curiosity_gap(script_text: str) -> bool:
 def classify_paragraph(paragraph: str) -> str:
     normalized = normalize_text(paragraph)
 
+    if any(term in normalized for term in ("check", "compare", "write down", "list", "diagnose", "seven-day", "better question", "which layer moved", "pattern interrupt")):
+        return "diagnostic"
+
+    if any(term in normalized for term in ("the point", "once you", "so if", "you can", "start with", "resolves", "answer those", "becomes a map", "payoff")):
+        return "payoff"
+
+    if any(term in normalized for term in ("rate", "structure", "pricing", "fixed charges", "time-of-use", "usage", "kilowatt-hours", "delivery charges", "plan changes")):
+        return "mechanism"
+
+    if any(term in normalized for term in ("refrigerator", "water heater", "dishwasher", "dryer", "computer", "dehumidifier", "appliance", "fridge", "freezer", "pool pump")):
+        return "example"
+
     if any(term in normalized for term in ("your bill", "hidden", "quietly", "before", "mistake")):
         return "hook"
 
-    if any(term in normalized for term in ("problem", "blame", "mystery", "confusion", "rises")):
+    if any(term in normalized for term in ("problem", "blame", "mystery", "confusion", "rises", "trap", "instinct")):
         return "problem"
-
-    if any(term in normalized for term in ("rate", "structure", "pricing", "fixed charges", "time-of-use", "usage")):
-        return "mechanism"
-
-    if any(term in normalized for term in ("refrigerator", "water heater", "dishwasher", "dryer", "computer", "dehumidifier", "appliance")):
-        return "example"
-
-    if any(term in normalized for term in ("check", "compare", "write down", "list", "diagnose", "seven-day")):
-        return "diagnostic"
-
-    if any(term in normalized for term in ("the point", "once you", "so if", "you can", "start with")):
-        return "payoff"
 
     return "explanation"
 
@@ -480,12 +480,14 @@ def check_no_article_mode(script_text: str) -> bool:
     ordinal_hits = sum(1 for term in ordinal_terms if re.search(rf"\b{term}\b", normalized_script))
 
     hard_article_markers = (
-        "the working title is",
         "this article",
         "in this essay",
         "in conclusion",
     )
     if any(marker in normalized_script for marker in hard_article_markers):
+        return False
+
+    if normalized_script.startswith("the working title is"):
         return False
 
     if ordinal_hits >= 3:
