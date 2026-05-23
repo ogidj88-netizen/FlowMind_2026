@@ -105,12 +105,29 @@ Keep frozen until cleanup phase.
 
 ### FIX-003: Upload / approval surface missing
 
-Status: OPEN
+Status: IMPLEMENTED V1 / PARTIAL
 Priority: HIGH
 Area: human review / upload gate
 
 Problem:
-QA blocks upload correctly, but there is no real human review command surface yet.
+QA blocks upload correctly, but the approval path was incomplete and unsafe.
+
+Confirmed old risk:
+The generic dispatcher transition command allowed approval gate flags to be passed directly.
+
+This created a bypass where:
+
+- transition --to READY_FOR_UPLOAD --qa-passed true
+
+could move a QA state to READY_FOR_UPLOAD without first using the explicit mark-qa-passed command.
+
+Fixed in V1:
+- tools/dispatcher_cli.py no longer exposes --qa-passed on generic transition
+- tools/dispatcher_cli.py no longer exposes --approved-for-upload on generic transition
+- tools/dispatcher_cli.py no longer exposes --approval-status on generic transition
+- approval mutations now remain available only through explicit commands:
+  - mark-qa-passed
+  - approve-upload
 
 Current reality:
 - phase is QA
@@ -121,9 +138,12 @@ Current reality:
 - dispatcher blocks QA -> READY_FOR_UPLOAD while qa_passed=false
 - dispatcher blocks READY_FOR_UPLOAD -> UPLOADED while approved_for_upload=false
 - runner supports QA dry-run but does not approve upload
+- generic transition approval bypass is blocked by argparse
+- failed bypass test leaves tmp state in QA
+- active PROJECT_STATE was not mutated during bypass testing
 
-Risk:
-System can render video and run gates, but cannot complete safe review/upload workflow through a controlled human approval surface.
+Risk remaining:
+System still lacks a clear human review protocol that defines when and how a human may run mark-qa-passed and transition to READY_FOR_UPLOAD.
 
 Evidence:
 - PROJECT_STATE.json
@@ -131,12 +151,25 @@ Evidence:
 - QA_EXECUTOR_CONTRACT_V1.md
 - dispatcher failed closed on QA -> READY_FOR_UPLOAD while qa_passed=false
 - runner dry-run resolves QA without mutating PROJECT_STATE
+- runtime bypass test on /tmp confirmed the old bypass
+- commit ebef6cd fix: block dispatcher transition approval bypass
+- after ebef6cd, --qa-passed on transition fails with argparse error
+- after ebef6cd, tmp state remained phase=QA, qa_passed=false, approved_for_upload=false, approval_status=PENDING
+- preflight passed after dispatcher_cli.py change
+
+Not fixed yet:
+- human review checklist
+- approval evidence artifact
+- review command protocol
+- READY_FOR_UPLOAD handoff rules
+- upload command surface
+- YouTube upload
 
 Do not fix yet:
 Telegram / YouTube upload are forbidden in current SYSTEM MAP MODE.
 
 Next possible design target:
-Define a minimal human review / approval surface that can record approval explicitly without uploading.
+Define the minimal human review / approval protocol that can record approval explicitly without uploading.
 
 ### FIX-004: Visual pacing is prototype only
 
@@ -353,7 +386,7 @@ Helper tools cleanup is a separate future scope.
 Continue SYSTEM LOGIC AUDIT.
 
 Next safe target:
-Design, but do not implement yet, the minimal human review / approval surface for FIX-003.
+Design, but do not implement yet, the minimal human review / approval protocol for FIX-003.
 
 Do not code upload.
 
