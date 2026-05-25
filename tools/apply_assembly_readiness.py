@@ -9,10 +9,6 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-DEFAULT_STATE_PATH = Path("projects/P2026_TEST_001/PROJECT_STATE.json")
-DEFAULT_ASSEMBLY_PLAN_PATH = Path("projects/P2026_TEST_001/assembly/assembly_plan.json")
-DEFAULT_RESOLVED_ASSETS_PATH = Path("projects/P2026_TEST_001/assets/resolved_assets.json")
-DEFAULT_AUDIO_RENDER_PATH = Path("projects/P2026_TEST_001/audio/audio_render.json")
 
 TOOL_NAME = "apply_assembly_readiness"
 TOOL_VERSION = "1.0.0"
@@ -397,22 +393,22 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Apply FlowMind assembly readiness")
     parser.add_argument(
         "--state",
-        default=str(DEFAULT_STATE_PATH),
+        required=True,
         help="Path to PROJECT_STATE.json relative to repo root",
     )
     parser.add_argument(
         "--assembly-plan",
-        default=str(DEFAULT_ASSEMBLY_PLAN_PATH),
+        required=True,
         help="Path to assembly_plan.json relative to repo root",
     )
     parser.add_argument(
         "--resolved-assets",
-        default=str(DEFAULT_RESOLVED_ASSETS_PATH),
+        required=True,
         help="Path to resolved_assets.json relative to repo root",
     )
     parser.add_argument(
         "--audio-render",
-        default=str(DEFAULT_AUDIO_RENDER_PATH),
+        required=True,
         help="Path to audio_render.json relative to repo root",
     )
     return parser

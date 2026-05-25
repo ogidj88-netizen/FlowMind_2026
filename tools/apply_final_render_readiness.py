@@ -9,9 +9,6 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-DEFAULT_STATE_PATH = Path("projects/P2026_TEST_001/PROJECT_STATE.json")
-DEFAULT_ASSEMBLY_PLAN_PATH = Path("projects/P2026_TEST_001/assembly/assembly_plan.json")
-DEFAULT_FINAL_RENDER_REPORT_PATH = Path("projects/P2026_TEST_001/final_render/final_render_report.json")
 
 TOOL_NAME = "apply_final_render_readiness"
 TOOL_VERSION = "1.0.0"
@@ -350,17 +347,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Apply FlowMind final render readiness")
     parser.add_argument(
         "--state",
-        default=str(DEFAULT_STATE_PATH),
+        required=True,
         help="Path to PROJECT_STATE.json relative to repo root",
     )
     parser.add_argument(
         "--assembly-plan",
-        default=str(DEFAULT_ASSEMBLY_PLAN_PATH),
+        required=True,
         help="Path to assembly_plan.json relative to repo root",
     )
     parser.add_argument(
         "--final-render-report",
-        default=str(DEFAULT_FINAL_RENDER_REPORT_PATH),
+        required=True,
         help="Path to final_render_report.json relative to repo root",
     )
     return parser

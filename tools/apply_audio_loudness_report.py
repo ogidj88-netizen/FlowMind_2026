@@ -9,9 +9,6 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-DEFAULT_STATE_PATH = Path("projects/P2026_TEST_001/PROJECT_STATE.json")
-DEFAULT_AUDIO_RENDER_PATH = Path("projects/P2026_TEST_001/audio/audio_render.json")
-DEFAULT_LOUDNESS_REPORT_PATH = Path("projects/P2026_TEST_001/audio/audio_loudness_report.json")
 
 TOOL_NAME = "apply_audio_loudness_report"
 TOOL_VERSION = "1.0.0"
@@ -174,7 +171,7 @@ def validate_loudness_report(
         "audio_loudness_report.source_audio_render_path",
     )
 
-    expected_source = str(DEFAULT_AUDIO_RENDER_PATH)
+    expected_source = str(audio_render_path)
     if source_audio_render_path != expected_source:
         raise ApplyAudioLoudnessReportError(
             f"audio_loudness_report.source_audio_render_path mismatch: {source_audio_render_path}"
@@ -291,17 +288,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Apply FlowMind audio loudness report")
     parser.add_argument(
         "--state",
-        default=str(DEFAULT_STATE_PATH),
+        required=True,
         help="Path to PROJECT_STATE.json relative to repo root",
     )
     parser.add_argument(
         "--audio-render",
-        default=str(DEFAULT_AUDIO_RENDER_PATH),
+        required=True,
         help="Path to audio_render.json relative to repo root",
     )
     parser.add_argument(
         "--loudness-report",
-        default=str(DEFAULT_LOUDNESS_REPORT_PATH),
+        required=True,
         help="Path to audio_loudness_report.json relative to repo root",
     )
     return parser
