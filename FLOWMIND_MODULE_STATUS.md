@@ -9,11 +9,12 @@ FlowMind skeleton exists.
 
 The active test project reached QA.
 
-The nervous system is partial but now improved and verified for:
+The nervous system is now improved and verified for:
 
 - SCRIPT chain compatibility
 - QA runner dry-run mapping
 - dispatcher upload gate protection
+- dispatcher transition approval-bypass protection
 
 Confirmed:
 
@@ -25,12 +26,17 @@ Confirmed:
 - runner resolves QA to engine/executors/qa_executor.py
 - dispatcher blocks QA -> READY_FOR_UPLOAD when qa_passed=false
 - dispatcher blocks READY_FOR_UPLOAD -> UPLOADED when approved_for_upload=false
-- real PROJECT_STATE stayed unchanged during failed QA gate check
+- generic transition cannot set qa_passed directly
+- generic transition cannot set approved_for_upload directly
+- generic transition cannot set approval_status directly
+- dispatcher approval bypass was confirmed on /tmp and then fixed
+- failed bypass test now leaves tmp state in QA
+- real PROJECT_STATE stayed unchanged during failed gate and bypass tests
 - upload gate was tested without opening upload path
 - git status stayed clean after committed checkpoints
 
 Main confirmed gap:
-Human review / upload approval surface is still missing or weak.
+Human review / approval protocol is still missing.
 
 ## Trusted active contour
 
@@ -46,6 +52,7 @@ Human review / upload approval surface is still missing or weak.
 - engine/executors/*
 - tools/flowmind_run_phase.py
 - tools/dispatcher.sh
+- tools/dispatcher_cli.py
 - projects/P2026_TEST_001/* active artifacts
 
 ## Frozen / not active
@@ -68,12 +75,12 @@ blocker: upload_readiness
 
 ## Command surface status
 
-Status: VERIFIED V1.1
+Status: VERIFIED V1.2
 
 Runner:
 tools/flowmind_run_phase.py
 
-Runner v1.1 supports:
+Runner v1.2 supports:
 - SCRIPT
 - SCENES
 - ASSETS
@@ -81,13 +88,13 @@ Runner v1.1 supports:
 - AUDIO
 - QA
 
-Runner v1.1 refuses:
+Runner v1.2 refuses:
 - READY_FOR_UPLOAD
 - UPLOADED
 - ARCHIVED
 - HALT
 
-Runner v1.1 does not:
+Runner v1.2 does not:
 - auto-transition phase
 - approve upload
 - upload to YouTube
@@ -95,12 +102,30 @@ Runner v1.1 does not:
 - call engine/modules/*
 - bypass dispatcher upload gates
 
+Dispatcher CLI:
+tools/dispatcher_cli.py
+
+Dispatcher CLI now allows approval mutations only through explicit commands:
+- mark-qa-passed
+- approve-upload
+
+Dispatcher CLI generic transition no longer exposes:
+- --qa-passed
+- --approved-for-upload
+- --approval-status
+
 Verified runtime gates:
 - QA dry-run resolves to engine/executors/qa_executor.py
 - QA dry-run does not mutate PROJECT_STATE
 - QA -> READY_FOR_UPLOAD refuses when qa_passed=false
 - READY_FOR_UPLOAD -> UPLOADED refuses when approved_for_upload=false
-- real PROJECT_STATE stayed unchanged during failed QA gate check
+- old bypass QA -> READY_FOR_UPLOAD with --qa-passed true was confirmed on /tmp
+- after fix, --qa-passed on transition fails with argparse error
+- failed bypass attempt leaves tmp state as phase=QA
+- failed bypass attempt leaves tmp qa_passed=false
+- failed bypass attempt leaves tmp approved_for_upload=false
+- failed bypass attempt leaves tmp approval_status=PENDING
+- real PROJECT_STATE stayed unchanged during failed gate and bypass checks
 - upload gate was tested without opening upload path
 - git status stayed clean after checks
 
@@ -138,7 +163,7 @@ Do not continue polishing SCRIPT quality during SYSTEM MAP MODE.
 8. Assembly: TRUSTED CANDIDATE
 9. Final Render: TRUSTED CANDIDATE
 10. QA: TRUSTED CANDIDATE
-11. Human Review / Upload: MISSING / WEAK
+11. Human Review / Upload: PARTIAL / PROTOCOL MISSING
 12. Analytics: MISSING
 
 ## Known open risks
@@ -150,7 +175,7 @@ Primary risks are tracked in:
 Most important current risks:
 
 - FIX-002: Legacy module runner still exists
-- FIX-003: Upload / approval surface missing
+- FIX-003: approval bypass fixed, but human review / approval protocol still missing
 - FIX-006: script_qa artifact lacks explicit status and blockers in existing active artifact until regenerated
 - FIX-007: scenes artifact lacks explicit status and consistent source paths
 - FIX-008: assets artifact lacks explicit status and consistent source fields
@@ -163,7 +188,7 @@ Most important current risks:
 Continue SYSTEM LOGIC AUDIT.
 
 Next audit target:
-Confirm whether QA execution should remain explicit manual command or be allowed through active runner after dry-run mapping.
+Design, but do not implement yet, the minimal human review / approval protocol for FIX-003.
 
 Do not expand upload surface yet.
 
