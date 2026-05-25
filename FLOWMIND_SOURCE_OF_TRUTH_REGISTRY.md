@@ -109,6 +109,7 @@ Do not use unverified root documents to guide implementation until reviewed and 
 | FLOWMIND_REPO_TRUST_BOUNDARY_V1.md | TRUSTED | Repo trust boundary guidance. |
 | docs/FLOWMIND_HARD_RULESET_V1.md | TRUSTED | Work discipline and decision behavior. |
 | docs/FLOWMIND_WORK_PROTOCOL_V1.md | TRUSTED | Work protocol for Evgen and ChatGPT. |
+| docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md | TRUSTED | Design-only human review / QA approval protocol. It does not move any state, does not approve upload, and is not implementation proof. |
 | CANONICAL_DISPATCHER_SPEC.md | TRUSTED | Trusted as control-policy and architectural-alignment document. Not automatic proof that every referenced implementation is valid. |
 | FLOWMIND_WORKING_TARGET.md | TRUSTED | Trusted only as target-shape and system-intent guidance. Not trusted as proof of implemented runtime. |
 | main.py | TRUSTED | Trusted only as blocking tombstone for retired legacy entrypoint. Not an active runtime launcher. |
@@ -135,6 +136,7 @@ Do not use unverified root documents to guide implementation until reviewed and 
 | docs/DISPATCHER_ENTRYPOINT.md | TRUSTED | Active dispatcher command-surface truth. |
 | docs/FLOWMIND_HARD_RULESET_V1.md | TRUSTED | Work discipline and decision behavior. |
 | docs/FLOWMIND_WORK_PROTOCOL_V1.md | TRUSTED | Cooperation protocol for FlowMind work. |
+| docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md | TRUSTED | Design-only human review / QA approval protocol. It does not move any state, does not approve upload, and is not implementation proof. |
 | docs/INTEGRATION_AUDIT_V1.md | TRUSTED | Integration audit checkpoint for legacy/canonical separation. |
 | docs/MAIN_PY_STATUS.md | TRUSTED | Audit truth for main.py retired legacy tombstone. |
 | docs/PHASE2_AUDIT_STANDARD.md | TRUSTED | Audit standard for cleanup and one-contour recovery. |

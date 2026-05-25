@@ -143,33 +143,42 @@ Current reality:
 - active PROJECT_STATE was not mutated during bypass testing
 
 Risk remaining:
-System still lacks a clear human review protocol that defines when and how a human may run mark-qa-passed and transition to READY_FOR_UPLOAD.
+Human review / approval protocol is now documented, but it is design-only.
+It does not move any project to READY_FOR_UPLOAD.
+It does not approve upload.
+It does not prove implementation of an approval evidence artifact or upload command surface.
 
 Evidence:
 - PROJECT_STATE.json
 - qa_report.json
 - QA_EXECUTOR_CONTRACT_V1.md
+- docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md lists docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md as TRUSTED design-only protocol
 - dispatcher failed closed on QA -> READY_FOR_UPLOAD while qa_passed=false
 - runner dry-run resolves QA without mutating PROJECT_STATE
 - runtime bypass test on /tmp confirmed the old bypass
 - commit ebef6cd fix: block dispatcher transition approval bypass
+- commit 759eb44 docs: add human review approval protocol
 - after ebef6cd, --qa-passed on transition fails with argparse error
 - after ebef6cd, tmp state remained phase=QA, qa_passed=false, approved_for_upload=false, approval_status=PENDING
 - preflight passed after dispatcher_cli.py change
 
-Not fixed yet:
+Fixed in documentation:
 - human review checklist
-- approval evidence artifact
 - review command protocol
 - READY_FOR_UPLOAD handoff rules
+- explicit forbidden actions before upload implementation
+
+Not fixed yet:
+- approval evidence artifact
 - upload command surface
 - YouTube upload
 
 Do not fix yet:
 Telegram / YouTube upload are forbidden in current SYSTEM MAP MODE.
 
-Next possible design target:
-Define the minimal human review / approval protocol that can record approval explicitly without uploading.
+Next possible audit target:
+Synchronize module status and inventory docs with the design-only human review / approval protocol.
 
 ### FIX-004: Visual pacing is prototype only
 
@@ -386,12 +395,14 @@ Helper tools cleanup is a separate future scope.
 Continue SYSTEM LOGIC AUDIT.
 
 Next safe target:
-Design, but do not implement yet, the minimal human review / approval protocol for FIX-003.
+Synchronize FLOWMIND_MODULE_STATUS.md and FLOWMIND_MODULE_INVENTORY.md with docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md.
 
 Do not code upload.
 
 Do not open YouTube integration.
 
 Do not auto-approve QA.
+
+Do not move any project to READY_FOR_UPLOAD.
 
 End.

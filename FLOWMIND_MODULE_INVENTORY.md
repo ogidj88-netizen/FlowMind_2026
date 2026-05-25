@@ -105,8 +105,8 @@ Current PROJECT_STATE artifacts:
 | 9 | Audio renderer | engine/executors/audio_renderer.py | QA | audio_plan_path | audio_render_path | final_render, visual_pacing, QA | phase guard verified; artifact writes verified | TRUSTED CANDIDATE | 84% | Later confirm provider/runtime cost and loudness path |
 | 10 | Final render | engine/executors/final_render_executor.py | implementation-level executor, runner v1 does not map it | assembly_plan_path, resolved_assets_path, audio_render_path, audio_loudness_report_path | final_video_path, final_render_report_path | QA, visual_pacing preview | artifact reads/writes verified; explicit --state required | TRUSTED CANDIDATE | 82% | Do not tune renderer until inventory is complete |
 | 11 | Visual pacing | engine/executors/visual_pacing_executor.py | implementation-level executor, runner v1 does not map it | final_video_path, assembly_plan_path, resolved_assets_path, audio_render_path, scenes_path, final_render_report_path | visual_pacing_plan_path | preview/review only | artifact reads/writes verified; quality risk known | PROTOTYPE / RISKY | 60% | Do not tune yet; revisit in VIDEO QUALITY MODE |
-| 12 | QA / Readiness | engine/executors/qa_executor.py | QA | script_path, script_meta_path, script_qa_path, scenes_path, assets_path, resolved_assets_path, assembly_plan_path, audio_plan_path, audio_render_path, optional final_video_path | qa_report_path | dispatcher upload gate, human review | phase guard verified; artifact summary consistency verified | TRUSTED CANDIDATE | 88% | Later define human review/upload command surface |
-| 13 | Human Review / Upload | missing active command surface | not active | qa_report_path, final_video_path, approved_for_upload | READY_FOR_UPLOAD / UPLOADED state | YouTube/upload later | dispatcher blocks upload without approval | MISSING / WEAK | 0% | Do not build until SYSTEM MAP MODE exits |
+| 12 | QA / Readiness | engine/executors/qa_executor.py | QA | script_path, script_meta_path, script_qa_path, scenes_path, assets_path, resolved_assets_path, assembly_plan_path, audio_plan_path, audio_render_path, optional final_video_path | qa_report_path | dispatcher upload gate, design-only human review protocol | phase guard verified; artifact summary consistency verified; human review protocol documented | TRUSTED CANDIDATE | 88% | Later implement approval evidence artifact only after explicit review |
+| 13 | Human Review / Upload | docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md | design-only protocol, not active upload runtime | qa_report_path, final_video_path, qa_passed=false, approved_for_upload=false, approval_status=PENDING | READY_FOR_UPLOAD handoff rules only; UPLOADED remains closed | YouTube/upload later | protocol documented; dispatcher still blocks upload without approval | DESIGN-ONLY / UPLOAD CLOSED | 25% | Do not implement upload; later add approval evidence artifact after review |
 
 ## Main findings
 
@@ -118,7 +118,7 @@ The dispatcher/control layer correctly blocks unsafe upload transitions.
 
 The runner v1 is intentionally minimal and does not run QA/upload/final upload phases.
 
-The main missing operational piece is human review / upload command surface.
+The main remaining operational gap is an approval evidence artifact and upload command surface. Human review rules are documented as design-only; upload remains closed.
 
 The main quality risks remain inside module hardening, not the control skeleton.
 
@@ -138,8 +138,8 @@ Do not:
 
 ## Current next action
 
-Validate this inventory file.
+Validate the synchronized status docs.
 
-Then commit it as a SYSTEM LOGIC AUDIT checkpoint.
+Then run preflight before committing this SYSTEM LOGIC AUDIT checkpoint.
 
 End.

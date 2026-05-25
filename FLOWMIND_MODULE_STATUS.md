@@ -36,7 +36,7 @@ Confirmed:
 - git status stayed clean after committed checkpoints
 
 Main confirmed gap:
-Human review / approval protocol is still missing.
+Human review / approval protocol is documented as design-only in docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md. It does not approve upload, does not move state, and does not implement upload.
 
 ## Trusted active contour
 
@@ -175,7 +175,7 @@ Primary risks are tracked in:
 Most important current risks:
 
 - FIX-002: Legacy module runner still exists
-- FIX-003: approval bypass fixed, but human review / approval protocol still missing
+- FIX-003: approval bypass fixed; human review / approval protocol documented as design-only; upload remains closed
 - FIX-006: script_qa artifact lacks explicit status and blockers in existing active artifact until regenerated
 - FIX-007: scenes artifact lacks explicit status and consistent source paths
 - FIX-008: assets artifact lacks explicit status and consistent source fields
@@ -188,7 +188,7 @@ Most important current risks:
 Continue SYSTEM LOGIC AUDIT.
 
 Next audit target:
-Design, but do not implement yet, the minimal human review / approval protocol for FIX-003.
+Synchronize FLOWMIND_MODULE_INVENTORY.md with docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md and keep upload closed.
 
 Do not expand upload surface yet.
 
