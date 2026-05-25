@@ -77,31 +77,37 @@ Upload / approval belongs to FIX-003.
 
 ### FIX-002: Legacy module runner still exists
 
-Status: OPEN
-Priority: HIGH
+Status: CONTROLLED / TOMBSTONED
+Priority: MEDIUM
 Area: active vs legacy separation
 
 Problem:
-engine/module_runner.py routes phases to engine/modules/*.
+engine/module_runner.py still exists, but it is no longer an active phase router.
 
 Current reality:
-- engine/module_runner.py maps TOPIC and SCRIPT to engine/modules/*
+- engine/module_runner.py is a fail-closed tombstone
+- engine/module_runner.py prints FLOWMIND_LEGACY_RUNNER_DISABLED
+- engine/module_runner.py exits with SystemExit(2)
+- active runner does not import engine/module_runner.py
+- active runner does not call engine/module_runner.py
+- active runner maps phases only to engine/executors/*
+- active runner blocks engine/module_runner.py and engine/modules/* through forbidden executor fragments
 - registry says engine/module_runner.py must not be active phase runner
 - registry says engine/modules/* must not be executed as active runtime
-- active runner blocks engine/module_runner.py and engine/modules/* through forbidden executor fragments
 
 Risk:
-It can create a second active contour if executed manually or accidentally outside the active runner.
+Residual legacy files still exist and can confuse operators or future edits, but the active command surface does not route through them.
 
 Evidence:
-- engine/module_runner.py
-- engine/modules/s1_strategy.py
-- engine/modules/s2_script.py
-- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md warnings
+- engine/module_runner.py fail-closed tombstone
+- FLOWMIND_LEGACY_RUNNER_DISABLED message
+- SystemExit(2) in engine/module_runner.py
 - tools/flowmind_run_phase.py forbids engine/module_runner.py and engine/modules/*
+- tools/flowmind_run_phase.py maps active phases only to engine/executors/*
+- grep import/call check found no active module_runner import or call outside the forbidden fragment list
 
 Do not fix yet:
-Keep frozen until cleanup phase.
+Keep tombstoned legacy files frozen until a dedicated cleanup phase.
 
 ### FIX-003: Upload / approval surface missing
 
