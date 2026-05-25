@@ -53,7 +53,7 @@ Current protocol state:
 - FIX-007 is classified as CONTROLLED ARTIFACT HARDENING RISK
 - FIX-008 is classified as CONTROLLED ARTIFACT HARDENING RISK
 - FIX-010 is classified as CONTROLLED LEGACY RISK
-- FIX-011 is classified as CONTROLLED MANUAL TOOL RISK
+- FIX-011 state-mutating readiness helper defaults are fixed in abec33e; remaining helper defaults are separate cleanup risk
 
 Forbidden now:
 

@@ -181,7 +181,7 @@ Most important current risks:
 - FIX-008: assets artifact lacks explicit status/verdict/blockers/script_qa source fields; controlled artifact hardening risk, active consumers use artifacts.assets_path and asset fields
 - FIX-009: asset_resolver can produce weak resolved asset output without strong enough blockers
 - FIX-010: legacy s2_script has direct PROJECT_STATE write path; controlled legacy risk, not active runner path
-- FIX-011: hardcoded P2026_TEST_001 defaults exist in helper tools; controlled manual tool risk, not active runner path
+- FIX-011: state-mutating readiness helper defaults fixed in abec33e; remaining helper defaults are separate cleanup risk, not active runner path
 
 ## Current next action
 

@@ -415,7 +415,7 @@ Keep legacy frozen until cleanup phase. Do not convert or delete it during SYSTE
 
 ### FIX-011: hardcoded P2026_TEST_001 defaults exist in helper tools
 
-Status: CONTROLLED MANUAL TOOL RISK
+Status: IMPLEMENTED V1 / PARTIAL
 Priority: MEDIUM
 Area: project isolation / multi-project safety
 
@@ -429,9 +429,9 @@ Fixed in V1:
 - final_render_executor.py no longer has hardcoded P2026_TEST_001 default paths
 
 Current reality:
-- tools/apply_assembly_readiness.py has P2026_TEST_001 defaults and writes assembly_plan plus PROJECT_STATE
-- tools/apply_audio_loudness_report.py has P2026_TEST_001 defaults and writes audio_render plus PROJECT_STATE
-- tools/apply_final_render_readiness.py has P2026_TEST_001 defaults and writes assembly_plan plus PROJECT_STATE
+- tools/apply_assembly_readiness.py now requires explicit paths and no longer has P2026_TEST_001 defaults
+- tools/apply_audio_loudness_report.py now requires explicit paths and no longer has P2026_TEST_001 defaults
+- tools/apply_final_render_readiness.py now requires explicit paths and no longer has P2026_TEST_001 defaults
 - tools/audio_loudness_report.py has P2026_TEST_001 defaults for report generation
 - tools/render_visual_pacing_preview.py has P2026_TEST_001 default visual pacing plan path
 - tools/elevenlabs_probe_short.py writes probe output under P2026_TEST_001
@@ -439,7 +439,7 @@ Current reality:
 - docs and inventory still use P2026_TEST_001 as current active test evidence, which is acceptable
 
 Risk:
-Manual execution without explicit paths can mutate or write under the active test project unintentionally.
+Remaining manual risk is limited to non-state-mutating helper defaults and probe/report tools still referencing the active test project.
 
 Evidence:
 - commit f83a0da fix: require explicit state for final render executor
@@ -449,7 +449,7 @@ Evidence:
 - runtime grep found hardcoded P2026_TEST_001 defaults in helper tools only, not in active runner phase mapping
 
 Do not fix yet:
-Defer code cleanup until module inventory is stable. Later cleanup should require explicit paths for state-mutating helper tools.
+State-mutating readiness helper tools are fixed in abec33e. Remaining cleanup should address non-state-mutating helper defaults separately.
 
 ## Current next action
 
