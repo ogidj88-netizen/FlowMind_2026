@@ -10,16 +10,16 @@ Branch:
 cashflow-mode
 
 Latest confirmed commit:
-b4acdfb docs: update module status after approval bypass fix
+ce17001 docs: sync human review protocol status
 
 Recent critical commits:
+- ce17001 docs: sync human review protocol status
+- 759eb44 docs: add human review approval protocol
+- 42248c4 docs: add active project source override
+- 7660c40 docs: add current chat start block
 - b4acdfb docs: update module status after approval bypass fix
 - 065f198 docs: record dispatcher approval bypass fix
 - ebef6cd fix: block dispatcher transition approval bypass
-- f899a55 docs: sync fix backlog after runner qa checkpoint
-- e882728 docs: update module status after runner qa checkpoint
-- 411f83c fix: allow active runner qa dry-run mapping
-- 40a6abf fix: align script executor with retention qa
 
 Repo status at last checkpoint:
 clean
@@ -39,11 +39,14 @@ stabilize system control, state safety, and active contour before module-quality
 ## Active contour
 
 Trusted active contour:
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+- CHAT_START_BLOCK_FLOWMIND_CURRENT.md
 - FLOWMIND_ACTIVE_MAP.md
 - FLOWMIND_FIX_BACKLOG.md
 - FLOWMIND_MODULE_STATUS.md
 - FLOWMIND_MODULE_INVENTORY.md
 - FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+- docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md
 - engine/state_validator.py
 - engine/state_store.py
 - engine/canonical_dispatcher.py
@@ -128,8 +131,10 @@ Dispatcher CLI generic transition no longer exposes:
 FIX-001:
 single active command surface is DONE.
 
-FIX-003 partial:
+FIX-003:
 dispatcher transition approval bypass is FIXED.
+
+Human review / approval protocol is DOCUMENTED AS DESIGN-ONLY.
 
 Old bypass:
 transition --to READY_FOR_UPLOAD --qa-passed true
@@ -145,14 +150,21 @@ Tmp state remains:
 - approved_for_upload=false
 - approval_status=PENDING
 
-Important:
-Human review / approval protocol is still missing.
+Protocol status:
+- docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md exists
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md lists it as TRUSTED design-only protocol
+- FLOWMIND_FIX_BACKLOG.md is synced
+- FLOWMIND_MODULE_STATUS.md is synced
+- FLOWMIND_MODULE_INVENTORY.md is synced
+- protocol does not move state
+- protocol does not approve upload
+- protocol does not implement YouTube upload
 
 ## Current open risks
 
 Most important open risks:
 - FIX-002: legacy module_runner still exists
-- FIX-003: approval bypass fixed, but human review / approval protocol still missing
+- FIX-003 remaining: approval evidence artifact is not implemented; upload command surface is not implemented; upload remains closed
 - FIX-006: script_qa artifact lacks explicit status and blockers in existing active artifact until regenerated
 - FIX-007: scenes artifact lacks explicit status and consistent source paths
 - FIX-008: assets artifact lacks explicit status and consistent source fields
@@ -165,15 +177,18 @@ Most important open risks:
 Continue SYSTEM LOGIC AUDIT.
 
 Next safe target:
-Design, but do not implement yet, the minimal human review / approval protocol for FIX-003.
+Read-only inspect stale upload / approval wording in trusted executor contracts before any runtime implementation.
 
-The protocol must define:
-- what a human reviews
-- what evidence must exist before mark-qa-passed
-- what command may mark QA as passed
-- what command may transition to READY_FOR_UPLOAD
-- what is still forbidden
-- no upload implementation yet
+Primary files to inspect:
+- docs/QA_EXECUTOR_CONTRACT_V1.md
+- docs/FINAL_RENDER_EXECUTOR_CONTRACT_V1.md
+- docs/VISUAL_PACING_LAYER_CONTRACT_V1.md
+- docs/AUDIO_RENDERER_CONTRACT_V1.md
+
+Goal:
+Identify wording that could imply executors, renderers, or visual pacing may set approved_for_upload=true or transition to upload states.
+
+Do not edit these contracts until the stale wording is inspected and classified.
 
 ## Forbidden now
 
