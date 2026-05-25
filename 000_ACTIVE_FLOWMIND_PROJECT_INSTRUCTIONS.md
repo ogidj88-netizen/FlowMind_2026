@@ -37,7 +37,7 @@ Current mode: SYSTEM MAP MODE.
 
 Current confirmed repo HEAD:
 
-ce17001 docs: sync human review protocol status
+d3ed993 docs: classify system map audit risks
 
 Current protocol state:
 
@@ -49,6 +49,11 @@ Current protocol state:
 - the protocol does not implement YouTube upload
 - approval evidence artifact is still not implemented
 - upload command surface is still not implemented
+- FIX-006 is classified as CONTROLLED ARTIFACT HARDENING RISK
+- FIX-007 is classified as CONTROLLED ARTIFACT HARDENING RISK
+- FIX-008 is classified as CONTROLLED ARTIFACT HARDENING RISK
+- FIX-010 is classified as CONTROLLED LEGACY RISK
+- FIX-011 is classified as CONTROLLED MANUAL TOOL RISK
 
 Forbidden now:
 
@@ -67,6 +72,6 @@ Forbidden now:
 
 Current next action:
 
-Synchronize CHAT_START_BLOCK_FLOWMIND_CURRENT.md with commit ce17001 and the design-only human review / approval protocol status.
+Synchronize CHAT_START_BLOCK_FLOWMIND_CURRENT.md with commit d3ed993 and the classified SYSTEM MAP audit risk status.
 
 End.

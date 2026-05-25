@@ -10,16 +10,16 @@ Branch:
 cashflow-mode
 
 Latest confirmed commit:
-ce17001 docs: sync human review protocol status
+d3ed993 docs: classify system map audit risks
 
 Recent critical commits:
+- d3ed993 docs: classify system map audit risks
+- 1367ea8 docs: record module runner tombstone status
+- 2347eb5 docs: sync active chat start block
 - ce17001 docs: sync human review protocol status
 - 759eb44 docs: add human review approval protocol
 - 42248c4 docs: add active project source override
 - 7660c40 docs: add current chat start block
-- b4acdfb docs: update module status after approval bypass fix
-- 065f198 docs: record dispatcher approval bypass fix
-- ebef6cd fix: block dispatcher transition approval bypass
 
 Repo status at last checkpoint:
 clean
@@ -163,32 +163,32 @@ Protocol status:
 ## Current open risks
 
 Most important open risks:
-- FIX-002: legacy module_runner still exists
+- FIX-002: legacy module_runner still exists, but engine/module_runner.py is tombstoned and active runner does not call it
 - FIX-003 remaining: approval evidence artifact is not implemented; upload command surface is not implemented; upload remains closed
-- FIX-006: script_qa artifact lacks explicit status and blockers in existing active artifact until regenerated
-- FIX-007: scenes artifact lacks explicit status and consistent source paths
-- FIX-008: assets artifact lacks explicit status and consistent source fields
+- FIX-006: script_qa artifact lacks explicit status/blockers/qa_passed; controlled artifact hardening risk, active consumers gate on verdict=PASS
+- FIX-007: scenes artifact lacks explicit status/verdict/blockers/source_script_meta_path; controlled artifact hardening risk, active consumers use artifacts.scenes_path
+- FIX-008: assets artifact lacks explicit status/verdict/blockers/script_qa source fields; controlled artifact hardening risk, active consumers use artifacts.assets_path and asset fields
 - FIX-009: asset_resolver can produce weak resolved asset output without strong enough blockers
-- FIX-010: legacy s2_script has direct PROJECT_STATE write path
-- FIX-011: hardcoded P2026_TEST_001 defaults exist in helper tools
+- FIX-010: legacy s2_script has direct PROJECT_STATE write path; controlled legacy risk, not active runner path
+- FIX-011: hardcoded P2026_TEST_001 defaults exist in helper tools; controlled manual tool risk, not active runner path
 
 ## Current next action
 
 Continue SYSTEM LOGIC AUDIT.
 
 Next safe target:
-Read-only inspect stale upload / approval wording in trusted executor contracts before any runtime implementation.
+Read-only select the next SYSTEM MAP MODE audit target from FLOWMIND_FIX_BACKLOG.md after d3ed993.
 
 Primary files to inspect:
-- docs/QA_EXECUTOR_CONTRACT_V1.md
-- docs/FINAL_RENDER_EXECUTOR_CONTRACT_V1.md
-- docs/VISUAL_PACING_LAYER_CONTRACT_V1.md
-- docs/AUDIO_RENDERER_CONTRACT_V1.md
+- FLOWMIND_FIX_BACKLOG.md
+- FLOWMIND_MODULE_STATUS.md
+- FLOWMIND_MODULE_INVENTORY.md
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
 
 Goal:
-Identify wording that could imply executors, renderers, or visual pacing may set approved_for_upload=true or transition to upload states.
+Continue system-control audit without module hardening, video-quality tuning, upload implementation, or legacy activation.
 
-Do not edit these contracts until the stale wording is inspected and classified.
+Do not edit runtime code until the next target is read-only inspected and classified.
 
 ## Forbidden now
 
