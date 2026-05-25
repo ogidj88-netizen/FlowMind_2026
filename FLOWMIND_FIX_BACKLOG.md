@@ -243,70 +243,112 @@ This is not the current system-control blocker.
 
 ### FIX-006: script_qa artifact lacks explicit status and blockers
 
-Status: OPEN
+Status: CONTROLLED ARTIFACT HARDENING RISK
 Priority: MEDIUM
 Area: script QA / gate artifact contract
 
 Problem:
-script_qa writes verdict and warnings, but the artifact does not expose explicit status or blockers.
+script_qa.json exposes verdict-based gate state but does not expose explicit top-level status, blockers, or qa_passed fields.
 
 Current reality:
 - engine/executors/script_qa.py returns status SCRIPT_QA_OK
 - script_qa.json contains verdict, score, checks, failure_reasons, warnings
-- existing artifact may not expose explicit status or blockers as top-level fields
+- active artifact has verdict=PASS
+- active artifact has status=None
+- active artifact has blockers=None
+- active artifact has qa_passed=None
+- active downstream executors currently gate on script_qa.verdict=PASS
 
 Risk:
-Downstream modules may need to infer gate state from missing fields.
+Future downstream modules may need to infer gate state from missing fields if they expect explicit status or blockers.
 
 Evidence:
 - engine/executors/script_qa.py returns status SCRIPT_QA_OK
+- projects/P2026_TEST_001/script/script_qa.json has verdict=PASS
 - projects/P2026_TEST_001/script/script_qa.json summary showed status=None
 - projects/P2026_TEST_001/script/script_qa.json summary showed blockers=None
+- projects/P2026_TEST_001/script/script_qa.json summary showed qa_passed=None
+- grep audit showed active consumers checking script_qa.verdict=PASS
 
 Do not fix yet:
-This belongs to module hardening after system-control audit.
+This belongs to module hardening after system-control audit. Later hardening should add explicit status, blockers, and qa_passed semantics only through the script QA contract update.
 
 ### FIX-007: scenes artifact lacks explicit status and consistent source paths
 
-Status: OPEN
+Status: CONTROLLED ARTIFACT HARDENING RISK
 Priority: MEDIUM
 Area: scenes executor / director artifact contract
 
 Problem:
-scenes_executor creates scenes.json, but the artifact does not expose explicit status, verdict, blockers, or consistent script source path fields.
+scenes.json exposes scene data and selected source paths, but does not expose explicit top-level status, verdict, blockers, or a complete consistent source path set.
+
+Current reality:
+- scenes.json contains scene_count and scenes
+- scenes.json contains source_script_path
+- scenes.json contains source_script_qa_path
+- scenes.json does not contain status
+- scenes.json does not contain verdict
+- scenes.json does not contain blockers
+- scenes.json does not contain script_path
+- scenes.json does not contain script_meta_path
+- scenes.json does not contain script_qa_path
+- scenes.json does not contain source_script_meta_path
+- active downstream consumers read scenes through artifacts.scenes_path
+- grep audit found no active consumer requiring scenes.status, scenes.verdict, scenes.blockers, or source_script_meta_path
 
 Risk:
-Downstream modules may need to depend on PROJECT_STATE or inconsistent field names.
+Future downstream modules may need to infer scene artifact readiness from missing fields if they expect explicit status, verdict, blockers, or complete source path metadata.
 
 Evidence:
 - engine/executors/scenes_executor.py writes source_script_path and source_script_qa_path
 - projects/P2026_TEST_001/scenes/scenes.json summary showed script_path=None
 - projects/P2026_TEST_001/scenes/scenes.json summary showed script_meta_path=None
 - projects/P2026_TEST_001/scenes/scenes.json summary showed script_qa_path=None
+- projects/P2026_TEST_001/scenes/scenes.json summary showed source_script_meta_path=None
 - projects/P2026_TEST_001/scenes/scenes.json summary showed status=None, verdict=None, blockers=None
+- grep audit showed active consumers use artifacts.scenes_path rather than scenes.status or scenes.blockers
 
 Do not fix yet:
-This belongs to module hardening after system-control audit.
+This belongs to module hardening after system-control audit. Later hardening should add explicit status, verdict, blockers, and complete source path semantics through the scenes contract update.
 
 ### FIX-008: assets artifact lacks explicit status and consistent source fields
 
-Status: OPEN
+Status: CONTROLLED ARTIFACT HARDENING RISK
 Priority: MEDIUM
 Area: assets executor / asset artifact contract
 
 Problem:
-assets_executor creates assets.json, but the artifact does not expose explicit status, verdict, blockers, or consistent scenes source path fields.
+assets.json exposes planned asset data and selected source paths, but does not expose explicit top-level status, verdict, blockers, or a complete consistent source path set.
+
+Current reality:
+- assets.json contains asset_count
+- assets.json contains assets
+- assets.json contains source_scenes_path
+- assets.json does not contain status
+- assets.json does not contain verdict
+- assets.json does not contain blockers
+- assets.json does not contain scenes_path
+- assets.json does not contain script_qa_path
+- assets.json does not contain source_script_qa_path
+- active downstream consumers read assets through artifacts.assets_path
+- active downstream consumers validate asset_count, assets list, provider_status, license_status, and related asset fields
+- grep audit found no active consumer requiring assets.status, assets.verdict, assets.blockers, scenes_path, script_qa_path, or source_script_qa_path from assets.json
 
 Risk:
-Downstream modules may need to infer asset readiness from missing fields or inconsistent source field names.
+Future downstream modules may need to infer asset artifact readiness from missing fields if they expect explicit status, verdict, blockers, or complete source path metadata.
 
 Evidence:
 - engine/executors/assets_executor.py writes source_scenes_path
+- projects/P2026_TEST_001/assets/assets.json has asset_count=9
+- projects/P2026_TEST_001/assets/assets.json has assets list_len=9
 - projects/P2026_TEST_001/assets/assets.json summary showed scenes_path=None
+- projects/P2026_TEST_001/assets/assets.json summary showed script_qa_path=None
+- projects/P2026_TEST_001/assets/assets.json summary showed source_script_qa_path=None
 - projects/P2026_TEST_001/assets/assets.json summary showed status=None, verdict=None, blockers=None
+- grep audit showed active consumers use artifacts.assets_path and asset fields rather than assets.status or assets.blockers
 
 Do not fix yet:
-This belongs to module hardening after system-control audit.
+This belongs to module hardening after system-control audit. Later hardening should add explicit status, verdict, blockers, and complete source path semantics through the assets contract update.
 
 ### FIX-009: asset_resolver zero-assets finding was invalid
 
@@ -343,58 +385,71 @@ No asset_resolver code fix is recommended for this finding.
 
 ### FIX-010: legacy s2_script has direct PROJECT_STATE write path
 
-Status: OPEN
-Priority: HIGH
+Status: CONTROLLED LEGACY RISK
+Priority: MEDIUM
 Area: legacy containment / state safety
 
 Problem:
-engine/modules/s2_script.py can directly write PROJECT_STATE.json using json.dump.
+engine/modules/s2_script.py still contains direct PROJECT_STATE.json write logic using json.dump.
 
-Risk:
-If legacy module_runner or engine/modules/s2_script.py is accidentally executed, it can bypass canonical state_store guards.
-
-Evidence:
+Current reality:
 - engine/modules/s2_script.py contains direct PROJECT_STATE.json write path
-- engine/module_runner.py can route SCRIPT to engine/modules/s2_script.py
+- engine/modules/s2_script.py can call OpenAI directly
+- SCRIPT_EXECUTOR_CONTRACT_V1.md forbids calling legacy engine/modules/s2_script.py
 - active runner does not call engine/module_runner.py
 - active runner does not call engine/modules/*
+- engine/module_runner.py is tombstoned and fails closed with FLOWMIND_LEGACY_RUNNER_DISABLED
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md marks engine/modules/s2_script.py as UNVERIFIED and forbidden for active runtime
+
+Risk:
+If engine/modules/s2_script.py is manually executed or reconnected in future work, it can bypass canonical state_store guards.
+
+Evidence:
+- engine/modules/s2_script.py direct save_state path writes PROJECT_STATE.json with json.dump
+- docs/SCRIPT_EXECUTOR_CONTRACT_V1.md forbids calling legacy engine/modules/s2_script.py
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md says engine/modules/s2_script.py must not be executed as active runtime
+- grep references found no active runner or active tool invoking engine/modules/s2_script.py
 
 Do not fix yet:
-Keep legacy frozen until cleanup phase.
+Keep legacy frozen until cleanup phase. Do not convert or delete it during SYSTEM MAP MODE.
 
-### FIX-011: hardcoded P2026_TEST_001 defaults exist in tools and executor defaults
+### FIX-011: hardcoded P2026_TEST_001 defaults exist in helper tools
 
-Status: IMPLEMENTED V1 / PARTIAL
+Status: CONTROLLED MANUAL TOOL RISK
 Priority: MEDIUM
 Area: project isolation / multi-project safety
 
 Problem:
-Several tools and previously one executor default referenced projects/P2026_TEST_001 directly.
-
-Risk:
-Future runs may accidentally operate on the test project instead of an explicit project state path.
+Several helper tools still default to projects/P2026_TEST_001 paths.
 
 Fixed in V1:
 - engine/executors/final_render_executor.py no longer has DEFAULT_STATE_PATH for P2026_TEST_001
 - final_render_executor.py now requires explicit --state
 - running final_render_executor.py without --state exits with argparse error code 2
+- final_render_executor.py no longer has hardcoded P2026_TEST_001 default paths
 
-Remaining:
-- apply_* tools still reference P2026_TEST_001
-- audio_loudness_report.py still references P2026_TEST_001
-- render_visual_pacing_preview.py still references P2026_TEST_001
-- elevenlabs_probe_short.py still writes under P2026_TEST_001
-- docs still use P2026_TEST_001 as examples/evidence
+Current reality:
+- tools/apply_assembly_readiness.py has P2026_TEST_001 defaults and writes assembly_plan plus PROJECT_STATE
+- tools/apply_audio_loudness_report.py has P2026_TEST_001 defaults and writes audio_render plus PROJECT_STATE
+- tools/apply_final_render_readiness.py has P2026_TEST_001 defaults and writes assembly_plan plus PROJECT_STATE
+- tools/audio_loudness_report.py has P2026_TEST_001 defaults for report generation
+- tools/render_visual_pacing_preview.py has P2026_TEST_001 default visual pacing plan path
+- tools/elevenlabs_probe_short.py writes probe output under P2026_TEST_001
+- no active runner call to these helper tools was found during grep audit
+- docs and inventory still use P2026_TEST_001 as current active test evidence, which is acceptable
+
+Risk:
+Manual execution without explicit paths can mutate or write under the active test project unintentionally.
 
 Evidence:
 - commit f83a0da fix: require explicit state for final render executor
-- grep in final_render_executor.py shows --state and required=True only
-- DEFAULT_STATE_PATH is no longer present in final_render_executor.py
-- P2026_TEST_001 is no longer present in final_render_executor.py
-- preflight passed after the change
+- tools/apply_assembly_readiness.py write_json_atomic(state_path, state)
+- tools/apply_audio_loudness_report.py write_json_atomic(audio_render_path, audio_render) and write_json_atomic(state_path, state)
+- tools/apply_final_render_readiness.py write_json_atomic(assembly_plan_path, assembly_plan) and write_json_atomic(state_path, state)
+- runtime grep found hardcoded P2026_TEST_001 defaults in helper tools only, not in active runner phase mapping
 
-Do not expand yet:
-Helper tools cleanup is a separate future scope.
+Do not fix yet:
+Defer code cleanup until module inventory is stable. Later cleanup should require explicit paths for state-mutating helper tools.
 
 ## Current next action
 

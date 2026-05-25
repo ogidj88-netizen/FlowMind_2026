@@ -176,12 +176,12 @@ Most important current risks:
 
 - FIX-002: Legacy module runner still exists
 - FIX-003: approval bypass fixed; human review / approval protocol documented as design-only; upload remains closed
-- FIX-006: script_qa artifact lacks explicit status and blockers in existing active artifact until regenerated
-- FIX-007: scenes artifact lacks explicit status and consistent source paths
-- FIX-008: assets artifact lacks explicit status and consistent source fields
+- FIX-006: script_qa artifact lacks explicit status/blockers/qa_passed; controlled artifact hardening risk, active consumers gate on verdict=PASS
+- FIX-007: scenes artifact lacks explicit status/verdict/blockers/source_script_meta_path; controlled artifact hardening risk, active consumers use artifacts.scenes_path
+- FIX-008: assets artifact lacks explicit status/verdict/blockers/script_qa source fields; controlled artifact hardening risk, active consumers use artifacts.assets_path and asset fields
 - FIX-009: asset_resolver can produce weak resolved asset output without strong enough blockers
-- FIX-010: legacy s2_script has direct PROJECT_STATE write path
-- FIX-011: hardcoded P2026_TEST_001 defaults exist in tools and executor defaults
+- FIX-010: legacy s2_script has direct PROJECT_STATE write path; controlled legacy risk, not active runner path
+- FIX-011: hardcoded P2026_TEST_001 defaults exist in helper tools; controlled manual tool risk, not active runner path
 
 ## Current next action
 
