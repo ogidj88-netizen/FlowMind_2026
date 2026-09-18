@@ -1,10 +1,12 @@
 # FLOWMIND TARGET ARCHITECTURE V2.1 — 12 MODULES
 
-Status: FINAL TARGET ARCHITECTURE  
-Project: FlowMind / Imagine What If  
-Version: 2.1  
-Mode: TARGET SYSTEM MAP  
-Date: 2026-05-25
+Status: FINAL TARGET ARCHITECTURE
+Project: FlowMind / Imagine What If
+Version: 2.1
+Mode: TARGET SYSTEM MAP
+Original date: 2026-05-25
+Authority reconciliation update: 2026-09-18
+Scope: detailed target architecture only; no current operational authority; not runtime proof
 
 ---
 
@@ -19,8 +21,8 @@ It answers:
 - why the 27-module version is preserved only as a capability map
 - why the 12-module version is the accepted implementation structure
 - which capabilities from the 27-module map are preserved
-- which modules matter first
-- what must not be built yet
+- which architectural areas are expected to matter most for quality
+- what scope is intentionally deferred
 
 This document is not runtime proof.
 
@@ -34,13 +36,25 @@ A module exists only after:
 
 This document is the source of truth for FlowMind target architecture v2.1 only.
 
-It does not override:
+It does not define:
 
-- active project instructions
-- source-of-truth registry
-- dispatcher/control specs
-- current work anchor
-- runtime evidence
+- current project state
+- current next action
+- current allowed work
+- current implementation sequence
+- current runtime truth
+
+It must not override:
+
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+- FLOWMIND_ACTIVE_MAP.md
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+- verified dispatcher/control specifications within their scope
+- newer verified repo or runtime evidence
+
+Operational priority always comes from the verified active authority chain.
+
+Historical implementation-priority statements in older versions of this document must not be interpreted as current authorization.
 
 ---
 
@@ -68,27 +82,29 @@ FlowMind must not remain a primitive chain:
 
 topic -> script -> images -> voiceover -> video
 
-FlowMind must evolve into:
+FlowMind must evolve toward:
 
 opportunity -> hook -> retention -> script -> director plan -> shots -> assets -> audio -> render -> quality review -> human decision
 
-Director Brain is the main quality driver.
+Director Brain is a principal target quality driver.
+
+This is an architectural statement, not a current operational instruction.
 
 ---
 
-## 3. Current System vs Target System
+## 3. Design Baseline vs Target System
 
-### Current system
+### Historical design baseline
 
-The current system has a rough 12-step execution skeleton.
-
-It can already produce a local:
+At the time the original architecture was drafted, the system was described as having a rough 12-step execution skeleton and being capable of producing a local:
 
 - final_video.mp4
 
-This proves the pipeline can technically generate a reviewable file.
+That description is retained only as historical design context.
 
-It does not prove the system can consistently create strong YouTube-style content.
+It must not be treated as current runtime proof.
+
+Current implementation state must be established from current repo and runtime evidence.
 
 ### Target system
 
@@ -103,11 +119,11 @@ Target FlowMind v2.1 is:
 - review-gated
 - quality-improvement oriented
 
-The current skeleton remains the execution backbone.
+The migration principle is:
 
-We evolve it.
+evolve the verified execution backbone rather than rewriting the entire system without evidence.
 
-We do not rewrite everything.
+If current runtime evidence shows that an older backbone assumption is no longer valid, runtime evidence wins.
 
 ---
 
@@ -133,6 +149,10 @@ We do not rewrite everything.
 
 ## 5. Final Module Structure
 
+The Priority column below describes architectural importance for the target system.
+
+It does not define the current implementation order.
+
 | No. | Module | Layer | Main responsibility | Key output | Priority |
 |---:|---|---|---|---|---|
 | 1 | Opportunity & Validation | Strategy | Topic, evidence, pain, angle, business verdict, basic risk check | opportunity_brief.json + source/evidence section | Low / semi-manual |
@@ -150,9 +170,9 @@ We do not rewrite everything.
 
 ---
 
-## 6. Director Brain Priority
+## 6. Director Brain Architectural Priority
 
-Director Brain is the first implementation priority.
+Within the target architecture, Director Brain is expected to be a high-impact quality area.
 
 It includes:
 
@@ -161,15 +181,15 @@ It includes:
 - Module 7 — Visual Concept & Pacing
 - Module 8 — Overlay & Text Planner
 
-The first MVP may exclude Overlay if it slows the first proof.
+This architectural priority does not authorize implementation.
 
-The first MVP target is:
+Current implementation sequencing must come from FLOWMIND_ACTIVE_MAP.md and the verified authority chain.
+
+When production implementation is explicitly authorized, a Director Brain MVP may use the target flow:
 
 script -> director_plan.json -> shot_list.json -> visual_pacing_plan.json -> render -> review
 
-Goal:
-
-Reduce PowerPoint/slideshow feeling by creating:
+The target quality goal is to reduce PowerPoint/slideshow feeling through:
 
 - shorter meaningful shots
 - clearer visual intent
@@ -177,11 +197,13 @@ Reduce PowerPoint/slideshow feeling by creating:
 - asset-specific motion rules
 - controlled reveal for information cards
 
+Overlay may be deferred from the first Director Brain proof if the active implementation plan explicitly allows it.
+
 ---
 
-## 7. Director Brain MVP Definition of Done
+## 7. Future Director Brain MVP Definition of Done
 
-Director Brain MVP is accepted only if:
+If and when Director Brain implementation is authorized by the current operational authority, its MVP acceptance criteria are:
 
 1. director_plan.json is not generic and contains concrete visual intent.
 2. shot_list.json contains timing, purpose, visual description, and motion instruction.
@@ -192,15 +214,19 @@ Director Brain MVP is accepted only if:
 7. Manual review scores the video as less PowerPoint-like by at least +2/10.
 8. If the video is not visibly better, the MVP is not accepted even if all JSON files are valid.
 
+These are future target acceptance criteria.
+
+They are not a current next action.
+
 ---
 
 ## 8. Retention Heatmap
 
-Retention Heatmap is not a separate module.
+Retention Heatmap is not a separate module in target architecture v2.1.
 
 It is a supporting artifact used across the system.
 
-Lifecycle:
+Target lifecycle:
 
 1. Planned retention:
    generated in Module 2 — Hook & Retention Architect.
@@ -217,33 +243,37 @@ Artifact:
 
 Rule:
 
-Do not create a separate Retention Heatmap module now.
+Do not create a separate Retention Heatmap module in the v2.1 target structure.
 
 ---
 
-## 9. Non-Negotiable Rules
+## 9. Non-Negotiable Target Architecture Rules
 
-1. Current skeleton remains the execution backbone.
+1. Evolve verified working structure instead of performing an unsupported full rewrite.
 2. No new parallel runtime contour.
-3. No activation of legacy modules.
-4. No upload automation before consistently watchable output.
-5. No full in-memory rewrite.
-6. Critical artifacts must remain on disk.
-7. Internal sub-steps may be in-memory only inside a module.
-8. No blind Ken Burns on all assets.
+3. No activation of legacy modules without explicit audit.
+4. No upload automation before consistently watchable output and explicit approval.
+5. No full in-memory rewrite of critical artifact flow.
+6. Critical artifacts must remain inspectable on disk where contracts require them.
+7. Internal sub-steps may be in-memory inside a module when this does not break artifact contracts.
+8. No blind Ken Burns behavior on all assets.
 9. Motion must depend on asset type and content role.
-10. Each new module must produce visible improvement or a measurable blocker report.
-11. After each major output-affecting change: render and review the video.
-12. Commit only after meaningful work blocks.
-13. Do not build all 12 modules at once.
+10. Each implemented module must produce visible improvement or a measurable blocker report.
+11. When output-affecting work is authorized, major changes must be followed by render and review.
+12. Commit only after meaningful validated work blocks.
+13. Do not attempt all 12 modules as one implementation block.
 14. No production placeholders, stubs, or fake output.
-15. If a module has no input/output contract, it is not real.
+15. If a module has no verified input/output contract, it is not operationally real.
+
+These are target architecture constraints.
+
+They do not define the current work step.
 
 ---
 
-## 10. Deferred Scope
+## 10. Deferred Target Scope
 
-Do not build now:
+The following capabilities are intentionally outside the immediate target architecture path unless separately authorized by the current operational authority:
 
 - full Opportunity Engine automation
 - external trend scraping
@@ -255,44 +285,75 @@ Do not build now:
 - full business ROI automation
 - runner rewrite
 - dispatcher rewrite
-- 12 empty module folders
+- creation of empty module folders without implementation value
+
+Deferred scope does not mean permanently forbidden.
+
+It means these items must not become active merely because they appear in historical plans.
+
+Current authorization must come from the verified authority chain.
 
 ---
 
-## 11. Current Immediate Implementation Target
+## 11. Architectural Sequencing Note
 
-The next real implementation target is not Market Intelligence and not upload.
+The target architecture expects the Director Brain area to provide one of the earliest major quality improvements once production implementation is authorized.
 
-The next real target is:
+That expectation is architectural, not operational.
 
-Director Brain MVP:
+It must not be interpreted as:
 
-- Director Engine
-- Shot Planner / Scene Splitter
-- Visual Concept & Pacing
+- the current project step
+- automatic permission to implement Director Brain
+- permission to change renderer behavior
+- permission to bypass authority/source reconciliation
+- permission to skip runtime verification
 
-Success criterion:
+When FLOWMIND_ACTIVE_MAP.md eventually authorizes production implementation, the operational plan may select Director Brain or another verified blocker based on current evidence.
 
-A new rendered video must look visibly more dynamic than the current baseline.
+Architecture suggests direction.
 
-If Director Brain MVP does not improve the video, do not continue to the next modules.
-
-Fix Director Brain first.
+The Active Map selects current work.
 
 ---
 
-## 12. Relationship With Current Work Anchor
+## 12. Relationship With Current Operational Authority
 
-FLOWMIND_CURRENT_WORK_ANCHOR.md defines where we are now.
+FLOWMIND_ACTIVE_MAP.md defines:
 
-This file defines where we are going.
+- where we are now
+- current allowed work
+- current forbidden work
+- current next operational step
+- current exit conditions
 
-Use both:
+This file defines:
 
-- CURRENT_WORK_ANCHOR = current operating state
-- TARGET_ARCHITECTURE_V2_12_MODULES = destination
+- where the target architecture is going
+- the accepted 12-module structure
+- target responsibilities
+- target artifacts
+- architectural constraints
 
-If they conflict, stop and reconcile before coding.
+FLOWMIND_CURRENT_WORK_ANCHOR.md is FROZEN LEGACY.
+
+It must not define current operating state or current next action.
+
+Historical work anchors may be used only as historical evidence.
+
+If target architecture and current operational authority materially conflict:
+
+STOP.
+
+Reconcile the conflict through:
+
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+- FLOWMIND_ACTIVE_MAP.md
+- current repo and runtime evidence
+- explicit user decision when required
+
+Do not silently choose an older next action.
 
 ---
 
@@ -304,13 +365,23 @@ FlowMind v2.1 target is:
 - 7 layers
 - 27 capabilities preserved
 - artifact-based
-- director-first
+- director-led
 - review-gated
 - no premature upload
 - no overbuilt market automation
 - no blind motion
 - no second runtime contour
 
-The first quality leap must come from Director Brain, not from more infrastructure.
+Director Brain remains an important target quality driver.
+
+It is not automatically the current next action.
+
+Current implementation work must always come from the verified current operational authority.
+
+Target architecture defines destination.
+
+Active Map defines where we work now.
+
+Runtime evidence defines what actually exists.
 
 End.
