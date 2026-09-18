@@ -1,220 +1,161 @@
 # FLOWMIND ACTION SEQUENCE V1
 
-## Status
-Canonical action order for rebuilding one working FlowMind contour.
-This document defines execution order only.
-It does not replace system map, dispatcher rules, or canonical state policy.
+Status: FROZEN LEGACY
+Project: FlowMind / Imagine What If
+Role: historical recovery action-sequence checkpoint only
+
+## 1. Purpose
+
+This file is retained as historical evidence of an earlier FlowMind recovery process.
+
+Earlier versions defined:
+
+- recovery phases
+- rebuild order
+- one-contour restoration steps
+- validation expectations
+- a time-sensitive current next focus
+
+This file no longer defines the current execution order.
 
 ---
 
-## Core rule
+## 2. Why this file is frozen
 
-Build only one working contour.
+Earlier versions were built around a recovery sequence such as:
 
-Forbidden:
-- parallel rebuild tracks
-- new migration branches as active work
-- second control centers
-- architecture expansion before baseline works
-- jumping over steps because something “seems obvious”
+- audit and cleanup
+- canonical system map
+- canonical action sequence
+- one-contour rebuild
+- final smoke test
 
-Allowed:
+That sequence was useful during recovery.
+
+It is no longer safe as current operational authority because FlowMind has moved beyond those checkpoints.
+
+Keeping this file active would create a second source for:
+
+- what phase we are in
+- what must happen next
+- what current work is allowed
+
+Current operational sequencing belongs to:
+
+FLOWMIND_ACTIVE_MAP.md
+
+---
+
+## 3. Current authority routing
+
+For current operational state and next action use:
+
+- FLOWMIND_ACTIVE_MAP.md
+
+For operating discipline use:
+
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+For authority classification use:
+
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+
+For execution discipline use:
+
+- docs/FLOWMIND_WORK_PROTOCOL_V1.md
+
+For product intent use:
+
+- FLOWMIND_WORKING_TARGET.md
+
+For detailed target architecture use:
+
+- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+
+For control-plane semantics use:
+
+- CANONICAL_DISPATCHER_SPEC.md
+
+Runtime truth requires current repo and runtime evidence.
+
+---
+
+## 4. Historical principles preserved
+
+The following principles remain useful:
+
 - one active contour
-- one active priority
-- one validation gate after each step
-- legacy only as audit source, not authority
+- no parallel rebuild tracks
+- no second control center
+- no architecture expansion before evidence
+- validation after meaningful work
+- legacy may inform but must not control
+- a step is incomplete until verified
+- runtime evidence is stronger than assumption
+
+These principles are now enforced by current authority documents.
+
+This file itself no longer controls execution order.
 
 ---
 
-## Phase order
+## 5. Prohibitions
 
-### Phase 1 — Locked mistakes and principles
-Purpose:
-- preserve lessons already paid for
-- prevent repeating structural errors
+Do not use this file to:
 
-Exit condition:
-- principles locked
-- interaction rules locked
-- anti-chaos rules locked
+- determine the current phase
+- determine the current next action
+- define current implementation order
+- decide which module to build next
+- authorize production work
+- reopen old recovery phases
+- override FLOWMIND_ACTIVE_MAP.md
+- override newer verified authority
+- infer current runtime readiness
 
-Status:
-- completed
-
----
-
-### Phase 2 — Audit and cleanup
-Purpose:
-- inspect actual repository reality
-- separate working parts from noise
-- identify legacy, duplicate, dead, and unclear zones
-
-Must produce:
-- clear list of trusted modules
-- clear list of untrusted modules
-- clear list of dead or frozen modules
-
-Exit condition:
-- repo reality is visible
-- no fake clarity remains
-
-Status:
-- partially completed / requires final consolidation
+Do not resume from old Phase 1–5 status values.
 
 ---
 
-### Phase 3 — Canonical system map
-Purpose:
-- define one system shape
-- mark what is canonical, frozen, legacy, unknown
+## 6. Recovery-era sequence
 
-Must produce:
-- one readable system map
-- explicit separation of:
-  - confirmed
-  - unverified
-  - frozen legacy
+Previous phase ordering and rebuild steps remain available in Git history.
 
-Exit condition:
-- one shared architectural picture exists
+They may be used only for:
 
-Status:
-- completed
+- historical investigation
+- understanding recovery decisions
+- comparing old and current system state
+- tracing why earlier architecture choices were made
+
+They are not current instructions.
 
 ---
 
-### Phase 4 — Canonical action sequence
-Purpose:
-- define exact rebuild order
-- remove ambiguity about “what next”
+## 7. Final classification
 
-Must produce:
-- one execution sequence
-- one step-at-a-time order
-- no parallel active workstreams
+Classification:
 
-Exit condition:
-- next actions are deterministic
+FROZEN LEGACY
 
-Status:
-- in progress
+Current authority:
 
----
+NONE
 
-### Phase 5 — Build one working contour
-Purpose:
-- assemble one real operating system
-- restore working flow without architectural drift
+Historical value:
 
-Build order:
-1. repo trust boundary
-2. canonical state boundary
-3. dispatcher entry path
-4. approval/control path
-5. production path
-6. validation path
-7. final operational smoke test
+YES
 
-Exit condition:
-- one contour runs end-to-end
-- result is verified by execution, not assumption
+Current execution-order value:
 
-Status:
-- not started
+NO
 
----
+Current-next-action value:
 
-## Operational order inside Phase 5
+NO
 
-### Step 1 — Repo trust boundary
-Define:
-- what folders/files are canonical
-- what is frozen legacy
-- what must not be touched during active rebuild
+Runtime-proof value:
 
-Success signal:
-- trusted zone is explicit
+NO
 
-### Step 2 — Canonical state boundary
-Verify:
-- one state authority
-- no shadow state
-- no reverse write from legacy paths
-
-Success signal:
-- state mutation authority is singular
-
-### Step 3 — Dispatcher entry path
-Verify:
-- one real entry path
-- dispatcher controls transition logic
-- no hidden side-entry starts runs
-
-Success signal:
-- one start path only
-
-### Step 4 — Approval/control path
-Verify:
-- approval flow is explicit
-- manual gates are clear
-- no ambiguous override behavior
-
-Success signal:
-- operator actions are deterministic
-
-### Step 5 — Production path
-Verify:
-- core production flow is connected
-- script -> assets -> assembly -> QA path is real
-- path can run without architectural guessing
-
-Success signal:
-- one production chain is runnable
-
-### Step 6 — Validation path
-Verify:
-- every critical stage has a check
-- failure produces a visible stop
-- no silent pass
-
-Success signal:
-- failures are detectable and localizable
-
-### Step 7 — Final smoke test
-Run:
-- one minimal end-to-end test through canonical contour
-
-Success signal:
-- one actual working contour exists
-
----
-
-## Non-goals
-
-This document does not authorize:
-- building advanced intelligence layers now
-- restarting broad migration work
-- adding new orchestration frameworks
-- expanding multi-channel logic
-- inventing new abstractions before baseline recovery
-
----
-
-## Decision standard
-
-A step is complete only if:
-- it is explicitly documented
-- it is validated
-- it reduced ambiguity
-- it moved the system closer to one working contour
-
-If not, it is not complete.
-
----
-
-## Current next focus
-
-Immediate focus after this document:
-- finalize trusted vs frozen repo boundary
-
-That is the next action after Action Sequence V1 is locked.
+End.

@@ -1,172 +1,462 @@
 # CANONICAL DISPATCHER SPEC
 
-Останнє оновлення: 2026-04-06
-Статус: ACTIVE CONTROL SPEC
-Призначення: активний контракт canonical control layer для FlowMind cashflow-mode
+Status: CANONICAL CONTROL SPEC
+Project: FlowMind / Imagine What If
+Updated: 2026-09-18
+Scope: control-plane contract only
+
+## 1. Purpose
+
+This document defines the intended canonical control-plane behavior for FlowMind.
+
+It defines:
+
+- project phase control
+- guarded phase transitions
+- HALT / resume behavior
+- state mutation discipline
+- approval gates
+- legacy control separation
+
+It does not define:
+
+- product strategy
+- creative reasoning
+- Director Brain behavior
+- module implementation
+- target product architecture
+- current runtime proof
+
+Runtime implementation must be verified separately.
 
 ---
 
-## 1. РОЛЬ
+## 2. Authority scope
 
-Canonical Dispatcher — це єдиний активний control brain системи.
+This specification controls only dispatcher/control-plane semantics.
 
-Він:
-- читає PROJECT_STATE.json
-- перевіряє валідність стану
-- визначає дозволений перехід фази
-- виконує контроль переходу
-- блокує незаконні переходи
-- фіксує HALT / resume / approval-related transitions
-- зберігає оновлений стан через захищений state layer
+It is subordinate to the verified FlowMind authority chain.
 
-Dispatcher НЕ є production-модулем.
-Dispatcher НЕ генерує контент.
-Dispatcher НЕ є legacy launcher.
-Dispatcher керує маршрутом і цілісністю control flow.
+It must not override:
+
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+- FLOWMIND_WORKING_TARGET.md
+- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+- FLOWMIND_ACTIVE_MAP.md
+- newer verified runtime evidence
+
+If this specification materially conflicts with current verified runtime evidence:
+
+STOP.
+
+Audit the conflict before changing runtime behavior.
 
 ---
 
-## 2. SINGLE SOURCE OF TRUTH
+## 3. Dispatcher role
 
-Єдине джерело правди для active control contour:
+Canonical Dispatcher is the control-plane authority for project phase transitions.
+
+Its responsibility is to:
+
+- read canonical project state
+- validate state before transition
+- determine whether a requested transition is allowed
+- enforce transition guards
+- record HALT state
+- control resume
+- enforce approval-dependent transitions
+- persist state through the approved state layer
+
+Dispatcher is not:
+
+- the product brain
+- the creative brain
+- Director Brain
+- Script Writer
+- QA content evaluator
+- production asset generator
+- renderer
+- legacy launcher
+
+Dispatcher controls state flow.
+
+It does not make creative content decisions.
+
+---
+
+## 4. Canonical state model
+
+The dispatcher contract uses:
 
 `projects/<PROJECT_ID>/PROJECT_STATE.json`
 
-Canonical dispatcher не використовує ExecutionManifest.json як runtime source of truth.
+as the canonical persistent project-state location.
 
----
-
-## 3. ACTIVE CONTROL CORE
-
-Активний canonical control core складається з:
-
-- `engine/canonical_dispatcher.py`
-- `engine/state_validator.py`
-- `engine/state_store.py`
-
-Ці файли формують базу одного активного control contour.
-
----
-
-## 4. ACTIVE ENTRYPOINTS
-
-Офіційні active entrypoints для canonical dispatcher:
-
-- `tools/dispatcher.sh` — shell entrypoint
-- `tools/dispatcher_cli.py` — CLI implementation layer
-- `tools/check_dispatcher.sh` — validation entrypoint
-
----
-
-## 5. STATE MODEL
-
-Canonical dispatcher працює через поле:
+The canonical phase field is:
 
 `phase`
 
-а не через:
-- `status`
-- `current_phase` legacy runtime
-- station-completion model типу `S1_DONE`, `S2_DONE`, etc.
+The control contract must not depend on legacy station-style state such as:
+
+- S1_DONE
+- S2_DONE
+- station completion flags
+- legacy current_phase conventions
+- ExecutionManifest.json as canonical runtime state
+
+ExecutionManifest-style artifacts may exist as historical or test evidence.
+
+They must not become parallel canonical state authority.
 
 ---
 
-## 6. CANONICAL PHASES
+## 5. Canonical phases
 
-Поточна canonical phase model:
+The canonical control model recognizes:
 
-- `TOPIC`
-- `SCRIPT`
-- `SCENES`
-- `ASSETS`
-- `ASSEMBLY`
-- `QA`
-- `READY_FOR_UPLOAD`
-- `UPLOADED`
-- `ARCHIVED`
-- `HALT`
+- TOPIC
+- SCRIPT
+- SCENES
+- ASSETS
+- ASSEMBLY
+- QA
+- READY_FOR_UPLOAD
+- UPLOADED
+- ARCHIVED
+- HALT
 
----
+These names define the control contract.
 
-## 7. GUARDED TRANSITIONS
+This document does not by itself prove that every phase is currently implemented end-to-end.
 
-Dispatcher дозволяє тільки явно визначені переходи між фазами.
-
-Dispatcher зобов’язаний:
-- забороняти no-op transitions
-- забороняти незаконні переходи
-- забороняти unsafe rollback after protected phases
-- вимагати обов’язкові runtime conditions before guarded transitions
-
-Приклади guard logic:
-- `ASSEMBLY -> QA` тільки якщо існує `artifacts.final_video_path`
-- `QA -> READY_FOR_UPLOAD` тільки якщо `qa_passed = true`
-- `READY_FOR_UPLOAD -> UPLOADED` тільки якщо `approved_for_upload = true`
+Runtime support must be verified.
 
 ---
 
-## 8. HALT / RESUME RULE
+## 6. Transition discipline
 
-Dispatcher може:
-- перевести стан у `HALT`
-- записати `halt_reason`
-- записати `resume_hint`
-- дозволити resume тільки в дозволені canonical phases
+All phase transitions must be explicit.
 
-Resume із `HALT` дозволений тільки через canonical dispatcher rules.
+The dispatcher must reject:
 
----
+- illegal transitions
+- accidental no-op transitions when not explicitly allowed
+- unsafe rollback
+- transitions with missing required state
+- transitions that bypass required gates
+- transitions that rely on legacy state authority
 
-## 9. STATE DISCIPLINE
-
-Canonical state layer зобов’язаний:
-- валідовувати top-level PROJECT_STATE structure
-- валідовувати manifest payload inside state
-- контролювати immutable vs mutable fields
-- блокувати несанкціоновані runtime mutations
-- зберігати state тільки через захищений state-store path
+No module may silently advance canonical project phase outside the approved control path.
 
 ---
 
-## 10. LEGACY SEPARATION
+## 7. Guarded transition examples
 
-Наступні файли НЕ входять в active canonical control contour:
+Required guard semantics include:
 
-- `main.py`
-- `dispatcher/engine.py`
-- `dispatcher/engine_v16.py`
+### ASSEMBLY -> QA
 
-Вони є legacy / retired artifacts і не повинні використовуватись як активні control entrypoints.
+Allowed only when the required final assembly artifact exists and satisfies the dispatcher contract.
+
+Historical field example:
+
+`artifacts.final_video_path`
+
+The exact current artifact contract must be verified against current runtime before implementation changes.
+
+### QA -> READY_FOR_UPLOAD
+
+Allowed only when the current QA contract has passed.
+
+Historical field example:
+
+`qa_passed = true`
+
+READY_FOR_UPLOAD must not be opened merely because rendering completed.
+
+### READY_FOR_UPLOAD -> UPLOADED
+
+Allowed only after explicit upload approval under the current verified release policy.
+
+Historical field example:
+
+`approved_for_upload = true`
+
+Automatic publication must not be inferred from this specification.
 
 ---
 
-## 11. NOT ALLOWED
+## 8. HALT behavior
 
-Заборонено:
-- відновлювати legacy dispatcher flow
-- змішувати `ExecutionManifest.json` runtime flow з `PROJECT_STATE.json` flow
-- змішувати legacy statuses зі canonical phases
-- створювати новий parallel control brain
-- вводити новий root entrypoint без сильної практичної потреби
-- називати legacy launcher canonical dispatcher
+Dispatcher must support a fail-closed HALT state.
 
----
+HALT should record enough information to diagnose and resume safely.
 
-## 12. CURRENT PRACTICAL RULE
+Expected control data may include:
 
-Під час Phase 2 система не потребує нової вигаданої архітектури control layer.
+- halt_reason
+- resume_hint
+- previous valid phase
+- relevant failure context
 
-Система потребує:
-- control-layer alignment
-- removal of legacy control ambiguity
-- one active dispatcher contour
-- one active command surface
+HALT must not silently convert into success.
 
 ---
 
-## 13. TARGET
+## 9. Resume behavior
 
-Поточна ціль canonical dispatcher layer:
+Resume must occur only through canonical control rules.
 
-Стати єдиним активним control brain для FlowMind cashflow-mode
-без legacy ambiguity, без parallel control logic, без подвійної state model.
+Resume must not:
+
+- bypass failed validation
+- erase failure evidence
+- jump to an arbitrary phase
+- reactivate legacy state flow
+- bypass approval gates
+
+The requested resume destination must be validated before state mutation.
+
+---
+
+## 10. State mutation discipline
+
+Canonical project state must not have multiple uncontrolled writers.
+
+State mutation must be:
+
+- explicit
+- validated
+- atomic where applicable
+- traceable
+- routed through the approved state-control path
+
+Direct uncontrolled writes to PROJECT_STATE.json are forbidden.
+
+Modules may produce artifacts and module outputs.
+
+They must not silently become independent phase-control authorities.
+
+---
+
+## 11. Expected implementation mapping
+
+The following repo paths have historically represented the canonical dispatcher implementation:
+
+- engine/canonical_dispatcher.py
+- engine/state_validator.py
+- engine/state_store.py
+
+Historical command-surface paths include:
+
+- tools/dispatcher.sh
+- tools/dispatcher_cli.py
+- tools/check_dispatcher.sh
+
+Their presence in this document does not grant current TRUSTED runtime status.
+
+Each path must be verified against:
+
+- current code
+- current contracts
+- runtime behavior
+- validation output
+- downstream use
+
+before current runtime claims are made.
+
+---
+
+## 12. Legacy separation
+
+Legacy control paths must not become parallel control authority.
+
+Historical examples include:
+
+- main.py
+- dispatcher/engine.py
+- dispatcher/engine_v16.py
+- engine/module_runner.py when routing legacy station modules
+- ExecutionManifest-driven station flow
+- engine/modules/* legacy execution paths
+
+A legacy file may remain in the repository.
+
+Repository presence does not make it active.
+
+---
+
+## 13. One-control-plane rule
+
+FlowMind must have one canonical phase-control authority.
+
+Do not introduce:
+
+- second dispatcher
+- parallel phase engine
+- second canonical state file
+- duplicate transition authority
+- hidden module-level phase mutation
+- legacy compatibility path that becomes a second runtime controller
+
+Compatibility code must remain subordinate to canonical control.
+
+---
+
+## 14. Separation from productive intelligence
+
+FlowMind productive intelligence and control-plane logic are different responsibilities.
+
+Productive intelligence may decide:
+
+- topic
+- story
+- script
+- scene logic
+- visual intent
+- creative quality direction
+
+Dispatcher decides only whether the project may move through canonical control state.
+
+Creative reasoning must not be embedded into phase-control logic.
+
+Phase-control logic must not impersonate creative reasoning.
+
+---
+
+## 15. QA and approval separation
+
+Dispatcher enforces gate results.
+
+Dispatcher does not create those results.
+
+For example:
+
+QA system:
+
+- evaluates output
+- produces PASS / FAIL or equivalent verified result
+
+Dispatcher:
+
+- reads the verified result
+- permits or rejects the transition
+
+Human or release approval:
+
+- produces explicit approval state
+
+Dispatcher:
+
+- enforces that approval before the relevant transition
+
+This separation must remain explicit.
+
+---
+
+## 16. Runtime proof rule
+
+This specification is not runtime proof.
+
+A dispatcher capability is considered current only when supported by relevant evidence such as:
+
+- inspected implementation
+- validation
+- runtime log
+- state transition result
+- reproducible test
+- generated state artifact
+- verified downstream behavior
+
+A historical status document is insufficient.
+
+---
+
+## 17. Failure behavior
+
+Control failures must fail closed.
+
+Forbidden:
+
+- silent transition failure
+- fake success
+- automatic fallback to legacy control
+- swallowing validation errors
+- mutating state after failed validation
+- continuing with ambiguous state
+
+Errors must be surfaced clearly enough to diagnose.
+
+---
+
+## 18. Idempotency principle
+
+Dispatcher operations should avoid uncontrolled duplicate effects.
+
+Repeated validation of the same state must not corrupt it.
+
+Repeated rejected transitions must not advance state.
+
+Where a transition is not naturally idempotent, the implementation must explicitly protect against accidental duplicate execution.
+
+---
+
+## 19. Current audit rule
+
+During the authority/source reconciliation phase:
+
+- do not rewrite dispatcher runtime
+- do not activate legacy dispatcher paths
+- do not change phase behavior merely to match this document
+- do not assume historical implementation paths are current
+- audit specification and runtime separately
+
+The current task is authority alignment, not dispatcher redevelopment.
+
+---
+
+## 20. Verification requirements
+
+Before this specification is used to justify runtime changes, verify:
+
+1. actual dispatcher implementation path;
+2. actual state-store path;
+3. actual validator path;
+4. current PROJECT_STATE schema;
+5. current transition rules;
+6. HALT / resume behavior;
+7. QA transition guard;
+8. upload approval guard;
+9. absence of competing active state writers;
+10. absence of a second active control contour.
+
+If verification fails:
+
+do not redesign immediately.
+
+Record the mismatch and resolve authority first.
+
+---
+
+## 21. Stable control principle
+
+The canonical dispatcher should remain:
+
+- narrow
+- deterministic
+- fail-closed
+- state-focused
+- non-creative
+- auditable
+- resistant to legacy ambiguity
+
+One control plane.
+
+One canonical state authority.
+
+No parallel dispatcher.
+
+No creative brain hidden inside control logic.
+
+End.

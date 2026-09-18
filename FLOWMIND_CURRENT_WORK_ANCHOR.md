@@ -1,317 +1,182 @@
 # FLOWMIND CURRENT WORK ANCHOR
 
-Status: ACTIVE WORK ANCHOR  
-Project: FlowMind / Imagine What If  
-Mode: DIRECTOR BRAIN MVP PREPARATION  
-Branch: cashflow-mode
-
----
+Status: FROZEN LEGACY
+Project: FlowMind / Imagine What If
+Role: historical Director Brain preparation checkpoint only
 
 ## 1. Purpose
 
-This file defines the current working position for FlowMind.
+This file is retained as historical evidence of an earlier FlowMind implementation checkpoint.
 
-It answers:
+Earlier versions described:
+
+- the current working position at that time
+- Director Brain MVP preparation
+- current production skeleton assumptions
+- preview-to-render bridge work
+- file-edit protocol references
+- implementation decision references
+- a time-sensitive current next action
+
+This file no longer defines the current operational state.
+
+---
+
+## 2. Why this file is frozen
+
+Earlier versions explicitly acted as the current operating anchor.
+
+That role now belongs to:
+
+FLOWMIND_ACTIVE_MAP.md
+
+Keeping this file active would create competing answers to:
 
 - where we are now
 - what we are doing next
-- what is forbidden now
-- what file defines the destination
-- how the current skeleton connects to the target architecture
-- which file-edit protocol is mandatory
+- what work is allowed
+- what work is forbidden
 
-This file is the current operating anchor.
+FlowMind must have one current operational authority.
 
-It does not replace the target architecture.
+---
 
-Destination map:
+## 3. Current authority routing
+
+For current operational state and next action use:
+
+- FLOWMIND_ACTIVE_MAP.md
+
+For operating discipline use:
+
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+For authority classification use:
+
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+
+For work discipline use:
+
+- docs/FLOWMIND_WORK_PROTOCOL_V1.md
+
+For high-level product intent use:
+
+- FLOWMIND_WORKING_TARGET.md
+
+For detailed target architecture use:
 
 - FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
 
-Integration map:
+For control-plane semantics use:
+
+- CANONICAL_DISPATCHER_SPEC.md
+
+Runtime truth requires current repo and runtime evidence.
+
+---
+
+## 4. Historical Director Brain context
+
+Previous versions contained useful historical evidence about:
+
+- Director Brain MVP
+- Director Engine
+- Shot Planner / Scene Splitter
+- Visual Concept & Pacing
+- production render bridge
+- preview pacing experiments
+- render-review expectations
+
+These may be reviewed later as historical implementation evidence.
+
+They must not define the current next action.
+
+---
+
+## 5. Historical linked documents
+
+Earlier versions referenced documents such as:
 
 - FLOWMIND_CURRENT_TO_TARGET_INTEGRATION_MAP.md
-
-File edit protocol:
-
 - FLOWMIND_FILE_EDIT_PROTOCOL.md
-
-Implementation decision:
-
 - FLOWMIND_DIRECTOR_BRAIN_MVP_INTEGRATION_DECISION.md
 
----
+Those references do not grant the linked files current authority.
 
-## 2. Mandatory file edit protocol
-
-All file modifications in FlowMind must follow:
-
-- FLOWMIND_FILE_EDIT_PROTOCOL.md
-
-Mandatory rule:
-
-Full file replacement only.
-
-Allowed edit methods:
-
-1. nano
-2. direct cat input using cat > path/to/file
-
-Forbidden:
-
-- heredoc
-- cat << EOF
-- cat <<'EOF'
-- partial edits
-- patch-style edits
-- sed -i
-- apply_patch
-- append-only changes with >>
-- unclear "change this section" instructions
-- modifying a file without providing full replacement content
-
-Assistant rule:
-
-When the assistant asks the user to modify a file, the assistant must provide:
-
-- exact file path
-- exact command
-- full replacement content
-- save instructions
-- verification command after user confirms completion
-
-If the assistant fails to provide full replacement content for a file change, stop and correct the instruction before continuing.
+Each file requires its own verification before use.
 
 ---
 
-## 3. Current confirmed state
+## 6. Prohibitions
 
-Active project:
+Do not use this file to:
 
-- projects/P2026_TEST_001
+- determine the current project state
+- determine the current next action
+- start Director Brain implementation
+- authorize renderer changes
+- define the current production contour
+- classify runtime components as active
+- override FLOWMIND_ACTIVE_MAP.md
+- override newer verified authority
+- infer current runtime readiness
 
-Current known output:
-
-- projects/P2026_TEST_001/final_render/final_video.mp4
-
-Current state interpretation:
-
-- the current skeleton can create a local final video
-- the output is reviewable
-- the system is not upload-ready
-- QA is expected to block upload readiness
-- current quality is not considered production YouTube quality
-
-Upload remains closed.
+Do not resume work from old Director Brain preparation instructions automatically.
 
 ---
 
-## 4. Current operating mode
+## 7. Relationship with target architecture
 
-Current mode:
+FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md defines the target architecture within its verified scope.
 
-DIRECTOR BRAIN MVP PREPARATION
+Any historical statement that this anchor defines the current operating state must be treated as stale.
 
-Meaning:
+Current operating state comes from:
 
-We are no longer doing broad system-map audit by default.
+FLOWMIND_ACTIVE_MAP.md
 
-We are preparing the first quality-improvement vertical slice:
-
-script
--> director_plan.json
--> shot_list.json
--> visual_pacing_plan.json
--> render
--> review
-
-Updated runtime finding:
-
-visual_pacing_plan.json already supports beat-level rendering through the existing visual pacing preview tool.
-
-Production final render currently renders scene-level output.
-
-Current technical focus:
-
-Visual Pacing Preview -> Production Render Bridge
-
-Goal:
-
-Reduce PowerPoint/slideshow feeling in the final video by moving from scene-level render behavior toward beat-level / shot-aware production output.
+Target architecture does not itself prove current implementation state.
 
 ---
 
-## 5. Target architecture
+## 8. Historical-use rule
 
-Target architecture file:
+Previous versions may be used only for:
 
-- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+- historical investigation
+- understanding Director Brain design work
+- recovering useful validated decisions
+- comparing earlier production state with current runtime evidence
+- tracing architecture evolution
 
-Target system:
-
-- 12 modules
-- 7 layers
-- 27 capabilities preserved
-- current skeleton remains execution backbone
-- Director Brain is first implementation priority
-
-Important interpretation:
-
-The 12-module architecture is not a rewrite.
-
-It is a destination map for evolving the current skeleton.
+Historical value does not equal current authority.
 
 ---
 
-## 6. Current implementation target
+## 9. Final classification
 
-Current implementation target:
+Classification:
 
-Director Brain MVP via Visual Pacing -> Production Render Bridge
+FROZEN LEGACY
 
-Included:
+Current authority:
 
-- Module 5 — Director Engine
-- Module 6 — Shot Planner / Scene Splitter
-- Module 7 — Visual Concept & Pacing
-- Module 11 — Assembly & Renderer bridge for beat-level / shot-aware output
+NONE
 
-Near-term technical target:
+Historical value:
 
-- use existing visual_pacing_plan.json beat structure
-- preserve current dispatcher / runner
-- avoid new DIRECTOR phase
-- avoid a second runtime contour
-- make production render visibly benefit from beat-level pacing
+YES
 
-Optional after MVP:
+Current operational-anchor value:
 
-- Module 8 — Overlay & Text Planner
+NO
 
-MVP output expectation:
+Current-next-action value:
 
-- director_plan.json when introduced
-- shot_list.json when introduced
-- visual_pacing_plan.json
-- production render bridge
-- new final render
-- manual review result
+NO
 
----
+Runtime-proof value:
 
-## 7. Definition of Done for Director Brain MVP
-
-Director Brain MVP is accepted only if:
-
-1. director_plan.json is not generic and contains concrete visual intent when introduced.
-2. shot_list.json contains timing, purpose, visual description, and motion instruction when introduced.
-3. visual_pacing_plan.json is actually used by the render path or by a production-safe bridge.
-4. unjustified static segments above 12 seconds are reduced.
-5. shot / beat changes are meaningful, not random.
-6. charts, dense cards, and infographics do not become less readable.
-7. manual review scores the video as less PowerPoint-like by at least +2/10.
-8. if the video is not visibly better, the MVP is not accepted even if all JSON files are valid.
-
----
-
-## 8. Confirmed implementation findings
-
-Confirmed executor surface:
-
-- engine/executors/scenes_executor.py creates scenes/scenes.json
-- engine/executors/assembly_executor.py creates assembly/assembly_plan.json
-- engine/executors/visual_pacing_executor.py creates visual_pacing/visual_pacing_plan.json
-- engine/executors/final_render_executor.py creates final_render/final_video.mp4 and final_render/final_render_report.json
-- tools/render_visual_pacing_preview.py creates final_render/final_video_visual_pacing_preview.mp4 and final_render/visual_pacing_preview_report.json
-
-Confirmed runtime finding:
-
-- production final render currently renders 9 scene-level segments
-- visual pacing preview renders 84 beat-level segments
-- visual pacing preview applies motion_profile and visual_action
-- visual pacing preview is not production output
-- visual pacing preview does not update PROJECT_STATE
-- visual pacing preview does not approve upload
-
-Implication:
-
-The next implementation should not start with a full Director Engine rewrite.
-
-The next implementation should focus on turning the proven visual pacing preview behavior into a production-safe render bridge.
-
----
-
-## 9. Forbidden now
-
-Do not:
-
-- create 12 empty module folders
-- rewrite the runner
-- rewrite the dispatcher
-- add a new DIRECTOR phase
-- activate engine/module_runner.py
-- execute engine/modules/*
-- add Telegram integration
-- add YouTube upload
-- add Pexels/Pixabay integration
-- add new provider integrations
-- open upload gate
-- move to READY_FOR_UPLOAD
-- approve upload
-- create publish package
-- create thumbnail automation
-- build full Market Intelligence automation
-- build all 12 modules at once
-- commit after every small edit
-- modify any file without full replacement content
-- use heredoc
-- use partial edits
-
----
-
-## 10. Commit rule
-
-Commit only after the full meaningful work block is complete and validated.
-
-Current uncommitted documentation block contains:
-
-1. FLOWMIND_DIRECTOR_BRAIN_MVP_INTEGRATION_DECISION.md
-2. FLOWMIND_FILE_EDIT_PROTOCOL.md
-3. FLOWMIND_CURRENT_WORK_ANCHOR.md
-
-Before commit:
-
-- inspect files
-- run required checks
-- inspect git status
-- commit once
-- push once
-
----
-
-## 11. Current next action
-
-After this full replacement of FLOWMIND_CURRENT_WORK_ANCHOR.md:
-
-1. verify anchor contains the file edit protocol reference
-2. verify decision file still exists
-3. verify file edit protocol exists
-4. run preflight
-5. commit the documentation / protocol block if checks pass
-
----
-
-## 12. Stop rule
-
-Stop if:
-
-- the next action creates a second runtime contour
-- the next action activates legacy modules
-- the next action touches upload
-- the next action rewrites runner/dispatcher before integration proof
-- the next action creates fake progress without improving output
-- the target architecture and current anchor conflict
-- any file edit is requested without full replacement content
-- any heredoc or partial edit is proposed
+NO
 
 End.

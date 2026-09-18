@@ -1,373 +1,607 @@
 # FLOWMIND SOURCE OF TRUTH REGISTRY
 
-Status: ACTIVE INDEX
-Authority: Subordinate to FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md
+Status: ACTIVE AUTHORITY INDEX
 
-## Purpose
+Project: FlowMind / Imagine What If
 
-This file is an operational index of document authority.
+Updated: 2026-09-18
 
-It does not replace FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md.
+Mode: FAIL-CLOSED AUTHORITY REGISTRY
 
-The trusted boundary file remains the higher authority for deciding what is trusted, frozen, or unverified.
+## 1. Purpose
 
-## Authority Rule
+This file records the verified authority classification for FlowMind.
 
-Primary authority:
+Its purpose is to prevent:
 
-- FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md
+- stale authority
+- duplicated authority
+- filename-based trust
+- recovery-era documents silently controlling current work
+- legacy documents returning as active guidance
+- architecture documents being mistaken for runtime proof
+- stale Project Source copies overriding newer repo truth
 
-This registry must not contradict the trusted boundary list.
+This registry does not grant authority merely because a file is listed.
 
-If this registry and the trusted boundary list disagree, the trusted boundary list wins.
+Actual content, freshness, scope, conflicts, and relevant evidence must be verified.
 
-## Status Model
+---
 
-This registry uses the same trust model as the trusted boundary list:
+## 2. Status model
+
+Every authority candidate is classified as exactly one of:
 
 - TRUSTED
 - FROZEN LEGACY
 - UNVERIFIED
 
-No separate authority model is allowed here.
-
-## Active Truth
-
-FlowMind is a niche-driven media intelligence and production system.
-
-FlowMind receives input parameters such as niche, language, format, audience, style, allowed sources, and business goal.
-
-FlowMind analyzes validated sources, competitors, YouTube, Reddit, and other signals to identify under-covered or poorly covered content opportunities.
-
-Production comes after topic validation.
-
-FlowMind is not a horror-content system.
-
-Imagine What If is not equal to FlowMind Core.
-
-A channel, niche, or style config must not be treated as FlowMind Core.
-
-## Root Index — TRUSTED
-
-| Path | Status | Rule |
-|---|---:|---|
-| CANONICAL_DISPATCHER_SPEC.md | TRUSTED | Trusted as control-policy and architectural-alignment document. Not automatic proof that every referenced implementation is valid. |
-| FLOWMIND_ACTION_SEQUENCE_V1.md | TRUSTED | Active recovery sequence guidance. |
-| FLOWMIND_REPO_TRUST_BOUNDARY_V1.md | TRUSTED | Repo trust boundary guidance. |
-| FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md | TRUSTED | Operational authority index. Subordinate to FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md. |
-| FLOWMIND_SYSTEM_MAP_V1.md | TRUSTED | Active system map for the current recovery contour. |
-| FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md | TRUSTED | Primary authority for trust boundaries. |
-| FLOWMIND_WORKING_TARGET.md | TRUSTED | Trusted only as target-shape and system-intent guidance. Not trusted as proof of implemented runtime. |
-| FLOWMIND_FILE_AUDIT_CANONICAL_DISPATCHER_SPEC_V1.md | TRUSTED | Audit record for CANONICAL_DISPATCHER_SPEC.md classification. |
-| FLOWMIND_FILE_AUDIT_FLOWMIND_CANONICAL_MAP_V1.md | TRUSTED | Audit record for FLOWMIND_CANONICAL_MAP.md classification. |
-| FLOWMIND_FILE_AUDIT_MAIN_PY_V1.md | TRUSTED | Audit record for main.py classification. |
-| FLOWMIND_FILE_AUDIT_WORKING_TARGET_V1.md | TRUSTED | Audit record for FLOWMIND_WORKING_TARGET.md classification. |
-| main.py | TRUSTED | Trusted only as blocking tombstone for retired legacy entrypoint. Not an active runtime launcher. |
-| Makefile | TRUSTED | Developer command surface helper. Trusted only for explicit reviewed commands, not architecture authority. |
-| .gitignore | TRUSTED | Repository ignore policy. Trusted only for git hygiene, not architecture authority. |
-
-## Root Index — FROZEN LEGACY
-
-| Path | Status | Rule |
-|---|---:|---|
-| FLOWMIND_CANONICAL_MAP.md | FROZEN LEGACY | Historical dual-system snapshot only. Must not guide current architecture. |
-
-## Root Index — UNVERIFIED
-
-| Path | Status | Rule |
-|---|---:|---|
-| FLOWMIND_CANONICAL_STATUS.md | UNVERIFIED | Status document. Must not guide active architecture until reviewed against current registry. |
-| FLOWMIND_CANONICAL_STRUCTURE.md | UNVERIFIED | Older structural description. Must not guide active architecture until reviewed. |
-| FLOWMIND_LEGACY_FREEZE_V1.md | UNVERIFIED | Legacy-freeze decision document. Must be reviewed before it can override current registry classifications. |
-| FLOWMIND_TOPIC_INTELLIGENCE_LITE_V1.md | UNVERIFIED | Topic Intelligence concept document. Must not guide runtime implementation until reviewed against current Topic Intelligence core. |
-| FLOWMIND_TOPLEVEL_CLASSIFICATION_V1.md | UNVERIFIED | Earlier top-level classification. Must not guide current authority unless reconciled with this registry. |
-| TOPIC_QUALITY_GATE_V1.md | UNVERIFIED | Topic scoring gate concept. Must be reviewed before becoming active production gate. |
-| .env | UNVERIFIED | Local ignored configuration only. Not tracked, not architecture authority, not source of truth, and must not be printed or committed. |
-
-## Root Prohibitions
-
-Do not treat root-level files as trusted unless explicitly listed here.
-
-Do not treat .env as architecture, business truth, or source of active system identity.
-
-Do not print .env contents unless explicitly required for a narrow safety check.
-
-Do not commit .env.
-
-Do not allow old authority-shaped root documents to override FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md or this registry.
-
-Do not use unverified root documents to guide implementation until reviewed and reclassified.
-
-## Current Document Index
-
-| Document | Status | Rule |
-|---|---:|---|
-| FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md | TRUSTED | Primary authority for trust boundaries. |
-| FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md | TRUSTED | Operational index only; subordinate to trusted boundary list. |
-| FLOWMIND_SYSTEM_MAP_V1.md | TRUSTED | Active recovery guidance. |
-| FLOWMIND_ACTION_SEQUENCE_V1.md | TRUSTED | Active recovery sequence guidance. |
-| FLOWMIND_REPO_TRUST_BOUNDARY_V1.md | TRUSTED | Repo trust boundary guidance. |
-| docs/FLOWMIND_HARD_RULESET_V1.md | TRUSTED | Work discipline and decision behavior. |
-| docs/FLOWMIND_WORK_PROTOCOL_V1.md | TRUSTED | Work protocol for Evgen and ChatGPT. |
-| docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md | TRUSTED | Design-only human review / QA approval protocol. It does not move any state, does not approve upload, and is not implementation proof. |
-| CANONICAL_DISPATCHER_SPEC.md | TRUSTED | Trusted as control-policy and architectural-alignment document. Not automatic proof that every referenced implementation is valid. |
-| FLOWMIND_WORKING_TARGET.md | TRUSTED | Trusted only as target-shape and system-intent guidance. Not trusted as proof of implemented runtime. |
-| main.py | TRUSTED | Trusted only as blocking tombstone for retired legacy entrypoint. Not an active runtime launcher. |
-| cashflow/topic_intelligence/niche_profile_schema.json | TRUSTED | Niche profile structure. |
-| cashflow/topic_intelligence/profiles/debt_trap_us_v1.json | TRUSTED | Reviewed niche profile example. |
-| cashflow/topic_intelligence/profiles/hidden_fees_us_v1.json | TRUSTED | Reviewed niche profile example. |
-| cashflow/topic_intelligence/profiles/finance_legacy_v1.json | UNVERIFIED | Must be reviewed before use. |
-| FLOWMIND_CANONICAL_MAP.md | FROZEN LEGACY | Historical dual-system snapshot only. Must not guide current architecture. |
-| MASTER_PROMPTS_v2_FULL.txt | FROZEN LEGACY | External/old prompt artifact. Not valid as repo truth. |
-| IronCore v3.5 references | FROZEN LEGACY | Historical context only unless explicitly re-approved. |
-| Imagine What If horror rules | UNVERIFIED | May become niche/style config only after review. Not FlowMind Core. |
-
-## Docs Index — TRUSTED
-
-| Document | Status | Rule |
-|---|---:|---|
-| docs/BOOTSTRAP_AUDIT_V1.md | TRUSTED | Bootstrap/init audit checkpoint. Trusted as review evidence, not redesign plan. |
-| docs/CANONICAL_DISPATCHER_ENTRYPOINTS.md | TRUSTED | Locked canonical dispatcher entrypoint decision. |
-| docs/CANONICAL_ENTRYPOINT_DECISION_V1.md | TRUSTED | Active control-layer entrypoint decision. |
-| docs/CANONICAL_MANIFEST_SPEC.md | TRUSTED | Canonical manifest/state contract. |
-| docs/CONTROL_LAYER_AUDIT_V1.md | TRUSTED | Control-layer audit verdict for one active contour. |
-| docs/DISPATCHER_CHEAT_SHEET.md | TRUSTED | Operational cheat sheet for canonical dispatcher commands. |
-| docs/DISPATCHER_ENGINE_STATUS.md | TRUSTED | Audit truth for retired dispatcher/engine.py legacy tombstone. |
-| docs/DISPATCHER_ENTRYPOINT.md | TRUSTED | Active dispatcher command-surface truth. |
-| docs/FLOWMIND_HARD_RULESET_V1.md | TRUSTED | Work discipline and decision behavior. |
-| docs/FLOWMIND_WORK_PROTOCOL_V1.md | TRUSTED | Cooperation protocol for FlowMind work. |
-| docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md | TRUSTED | Design-only human review / QA approval protocol. It does not move any state, does not approve upload, and is not implementation proof. |
-| docs/INTEGRATION_AUDIT_V1.md | TRUSTED | Integration audit checkpoint for legacy/canonical separation. |
-| docs/MAIN_PY_STATUS.md | TRUSTED | Audit truth for main.py retired legacy tombstone. |
-| docs/PHASE2_AUDIT_STANDARD.md | TRUSTED | Audit standard for cleanup and one-contour recovery. |
-| docs/RUNTIME_AUDIT_V1.md | TRUSTED | Runtime audit checkpoint for canonical state-control layer. |
-
-## Docs Index — FROZEN LEGACY
-
-| Document | Status | Rule |
-|---|---:|---|
-| docs/COMPAT_ADAPTER_SMOKE_CHECK_V1.md | FROZEN LEGACY | Historical compatibility adapter smoke note. Not active execution path. |
-| docs/MIGRATION_ROADMAP_V1.md | FROZEN LEGACY | Historical migration roadmap. Not current cleanup strategy. |
-| docs/READ_ONLY_ADAPTER_USAGE_V1.md | FROZEN LEGACY | Historical read-only adapter usage note. Not active adapter work. |
-| docs/READ_ONLY_COMPATIBILITY_BRIDGE.md | FROZEN LEGACY | Historical compatibility bridge plan. Not active implementation plan. |
-
-## Docs Index — UNVERIFIED
-
-| Document | Status | Rule |
-|---|---:|---|
-| docs/FLOWMIND_6_CORE_ENGINES_CONTRACTS_V1.md | UNVERIFIED | Production architecture claim. Must not guide implementation until reviewed against current FlowMind Core. |
-| docs/FLOWMIND_CANONICAL_ARCHITECTURE_V1.md | UNVERIFIED | Contains possible outdated scope. Must not guide decisions until reviewed. |
-| docs/FLOWMIND_DIRECTOR_ENGINE_V1.md | UNVERIFIED | Creative/production engine specification. Must not guide current architecture until reviewed. |
-| docs/FLOWMIND_SHOT_SCHEMA_V1.md | UNVERIFIED | Shot/visual production schema. Must not guide current architecture until reviewed. |
-| docs/LEGACY_TO_CANONICAL_PHASE_MAPPING.md | UNVERIFIED | Migration mapping document. Must not guide current architecture until reviewed. |
-| docs/M3_BOUNDARY_AUDIT.md | UNVERIFIED | Migration boundary audit. Must not guide active cleanup until reviewed. |
-| docs/M4_READ_ONLY_ADAPTER_CONTRACT.md | UNVERIFIED | Migration adapter contract. Must not guide active cleanup until reviewed. |
-| docs/M5_ADAPTER_NON_AUTHORITY_RULE.md | UNVERIFIED | Migration adapter rule. Must not guide active cleanup until reviewed. |
-| docs/M6_LEGACY_READ_SCOPE_RULE.md | UNVERIFIED | Migration adapter read-scope rule. Must not guide active cleanup until reviewed. |
-| docs/M7_ADAPTER_VERSIONING_RULE.md | UNVERIFIED | Migration adapter versioning rule. Must not guide active cleanup until reviewed. |
-| docs/M8_ADAPTER_FAIL_CLOSED_RULE.md | UNVERIFIED | Migration adapter fail-closed rule. Must not guide active cleanup until reviewed. |
-| docs/M9_ADAPTER_REQUIRED_FIELDS_RULE.md | UNVERIFIED | Migration adapter required-fields rule. Must not guide active cleanup until reviewed. |
-| docs/MIGRATION_ADAPTER_PACK_SUMMARY.md | UNVERIFIED | Migration adapter summary. Must not guide active cleanup until reviewed. |
-| docs/MIGRATION_STATUS_V1.md | UNVERIFIED | Migration status document. Must not guide active cleanup until reviewed. |
-
-## Runtime Index — engine/
-
-| Path | Status | Rule |
-|---|---:|---|
-| engine/canonical_dispatcher.py | TRUSTED | Canonical dispatcher logic for phase transitions, HALT/resume, QA approval, and upload approval state transitions. |
-| engine/state_store.py | TRUSTED | Canonical atomic state persistence layer. State writes must go through this layer or approved dispatcher paths. |
-| engine/state_validator.py | TRUSTED | Canonical PROJECT_STATE.json and manifest validation layer. |
-| engine/legacy_guard.py | TRUSTED | Trusted only as fail-fast blocker for frozen legacy station pipeline. Not a production engine. |
-| engine/global_hard_gate_v1.py | TRUSTED | Trusted only as legacy tombstone that imports legacy_guard and blocks frozen station execution. |
-| engine/modules/s1_strategy.py | TRUSTED | Trusted only as frozen legacy module tombstone. Must not be executed as production module. |
-| engine/module_runner.py | UNVERIFIED | Phase-to-module runner that can route to legacy/station-style modules. Must not be used until reviewed. |
-| engine/modules/s2_script.py | UNVERIFIED | Script module with direct PROJECT_STATE.json write path and OpenAI call. Must not be executed until reviewed or converted to canonical executor contract. |
-
-## Runtime Prohibitions — engine/
-
-Do not treat engine/module_runner.py as an active phase runner.
-
-Do not execute engine/modules/s2_script.py as active runtime.
-
-Do not allow direct PROJECT_STATE.json writes outside canonical dispatcher/state_store authority.
-
-Do not treat legacy tombstones as production modules.
-
-Do not reactivate engine/modules/* without explicit review and registry update.
-
-## Runtime Index — tools/ TRUSTED
-
-| Path | Status | Rule |
-|---|---:|---|
-| tools/dispatcher.sh | TRUSTED | Official user-facing canonical dispatcher shell entrypoint. |
-| tools/dispatcher_cli.py | TRUSTED | Canonical dispatcher CLI implementation used by tools/dispatcher.sh. |
-| tools/check_dispatcher.sh | TRUSTED | Canonical dispatcher validation entrypoint. |
-| tools/run_dispatcher_checks.py | TRUSTED | Dispatcher smoke/guard checks using canonical dispatcher and state_store. |
-| tools/smoke_test_dispatcher.py | TRUSTED | Dispatcher smoke test using canonical dispatcher and state_store. |
-| tools/bootstrap_project.sh | TRUSTED | Shell wrapper for canonical PROJECT_STATE bootstrap. |
-| tools/bootstrap_project_state.py | TRUSTED | Canonical PROJECT_STATE bootstrap implementation using state_store and manifest hash logic. |
-| tools/preflight.sh | TRUSTED | Pre-commit/preflight safety runner. |
-| tools/shell_lint_quick.sh | TRUSTED | Shell syntax lint helper for tools/*.sh. |
-| tools/json_lint_quick.sh | TRUSTED | JSON lint helper for repository JSON files. |
-| tools/manifest_guard_scan.py | TRUSTED | Guard scanner for direct ExecutionManifest.json write risks. |
-| tools/code_check.py | TRUSTED | Code check helper. Trusted only as validation support, not runtime authority. |
-
-## Runtime Index — tools/ FROZEN LEGACY
-
-| Path | Status | Rule |
-|---|---:|---|
-| tools/contract_validation.py | FROZEN LEGACY | Frozen station-pipeline validator blocked through legacy_guard. Must not be used as active validation. |
-
-## Runtime Index — tools/ UNVERIFIED
-
-| Path | Status | Rule |
-|---|---:|---|
-| tools/README_SAFE_EDITING.md | UNVERIFIED | Conflicts with active no-heredoc editing discipline. Must not guide editing until rewritten and reviewed. |
-| tools/build_compat_payload.sh | UNVERIFIED | Compatibility payload helper. Must not guide active cleanup until reviewed. |
-| tools/cleanup_manifest_guard_worktree.sh | UNVERIFIED | Worktree cleanup helper for manifest guard work. Must not be used until reviewed. |
-| tools/fm_edit.sh | UNVERIFIED | Editing helper. Must not guide file edits until reviewed against full-replacement/no-heredoc rule. |
-| tools/git_commit_core_tools.sh | UNVERIFIED | Git helper. Must not be used until reviewed. |
-| tools/git_stage_core_tools.sh | UNVERIFIED | Git staging helper. Must not be used until reviewed. |
-| tools/git_stage_manifest_single_writer_fix.sh | UNVERIFIED | Git staging helper for manifest single-writer changes. Must not be used until reviewed. |
-| tools/install_githooks.sh | UNVERIFIED | Git hook installer. Must not be used until reviewed. |
-| tools/json_autofix_s2_or_quarantine.sh | UNVERIFIED | JSON autofix/quarantine helper. Must be reviewed before use. |
-| tools/json_repair_or_quarantine.sh | UNVERIFIED | JSON repair/quarantine helper. Must be reviewed before use. |
-| tools/json_write_locked.sh | UNVERIFIED | JSON writer helper. Must be reviewed before use as approved write path. |
-| tools/json_write_safe.sh | UNVERIFIED | JSON writer helper. Must be reviewed before use as approved write path. |
-| tools/manifest_write.py | UNVERIFIED | Manifest writer helper. Must be reviewed before use. |
-| tools/rewrite_json_write_safe.sh | UNVERIFIED | Regenerates json_write_safe.sh using heredoc. Must not be used under active no-heredoc discipline until reviewed. |
-| tools/run_topic_pipeline.sh | UNVERIFIED | Topic intelligence runner. Must not be treated as production entrypoint until reviewed. |
-| tools/safe_write.sh | UNVERIFIED | Base64 write helper. Must not guide active editing until reviewed. |
-| tools/selftest_manifest_single_writer.sh | UNVERIFIED | ExecutionManifest single-writer selftest. Must not guide active runtime until reviewed. |
-| tools/semantic_validation.py | UNVERIFIED | Legacy S1/S2 semantic validator. Must not guide active validation until reviewed. |
-| tools/structural_validation.py | UNVERIFIED | Legacy S1/S2 structural validator. Must not guide active validation until reviewed. |
-| tools/test_profile_runtime_collector.py | UNVERIFIED | Topic intelligence profile test using finance_legacy profile. Must not guide active runtime until reviewed. |
-| tools/test_topic_intelligence_core.py | UNVERIFIED | Topic intelligence test helper. Must not guide active runtime until reviewed. |
-| tools/verify_canonical_map.sh | UNVERIFIED | Verifies frozen historical canonical map. Must not guide current architecture until reviewed. |
-| tools/write_text_atomic.sh | UNVERIFIED | Text writer helper using stdin flow and heredoc-style usage comments. Must not guide active editing until reviewed. |
-
-## Runtime Prohibitions — tools/
-
-Do not use tools/README_SAFE_EDITING.md as active editing policy.
-
-Do not use heredoc-based editing instructions as active FlowMind workflow.
-
-Do not use tools/rewrite_json_write_safe.sh under active no-heredoc discipline until reviewed.
-
-Do not use tools/safe_write.sh or tools/write_text_atomic.sh as active editing standard until reviewed.
-
-Do not treat tools/run_topic_pipeline.sh as production topic runtime until reviewed.
-
-Do not treat legacy S1/S2 validators as active validation for current FlowMind Core.
-
-Do not use git helper scripts unless explicitly reviewed and listed as trusted.
+TRUSTED:
 
-## Runtime Index — cashflow/ TRUSTED
+verified for the explicit scope stated in this registry.
 
-| Path | Status | Rule |
-|---|---:|---|
-| cashflow/topic_intelligence/niche_profile_schema.json | TRUSTED | Canonical niche profile schema for Topic Intelligence profile contracts. |
-| cashflow/topic_intelligence/profiles/debt_trap_us_v1.json | TRUSTED | Reviewed niche profile example for debt-trap topic discovery. |
-| cashflow/topic_intelligence/profiles/hidden_fees_us_v1.json | TRUSTED | Reviewed niche profile example for hidden-fees topic discovery. |
-| cashflow/topic_intelligence/models.py | TRUSTED | Topic Intelligence data models for seed and validated topic contracts. |
-| cashflow/topic_intelligence/profile_loader.py | TRUSTED | Frozen profile loader with structural validation for niche profiles. |
-| cashflow/topic_intelligence/profile_runtime_adapter.py | TRUSTED | Adapter that converts reviewed niche profiles into collector runtime config. |
-| cashflow/topic_intelligence/collector.py | TRUSTED | Topic seed collector for validated-source signal collection. |
-| cashflow/topic_intelligence/analyzer.py | TRUSTED | Topic analyzer that converts seed candidates into validated topic objects. |
-| cashflow/topic_intelligence/topic_pool_builder.py | TRUSTED | Topic pool builder that ranks analyzed BACKLOG topics for downstream review. |
+FROZEN LEGACY:
 
-## Runtime Index — cashflow/ FROZEN LEGACY
+historical or retired material that must not control current work.
 
-| Path | Status | Rule |
-|---|---:|---|
-| cashflow/README.md | FROZEN LEGACY | Declares cashflow subtree as frozen/deprecated. Not active architecture. |
-| cashflow/dispatcher/engine.py | FROZEN LEGACY | Legacy cashflow dispatcher tombstone blocked by legacy_guard. Must not be executed. |
-| cashflow/PROJECT_STATE_TEMPLATE.json | FROZEN LEGACY | Deprecated legacy template. Canonical PROJECT_STATE template lives outside cashflow. |
-| cashflow/modules/ | FROZEN LEGACY | Frozen station-style module subtree. Must not be used as active production modules. |
-| cashflow/projects/ | FROZEN LEGACY | Legacy project area inside frozen cashflow subtree. Must not be used as active state source. |
-| cashflow/tools/ | FROZEN LEGACY | Legacy tools area inside frozen cashflow subtree. Must not guide active tooling. |
-| cashflow/_archive/ | FROZEN LEGACY | Archive subtree only. Historical context, no active authority. |
+UNVERIFIED:
 
-## Runtime Index — cashflow/ UNVERIFIED
+must not control architecture, implementation, or current work until audited.
 
-| Path | Status | Rule |
-|---|---:|---|
-| cashflow/topic_intelligence/profiles/finance_legacy_v1.json | UNVERIFIED | Legacy-derived broad finance profile. Must be reviewed before use. |
-| cashflow/topic_intelligence/pipeline.py | UNVERIFIED | Topic intelligence runner. Must not be treated as production runtime until reviewed. |
-| cashflow/topic_intelligence/validator.py | UNVERIFIED | YouTube validation helper with external API/quota behavior. Must be reviewed before use. |
-| cashflow/topic_intelligence/script_input_builder.py | UNVERIFIED | Converts validated topics into script input. Crosses from intelligence into production. Must be reviewed. |
-| cashflow/topic_intelligence/script_generator.py | UNVERIFIED | Deterministic script draft generator. Crosses into production layer. Must be reviewed. |
-| cashflow/topic_intelligence/topic_intelligence_lite.py | UNVERIFIED | Older deterministic Cashflow Mode topic generator. Must not guide current Topic Intelligence until reviewed. |
-| cashflow/topic_intelligence/runtime_seed_smoke.py | UNVERIFIED | Runtime smoke script using finance_legacy profile. Not production runtime. |
-| cashflow/topic_intelligence/runtime_analyzer_smoke.py | UNVERIFIED | Runtime smoke script using finance_legacy profile. Not production runtime. |
-| cashflow/topic_intelligence/script_input_smoke.py | UNVERIFIED | Smoke script for script-input payloads. Not production runtime. |
-| cashflow/topic_intelligence/topic_pool_smoke.py | UNVERIFIED | Smoke script for topic-pool payloads. Not production runtime. |
+If evidence is insufficient:
 
-## Runtime Prohibitions — cashflow/
+UNVERIFIED.
 
-Do not treat cashflow/ as active FlowMind Core.
+---
 
-Do not execute cashflow/dispatcher/engine.py.
+## 3. Audit publication gate
 
-Do not use cashflow/PROJECT_STATE_TEMPLATE.json as canonical state template.
+The authority-audit block must not be committed or pushed while any material risk remains unresolved.
 
-Do not treat cashflow/modules/ as active production modules.
+Do not commit or push if:
 
-Do not treat cashflow/topic_intelligence/pipeline.py as production topic runtime until reviewed.
+- authority documents materially conflict
+- a changed authority file has not been content-verified
+- required validation fails
+- git diff contains unexplained changes
+- preflight fails
+- an intended classification is unsupported by evidence
+- secrets or unrelated changes may be included
+- the active authority chain is internally inconsistent
 
-Do not use finance_legacy_v1.json as active profile until reviewed.
+A request to commit does not override a failed safety or consistency gate.
 
-Do not cross from Topic Intelligence into script generation without explicit review and registry update.
+Resolve the blocker first.
 
-Do not treat cashflow/topic_intelligence script-generation files as active production layer.
+Then validate again.
 
-## Runtime Index — templates/
+---
 
-| Path | Status | Rule |
-|---|---:|---|
-| templates/PROJECT_STATE.template.json | TRUSTED | Canonical PROJECT_STATE bootstrap template. Trusted for state shape only. Manifest defaults must be replaced by bootstrap inputs and must not define active niche, business truth, or FlowMind identity. |
+## 4. Authority roles
 
-## Runtime Prohibitions — templates/
+Authority is role-based.
 
-Do not treat templates/PROJECT_STATE.template.json manifest defaults as active business truth.
+No filename or document may grant itself permanent authority.
 
-Do not treat cashflow-mode or Money Mistakes / Invisible Costs defaults as FlowMind Core identity.
+### 4.1 Operating discipline
 
-Do not use this template directly as a project state without canonical bootstrap replacement.
+`000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
 
-## Runtime Index — projects/ FROZEN LEGACY
+Classification:
 
-| Path | Status | Rule |
-|---|---:|---|
-| projects/FM_*/ | FROZEN LEGACY | Station-based project artifacts using ExecutionManifest.json and S1/S2-style files. Historical/test evidence only. Must not be treated as active runtime state. |
+TRUSTED
 
-## Runtime Index — projects/ UNVERIFIED
+Controls:
 
-| Path | Status | Rule |
-|---|---:|---|
-| projects/P2026_CANONICAL_001/PROJECT_STATE.json | UNVERIFIED | Canonical dispatcher runtime verification artifact. May be used as historical evidence only, not as active production state. |
-| projects/P2026_CANONICAL_002/PROJECT_STATE.json | UNVERIFIED | Canonical dispatcher runtime verification artifact. May be used as historical evidence only, not as active production state. |
+- highest-priority FlowMind operating discipline
+- anti-drift rules
+- authority verification
+- source synchronization rules
+- current audit constraints
 
-## Runtime Prohibitions — projects/
+Does not prove runtime implementation.
 
-Do not treat projects/ as source of active architecture.
+---
 
-Do not treat projects/FM_*/ExecutionManifest.json as active runtime state.
+### 4.2 Product intent
 
-Do not use FM_* station artifacts as current production contracts.
+`FLOWMIND_WORKING_TARGET.md`
 
-Do not treat placeholder/test fixture language inside projects/ as production permission.
+Classification:
 
-Do not treat P2026_CANONICAL_* states as active production projects unless explicitly re-created or re-approved through canonical bootstrap and registry update.
+TRUSTED
 
-## Prohibitions
+Controls:
 
-Do not treat unlisted files as trusted.
+- high-level product intent
+- optimization principles
+- minimalism / ROI boundaries
+- scope discipline
 
-Do not treat unverified files as architecture.
+Does not define detailed target architecture.
 
-Do not treat frozen legacy as active guidance.
+Does not prove runtime implementation.
 
-Do not treat a channel, niche, or style config as equal to FlowMind Core.
+---
 
-Do not delete files before runtime reference check.
+### 4.3 Detailed target architecture
+
+`FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
+
+Classification:
+
+TRUSTED
+
+Controls:
+
+- detailed target architecture
+- 12-module destination
+- target layers
+- target responsibilities
+- target artifacts
+- deferred scope
+
+Defines where FlowMind is evolving toward.
+
+Does not prove that target modules are implemented.
+
+---
+
+### 4.4 Current operational state
+
+`FLOWMIND_ACTIVE_MAP.md`
+
+Classification:
+
+TRUSTED
+
+Controls:
+
+- where current work is
+- current objective
+- current allowed work
+- current forbidden work
+- current next operational step
+- audit exit conditions
+
+This is the single current operational authority.
+
+Historical start blocks, anchors, maps, and action sequences must not compete with it.
+
+---
+
+### 4.5 Execution discipline
+
+`docs/FLOWMIND_WORK_PROTOCOL_V1.md`
+
+Classification:
+
+TRUSTED
+
+Controls:
+
+- one-step execution
+- evidence requirements
+- file-edit discipline
+- validation discipline
+- failure handling
+- idempotency
+- secrets
+- architecture discipline
+- Git discipline
+- Project Sources synchronization
+- response discipline
+- stop conditions
+
+Does not define current project state.
+
+---
+
+### 4.6 Map guard
+
+`docs/FLOWMIND_MAP_GUARD_V1.md`
+
+Classification:
+
+TRUSTED
+
+Controls:
+
+- mandatory MAP CHECK
+- authority alignment before technical work
+- anti-drift stop conditions
+
+Does not define target architecture or runtime truth.
+
+---
+
+### 4.7 Control-plane semantics
+
+`CANONICAL_DISPATCHER_SPEC.md`
+
+Classification:
+
+TRUSTED
+
+Scope:
+
+control-plane semantics only.
+
+Controls:
+
+- state-transition discipline
+- guarded transitions
+- HALT / resume behavior
+- state mutation rules
+- approval/control semantics
+- fail-closed dispatcher behavior
+
+Does not prove that every referenced dispatcher implementation exists or works.
+
+Runtime implementation still requires runtime evidence.
+
+---
+
+### 4.8 Authority index
+
+`FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
+
+Classification:
+
+TRUSTED
+
+Scope:
+
+authority classification and routing only.
+
+This registry cannot turn an unverified implementation into runtime truth.
+
+---
+
+### 4.9 Runtime truth
+
+Runtime truth comes from current repo and runtime evidence.
+
+Relevant evidence may include:
+
+- implementation
+- valid inputs
+- valid outputs
+- validation output
+- generated artifacts
+- downstream consumption
+- runtime logs
+- reproducible execution
+- failure behavior
+
+Documents are not runtime proof.
+
+---
+
+## 5. TRUSTED authority files
+
+| Path | Verified scope |
+|---|---|
+| `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md` | Highest-priority operating discipline and anti-drift |
+| `FLOWMIND_WORKING_TARGET.md` | High-level product intent |
+| `FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md` | Detailed target architecture |
+| `FLOWMIND_ACTIVE_MAP.md` | Single current operational authority |
+| `docs/FLOWMIND_WORK_PROTOCOL_V1.md` | Execution and cooperation discipline |
+| `docs/FLOWMIND_MAP_GUARD_V1.md` | Mandatory map-alignment guard |
+| `CANONICAL_DISPATCHER_SPEC.md` | Control-plane semantics only |
+| `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md` | Authority classification and routing |
+
+These classifications apply to the versions contained in the validated authority-audit commit.
+
+Before that commit exists, the modified working tree remains a candidate state and must pass all publication gates.
+
+---
+
+## 6. FROZEN LEGACY authority-shaped files
+
+| Path | Historical scope |
+|---|---|
+| `CHAT_START_BLOCK_FLOWMIND_CURRENT.md` | Historical operational checkpoint |
+| `FLOWMIND_CURRENT_WORK_ANCHOR.md` | Historical Director Brain preparation checkpoint |
+| `FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md` | Historical recovery trust-boundary checkpoint |
+| `FLOWMIND_REPO_TRUST_BOUNDARY_V1.md` | Historical repository trust-boundary checkpoint |
+| `FLOWMIND_SYSTEM_MAP_V1.md` | Historical recovery system map |
+| `FLOWMIND_ACTION_SEQUENCE_V1.md` | Historical recovery execution sequence |
+| `FLOWMIND_CANONICAL_STRUCTURE.md` | Historical architecture checkpoint |
+| `docs/FLOWMIND_HARD_RULESET_V1.md` | Historical R01-R16 work-discipline checkpoint |
+| `MASTER_PROMPTS_v2_FULL.txt` | Historical IronCore / horror prompt artifact; source-only |
+| `CHAT_START_BLOCK.txt` | Historical start block; source-only |
+| old IronCore v3.5 references | Historical context only |
+| old horror rules | Historical or niche-specific material only |
+| old migration-era architecture | Historical context only |
+| retired runtime contours | Must not become active without explicit re-audit |
+
+FROZEN LEGACY material:
+
+- may be read
+- may be compared
+- may provide historical evidence
+- may provide donor ideas after review
+
+It must not:
+
+- define current state
+- define current next action
+- define current architecture
+- regain runtime authority
+- silently influence active decisions
+
+---
+
+## 7. UNVERIFIED default
+
+Anything not explicitly classified as TRUSTED or FROZEN LEGACY in this registry is:
+
+UNVERIFIED.
+
+This includes authority-shaped documents and runtime components that have not passed the current verification gate.
+
+Do not infer trust from:
+
+- filename
+- directory
+- ACTIVE label
+- CURRENT label
+- FINAL label
+- CANONICAL label
+- version number
+- age
+- Git history
+- existence in GitHub
+- existence in Project Sources
+- another document referencing it
+
+Review first.
+
+Then classify.
+
+---
+
+## 8. Runtime classification rule
+
+Historical runtime classifications do not automatically survive into the current registry.
+
+Runtime files and components require scope-specific evidence.
+
+Potential evidence includes:
+
+- code inspection
+- input contract
+- output contract
+- validation
+- artifact production
+- downstream consumer
+- reproducible runtime execution
+- failure behavior
+
+No runtime component becomes TRUSTED merely because an older registry, map, or recovery document described it as active.
+
+---
+
+## 9. Validation tools rule
+
+A validation tool does not become architecture authority merely because it is executed successfully.
+
+`tools/preflight.sh` may be used as an audit validation helper only after its current contents are inspected sufficiently to establish that running it is safe and relevant.
+
+A successful preflight proves only the checks that the script actually performs.
+
+It does not automatically make scanned files TRUSTED.
+
+---
+
+## 10. Project Sources rule
+
+GitHub repository is the durable project master.
+
+Project Sources are ChatGPT working context.
+
+Project Sources do not become source of truth merely because they are uploaded.
+
+An active Project Source must:
+
+1. have verified content
+2. have a defined authority role
+3. have a current classification
+4. not conflict with newer repo evidence
+5. match the intended committed repo version when a repo version exists
+
+A stale Project Source copy is UNVERIFIED as a working copy until synchronized.
+
+Internal upload suffixes such as:
+
+- `(1)`
+- `(2)`
+- `(3)`
+
+do not create new logical authority when canonical identity and verified content show they are copies of the same file.
+
+---
+
+## 11. Project Sources reconciliation
+
+### KEEP / SYNCHRONIZE
+
+The following active authority sources should remain available after synchronization:
+
+- `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
+- `FLOWMIND_WORKING_TARGET.md`
+- `FLOWMIND_ACTIVE_MAP.md`
+- `docs/FLOWMIND_MAP_GUARD_V1.md`
+- `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
+- `CANONICAL_DISPATCHER_SPEC.md`
+- `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
+
+### ADD AFTER COMMIT
+
+Add the verified detailed target architecture:
+
+- `FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
+
+### REMOVE FROM ACTIVE PROJECT SOURCES
+
+Remove legacy sources that must not influence active decisions:
+
+- `CHAT_START_BLOCK.txt`
+- `CHAT_START_BLOCK_FLOWMIND_CURRENT.md`
+- `MASTER_PROMPTS_v2_FULL.txt`
+
+Repository historical copies may remain where applicable.
+
+Removing an active Project Source does not require deleting historical Git evidence.
+
+---
+
+## 12. Completed authority-audit findings
+
+The current audit established:
+
+1. `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
+   - TRUSTED
+   - highest-priority operating discipline
+
+2. `FLOWMIND_WORKING_TARGET.md`
+   - TRUSTED
+   - high-level product intent only
+
+3. `FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
+   - TRUSTED
+   - detailed target architecture only
+
+4. `FLOWMIND_ACTIVE_MAP.md`
+   - previous version was stale
+   - replacement establishes one current operational authority
+
+5. `docs/FLOWMIND_MAP_GUARD_V1.md`
+   - previous version depended on stale recovery authority
+   - replacement aligns map checks with the current authority chain
+
+6. `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
+   - replacement consolidates active execution discipline
+   - preserves required historical HARD_RULESET principles without keeping parallel policy authority
+
+7. `CANONICAL_DISPATCHER_SPEC.md`
+   - replacement limits its authority to control-plane semantics
+   - no longer acts as product brain or runtime proof
+
+8. `CHAT_START_BLOCK_FLOWMIND_CURRENT.md`
+   - FROZEN LEGACY
+
+9. `FLOWMIND_CURRENT_WORK_ANCHOR.md`
+   - FROZEN LEGACY
+
+10. `FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md`
+    - FROZEN LEGACY
+
+11. `FLOWMIND_REPO_TRUST_BOUNDARY_V1.md`
+    - FROZEN LEGACY
+
+12. `FLOWMIND_SYSTEM_MAP_V1.md`
+    - FROZEN LEGACY
+
+13. `FLOWMIND_ACTION_SEQUENCE_V1.md`
+    - FROZEN LEGACY
+
+14. `FLOWMIND_CANONICAL_STRUCTURE.md`
+    - FROZEN LEGACY
+
+15. `docs/FLOWMIND_HARD_RULESET_V1.md`
+    - FROZEN LEGACY
+    - useful principles migrated into current operating documents
+
+16. `CHAT_START_BLOCK.txt`
+    - FROZEN LEGACY
+    - Project Source only; absent from current repo
+
+17. `MASTER_PROMPTS_v2_FULL.txt`
+    - FROZEN LEGACY
+    - Project Source only; absent from current repo
+
+---
+
+## 13. Prohibitions
+
+Do not:
+
+- trust a file because another file calls it TRUSTED
+- use FROZEN LEGACY as active guidance
+- use UNVERIFIED material to drive implementation
+- treat architecture documentation as runtime evidence
+- treat validation success as proof beyond the validation scope
+- treat test artifacts as production permission
+- reactivate legacy modules without explicit audit
+- allow historical current-next-action instructions to override `FLOWMIND_ACTIVE_MAP.md`
+- maintain a second operational authority
+- commit or push an authority block while material risk remains unresolved
+- print or commit secrets
+- use `.env` as architecture or product truth
+
+---
+
+## 14. Current objective
+
+Current mode:
+
+SYSTEM MAP MODE
+
+Current objective:
+
+Complete authority and Project Sources reconciliation before production development resumes.
+
+Production implementation remains paused.
+
+No Director Brain implementation, renderer tuning, provider expansion, Telegram integration, YouTube upload, TikTok crossposting, or legacy runtime activation is authorized by this audit.
+
+---
+
+## 15. Exit condition
+
+The authority/source audit is complete only when:
+
+1. every active Project Source has a current classification
+2. active authority roles no longer overlap ambiguously
+3. `FLOWMIND_ACTIVE_MAP.md` is the single current operational authority
+4. legacy operational documents are frozen
+5. control specifications are audited
+6. changed authority files pass validation
+7. the validation helper used for preflight is safe to run
+8. preflight passes
+9. git diff contains only intended changes
+10. no unresolved commit risk remains
+11. the authority block is committed
+12. the commit is pushed
+13. active Project Sources are synchronized with committed authority
+14. stale legacy Project Sources are removed from active context
+
+If any condition fails:
+
+STOP.
+
+Do not declare the audit complete.
+
+---
+
+## 16. One-step rule
+
+Audit work proceeds:
+
+one step
+
+→ evidence
+
+→ verification
+
+→ next step
+
+Do not jump ahead.
+
+Do not commit after every individual file.
+
+Commit only after one coherent validated authority-audit block.
+
+End.

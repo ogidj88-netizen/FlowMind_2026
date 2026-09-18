@@ -1,159 +1,143 @@
 # FLOWMIND TRUSTED BOUNDARY LIST V1
 
-## Purpose
-This document defines the first concrete trusted boundary list for FlowMind_2026.
+Status: FROZEN LEGACY
+Project: FlowMind / Imagine What If
+Role: historical recovery trust-boundary checkpoint only
 
-It translates trust policy into operational use.
+## 1. Purpose
 
-This file answers:
+This file is retained as historical evidence of the earlier FlowMind recovery process.
 
-- what is inside the active recovery contour
-- what is outside as frozen legacy
-- what remains unverified until reviewed
+It must not define the current trusted boundary.
+
+Previous versions documented:
+
+- a narrow recovery contour
+- legacy isolation
+- fail-closed trust behavior
+- TRUSTED / FROZEN LEGACY / UNVERIFIED classification
+- recovery-era next actions
+
+Those principles influenced the current authority model, but this file no longer controls it.
 
 ---
 
-## Core rule
+## 2. Why this file is frozen
 
-Only explicitly listed elements may be treated as trusted during current recovery.
+Earlier versions of this file:
 
-If an element is not listed as trusted here, it is not trusted by default.
+- described an active recovery contour
+- declared recovery-era documents trusted
+- included itself as trusted authority
+- defined a time-sensitive current next focus
 
-Historical importance does not override this rule.
+Those claims are no longer safe as current authority.
+
+Keeping this file active would duplicate the responsibility of:
+
+FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+
+and could recreate competing trust authorities.
 
 ---
 
-## Trusted now — active recovery contour
+## 3. Current authority routing
 
-### Root-level canonical guidance documents
-These are trusted as active recovery guidance:
+For current authority classification use:
+
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+
+For operating discipline use:
+
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+For current operational state use:
+
+- FLOWMIND_ACTIVE_MAP.md
+
+For work protocol use:
+
+- docs/FLOWMIND_WORK_PROTOCOL_V1.md
+
+For target product direction use:
+
+- FLOWMIND_WORKING_TARGET.md
+- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+
+Runtime truth requires current repo and runtime evidence.
+
+---
+
+## 4. Historical principles preserved
+
+The following principles remain historically useful:
+
+- unreviewed material must not be trusted by assumption
+- legacy must not silently regain authority
+- historical importance does not equal current authority
+- every authority candidate must be explicitly classified
+- narrow verified trust is safer than broad assumed trust
+
+These principles are now enforced by current authority documents.
+
+This file itself does not enforce them.
+
+---
+
+## 5. Prohibitions
+
+Do not use this file to:
+
+- classify a current document as TRUSTED
+- define the active contour
+- select the current next action
+- authorize runtime execution
+- reactivate recovery-era documents
+- override FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+- override newer verified repo or runtime evidence
+
+Do not infer current trust from classifications that existed in older versions of this file.
+
+---
+
+## 6. Recovery-era references
+
+Historical references such as:
 
 - FLOWMIND_SYSTEM_MAP_V1.md
 - FLOWMIND_ACTION_SEQUENCE_V1.md
 - FLOWMIND_REPO_TRUST_BOUNDARY_V1.md
-- FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md
 
-Reason:
-- they define the current canonical direction
-- they reduce ambiguity
-- they support one working contour
-- they do not create runtime authority conflicts
+do not receive current TRUSTED status merely because older versions of this file listed them as trusted.
+
+Each requires its own current audit.
 
 ---
 
-## Trusted now — policy intent only
+## 7. Final classification
 
-The following categories are trusted only at the policy level, not automatically as runnable implementation:
+Classification:
 
-- canonical state ownership rules
-- dispatcher authority rules
-- read-only legacy boundary rules
-- anti-dual-control rules
-- one-entry-point rules
+FROZEN LEGACY
 
-Important:
-Trust at policy level does not mean every related implementation file is already trusted.
-Implementation trust must still be earned explicitly.
+Current authority:
 
----
+NONE
 
-## Frozen outside the active contour
+Historical value:
 
-The following are frozen outside the active contour until explicitly reintroduced by review:
+YES
 
-- legacy runtime authority paths
-- migration-era active rebuild directions
-- duplicated orchestration logic
-- any module or script that implies a second control center
-- any runtime path that can mutate state outside the canonical authority model
-- any historical structure preserved only for audit or reference
+Current trust-boundary value:
 
-Operational meaning:
-- may be read
-- may be analyzed
-- must not guide current rebuild by default
-- must not silently regain execution authority
+NO
 
----
+Current-next-action value:
 
-## Unverified by default
+NO
 
-The following remain unverified until reviewed one by one:
+Runtime-proof value:
 
-- code folders not yet audited in current recovery phase
-- scripts not yet classified by authority
-- adapters not yet classified by authority
-- runners not yet classified by authority
-- utilities with unclear scope
-- docs that may contain historical value but unclear current authority
+NO
 
-Operational meaning:
-- do not trust by assumption
-- do not execute by habit
-- do not use as authority
-- review first, then classify
-
----
-
-## What is trusted right now in practice
-
-Trusted in practice right now:
-
-1. current canonical recovery documents
-2. the one-contour rebuild direction
-3. the rule that legacy has no automatic authority
-4. the rule that unreviewed repo elements stay unverified
-
-This is intentionally narrow.
-
-Narrow trust is safer than false clarity.
-
----
-
-## What is not trusted right now in practice
-
-Not trusted right now in practice:
-
-- broad legacy runtime as active authority
-- any undocumented control path
-- any hidden entrypoint
-- any script with unclear architectural role
-- any folder assumed to be important only because it exists
-- any implementation path not yet reviewed in the current recovery process
-
----
-
-## Classification rule for the next steps
-
-Each repo element reviewed later must be assigned to exactly one class:
-
-- TRUSTED
-- FROZEN LEGACY
-- UNVERIFIED
-
-No element may remain “implicitly trusted”.
-
----
-
-## Exit condition
-
-This document is considered operational only if it changes how the repo is handled.
-
-That means:
-
-- current work uses only explicitly trusted guidance
-- frozen elements stay outside active authority
-- unverified elements are reviewed before use
-- no code or script is treated as canonical by accident
-
----
-
-## Current next focus
-
-Next after this file:
-
-- inspect actual top-level repo structure
-- classify first real folders/files into:
-  - trusted
-  - frozen legacy
-  - unverified
+End.

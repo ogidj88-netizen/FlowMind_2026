@@ -1,17 +1,22 @@
-# FLOWMIND_MAP_GUARD_V1
+# FLOWMIND MAP GUARD V1
 
-Status: TRUSTED OPERATIONAL GUARD
-Mode after creation: SYSTEM MAP MODE
+Status: ACTIVE OPERATIONAL GUARD
+Project: FlowMind / Imagine What If
+Mode: SYSTEM MAP MODE
 
-## Purpose
+## 1. Purpose
 
-Prevent FlowMind work from drifting away from the active programming map.
+Prevent FlowMind work from drifting away from the verified product target and current operational map.
 
-No code, file change, renderer change, module change, provider integration, or video-quality tuning is allowed before a visible map check.
+This guard does not define product architecture.
 
-## Required MAP CHECK
+This guard enforces alignment before technical work.
 
-Before every technical answer, the assistant must show:
+---
+
+## 2. Required MAP CHECK
+
+Before every technical or architectural answer, the assistant must show:
 
 MAP CHECK
 Active map:
@@ -21,109 +26,249 @@ Forbidden action:
 Evidence:
 Verdict:
 
-If the assistant cannot fill this block clearly, the assistant must stop.
+If the assistant cannot fill this block from verified sources:
 
-## Active map sources
+STOP.
 
-Use these files as map authority when present:
+Do not guess.
+
+---
+
+## 3. Verified authority chain
+
+Use authority by role, not by filename prestige.
+
+### Operating discipline
+
+000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+Controls:
+
+- anti-drift rules
+- source verification rules
+- current audit objective
+- authority discipline
+
+### Product intent
+
+FLOWMIND_WORKING_TARGET.md
+
+Controls:
+
+- high-level product intent
+- optimization principles
+- scope discipline
+- ROI / minimalism boundaries
+
+### Detailed target architecture
+
+FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+
+Controls:
+
+- detailed target architecture
+- 12-module destination
+- target layers
+- target module responsibilities
+
+It is not runtime proof.
+
+### Current operational map
+
+FLOWMIND_ACTIVE_MAP.md
+
+Controls:
+
+- where we are now
+- what work is allowed now
+- what work is forbidden now
+- current exit condition
+
+### Runtime truth
+
+Current repo and runtime evidence prove:
+
+- what exists
+- what runs
+- what produces artifacts
+- what is consumed downstream
+- what actually passes validation
+
+Documents do not substitute for runtime evidence.
+
+---
+
+## 4. Unverified authority rule
+
+The following must NOT automatically control work unless individually audited and verified:
 
 - FLOWMIND_ACTION_SEQUENCE_V1.md
 - FLOWMIND_SYSTEM_MAP_V1.md
 - FLOWMIND_CANONICAL_STRUCTURE.md
 - FLOWMIND_REPO_TRUST_BOUNDARY_V1.md
 - FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md
-- docs/MIGRATION_ROADMAP_V1.md
-- docs/READ_ONLY_COMPATIBILITY_BRIDGE.md
+- migration-era documents
+- historical start blocks
+- historical work anchors
+- old module status documents
+- old fix backlogs
 
-If authority is unclear, do not guess.
+A reference from another document is not enough.
 
-Say:
+Content must be verified.
 
-STOP: map alignment required.
-Reason:
-Next safe action:
+---
 
-## Current default
+## 5. Current default
 
-Current mode: SYSTEM MAP MODE
+Current mode:
+
+SYSTEM MAP MODE
 
 Current objective:
-Re-align with the active programming map before more production coding.
 
-Current forbidden action:
-Do not continue video-quality tuning until skeleton, module sequence, gates, and active runtime contour are reviewed.
+Complete authority and Project Sources reconciliation before production development resumes.
 
-## Work modes
+Current active step:
 
-SYSTEM MAP MODE:
-Allowed: inspect repo, inspect docs, inspect contracts, classify files, document guardrails.
-Forbidden: tune video quality, change renderer, add providers, add new production modules.
+Audit one file at a time:
 
-MODULE QUALITY MODE:
-Allowed: improve one selected module after its input, output, consumer, and runtime proof are known.
-Forbidden: jump to other modules or change unrelated files.
+READ
+→ VERIFY CONTENT
+→ CHECK FRESHNESS
+→ CHECK CONFLICTS
+→ CLASSIFY
+→ KEEP / REMOVE / UPDATE
+→ VERIFY
 
-VIDEO QUALITY MODE:
-Allowed only after skeleton and gates are confirmed.
-Forbidden before system map review is complete.
+---
 
-## Stop triggers
+## 6. Current forbidden work
 
-Stop if:
+Until authority reconciliation is complete:
 
-1. Current map step is unknown.
-2. Requested action does not match the map step.
-3. Git is dirty and user did not approve dirty work.
-4. Action creates a second active contour.
-5. Action mixes active runtime, donor, archive, or legacy.
-6. Action uses production placeholders, stubs, or fake outputs.
-7. User asks "по карті що далі?" and assistant cannot name the source.
+- no Director Brain implementation
+- no renderer changes
+- no video-quality tuning
+- no YouTube upload
+- no Telegram integration
+- no TikTok crossposting
+- no new providers
+- no runner rewrite
+- no dispatcher rewrite
+- no legacy module activation
+- no second runtime contour
+- no upload approval
+- no READY_FOR_UPLOAD transition
+- no implementation based on stale operational documents
 
-## File rules
+---
 
-All file changes:
+## 7. Stop triggers
 
-- full file replacement only
-- nano only
-- no heredoc
-- no partial patches
-- no hidden edits
-- no production placeholders
-- no fake progress
+STOP if:
 
-## Git rules
+1. current operational step is unclear;
+2. authority documents materially conflict;
+3. source freshness is unknown;
+4. a file is trusted only because of its filename or declared status;
+5. the action does not match FLOWMIND_ACTIVE_MAP.md;
+6. the action creates a second runtime contour;
+7. the action activates legacy code;
+8. active, donor, archive, legacy, or unverified material is mixed;
+9. production placeholders or fake outputs are proposed;
+10. current runtime evidence contradicts documentation;
+11. implementation is proposed before the authority audit is complete.
 
-Before commit:
+---
 
-1. run relevant runtime check if needed
-2. run bash tools/preflight.sh
-3. inspect git status
-4. stage only intended files
-5. commit precisely
-6. push to origin cashflow-mode
-7. verify clean status
+## 8. File modification rules
 
-## Visual pacing lesson
+All FlowMind file modifications must use full replacement.
 
-Visual pacing works technically, but blind motion can make video worse.
+Allowed:
 
-Rule:
-motion must depend on asset type and content role.
+1. nano
+2. direct input:
+   cat > path/to/file
+   then paste full content and Ctrl + D
 
-Stock video: motion allowed.
-Lifestyle footage: motion allowed.
-Static info card: motion limited.
-Chart: hold or controlled reveal.
-Checklist: hold or item-by-item reveal.
-Dense text card: avoid zoom and pan.
+Forbidden:
 
-## Exit condition
+- heredoc
+- cat << EOF
+- partial edits
+- apply_patch
+- sed -i
+- append-only fixes
+- hidden edits
+- production placeholders
 
-Accepted when:
+---
 
-1. this file exists
-2. it is committed to cashflow-mode
-3. future technical answers include MAP CHECK
-4. next action is repo/map inspection, not video-quality tuning
+## 9. Git rules
+
+Do not commit after every audited file.
+
+During the authority audit:
+
+- accumulate one meaningful audit block
+- keep changes visible in git status
+- validate each changed file
+- run preflight before the final block commit
+
+Before final commit:
+
+1. inspect git diff
+2. run relevant checks
+3. run bash tools/preflight.sh
+4. inspect git status
+5. stage only intended files
+6. commit one meaningful audit block
+7. push once
+8. verify clean status
+9. synchronize changed authority files with Project Sources
+
+---
+
+## 10. Source synchronization rule
+
+GitHub repository is the durable project master.
+
+Project Sources are ChatGPT working context.
+
+If an active authority file changes:
+
+- GitHub and Project Sources must be synchronized;
+- content mismatch means UNVERIFIED;
+- internal upload suffixes such as (1) or (2) do not change logical identity if actual file content and canonical heading match.
+
+---
+
+## 11. Exit condition
+
+This guard remains valid when:
+
+1. every technical answer uses a verified MAP CHECK;
+2. current operational work is taken from FLOWMIND_ACTIVE_MAP.md;
+3. product direction is checked against verified product authority;
+4. runtime claims are backed by runtime evidence;
+5. stale documents cannot silently override current work;
+6. authority conflicts cause STOP instead of guessing.
+
+---
+
+## 12. One-step rule
+
+Work proceeds:
+
+one file
+→ audit
+→ verdict
+→ KEEP / REMOVE / UPDATE
+→ verify
+→ next file
+
+No automatic jumping ahead.
 
 End.

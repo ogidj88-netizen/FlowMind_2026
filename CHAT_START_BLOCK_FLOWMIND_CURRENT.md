@@ -1,222 +1,155 @@
-# CHAT_START_BLOCK_FLOWMIND_CURRENT
+# CHAT START BLOCK FLOWMIND CURRENT
 
-Status: ACTIVE CHAT START BLOCK
+Status: FROZEN LEGACY
 Project: FlowMind / Imagine What If
-Mode: SYSTEM MAP MODE
+Role: historical operational checkpoint only
 
-## Current repo state
+## 1. Purpose
 
-Branch:
-cashflow-mode
+This file is retained only as a historical checkpoint.
 
-Latest confirmed commit:
-d3ed993 docs: classify system map audit risks
+It must not define:
 
-Recent critical commits:
-- d3ed993 docs: classify system map audit risks
-- 1367ea8 docs: record module runner tombstone status
-- 2347eb5 docs: sync active chat start block
-- ce17001 docs: sync human review protocol status
-- 759eb44 docs: add human review approval protocol
-- 42248c4 docs: add active project source override
-- 7660c40 docs: add current chat start block
+- current project state
+- current repo state
+- current commit
+- current active contour
+- current next action
+- current implementation priority
+- current runtime truth
 
-Repo status at last checkpoint:
-clean
+Previous operational details remain available in Git history.
 
-## Active mode
+---
 
-SYSTEM MAP MODE.
+## 2. Why this file is frozen
 
-Do not polish individual module quality yet.
-Do not tune video quality yet.
-Do not expand upload surface yet.
-Do not start YouTube integration.
+Earlier versions of this file contained time-sensitive operational information such as:
 
-Current objective:
-stabilize system control, state safety, and active contour before module-quality hardening.
+- branch checkpoints
+- commit hashes
+- active runtime assumptions
+- test-project state
+- open fixes
+- current next actions
+- forbidden actions
 
-## Active contour
+That information became stale as FlowMind evolved.
 
-Trusted active contour:
+Keeping such information active here would create competing operational authority.
+
+FlowMind must have one current operational authority.
+
+---
+
+## 3. Current authority routing
+
+For current operating discipline use:
+
 - 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
-- CHAT_START_BLOCK_FLOWMIND_CURRENT.md
+
+For current operational state use:
+
 - FLOWMIND_ACTIVE_MAP.md
-- FLOWMIND_FIX_BACKLOG.md
-- FLOWMIND_MODULE_STATUS.md
-- FLOWMIND_MODULE_INVENTORY.md
-- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
-- docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md
-- engine/state_validator.py
-- engine/state_store.py
-- engine/canonical_dispatcher.py
-- engine/executors/*
-- tools/flowmind_run_phase.py
-- tools/dispatcher.sh
-- tools/dispatcher_cli.py
-- projects/P2026_TEST_001/* active artifacts
 
-Frozen / not active:
-- engine/module_runner.py
-- engine/modules/*
-- old migration docs
-- old FM_* projects
-- old IronCore / horror rules
+For high-level product intent use:
 
-Rule:
-Do not mix active runtime, frozen legacy, and archive material.
+- FLOWMIND_WORKING_TARGET.md
 
-## Current project state
+For detailed target architecture use:
 
-Active test project:
-P2026_TEST_001
+- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
 
-Current phase:
-QA
+For control-plane semantics use:
 
-Current gate state:
-- qa_passed=false
-- approved_for_upload=false
-- approval_status=PENDING
-- qa_verdict=BLOCKED
-- blocker=upload_readiness
+- CANONICAL_DISPATCHER_SPEC.md
 
-Do not move to READY_FOR_UPLOAD yet.
-Do not approve upload yet.
-Do not upload to YouTube.
+For cooperation and execution discipline use:
 
-## Command surface status
+- docs/FLOWMIND_WORK_PROTOCOL_V1.md
 
-Command surface:
-VERIFIED V1.2
+For authority classification use:
 
-Active runner:
-tools/flowmind_run_phase.py
-
-Runner supports:
-- SCRIPT
-- SCENES
-- ASSETS
-- ASSEMBLY
-- AUDIO
-- QA
-
-Runner refuses:
-- READY_FOR_UPLOAD
-- UPLOADED
-- ARCHIVED
-- HALT
-
-Runner does not:
-- auto-transition phase
-- approve upload
-- upload to YouTube
-- call engine/module_runner.py
-- call engine/modules/*
-
-Dispatcher CLI:
-tools/dispatcher_cli.py
-
-Dispatcher CLI allows approval mutations only through explicit commands:
-- mark-qa-passed
-- approve-upload
-
-Dispatcher CLI generic transition no longer exposes:
-- --qa-passed
-- --approved-for-upload
-- --approval-status
-
-## Closed system fixes
-
-FIX-001:
-single active command surface is DONE.
-
-FIX-003:
-dispatcher transition approval bypass is FIXED.
-
-Human review / approval protocol is DOCUMENTED AS DESIGN-ONLY.
-
-Old bypass:
-transition --to READY_FOR_UPLOAD --qa-passed true
-
-Result before fix:
-could move tmp QA state to READY_FOR_UPLOAD.
-
-Result after fix:
---qa-passed on transition fails with argparse error.
-Tmp state remains:
-- phase=QA
-- qa_passed=false
-- approved_for_upload=false
-- approval_status=PENDING
-
-Protocol status:
-- docs/HUMAN_REVIEW_APPROVAL_PROTOCOL_V1.md exists
-- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md lists it as TRUSTED design-only protocol
-- FLOWMIND_FIX_BACKLOG.md is synced
-- FLOWMIND_MODULE_STATUS.md is synced
-- FLOWMIND_MODULE_INVENTORY.md is synced
-- protocol does not move state
-- protocol does not approve upload
-- protocol does not implement YouTube upload
-
-## Current open risks
-
-Most important open risks:
-- FIX-002: legacy module_runner still exists, but engine/module_runner.py is tombstoned and active runner does not call it
-- FIX-003 remaining: approval evidence artifact is not implemented; upload command surface is not implemented; upload remains closed
-- FIX-006: script_qa artifact lacks explicit status/blockers/qa_passed; controlled artifact hardening risk, active consumers gate on verdict=PASS
-- FIX-007: scenes artifact lacks explicit status/verdict/blockers/source_script_meta_path; controlled artifact hardening risk, active consumers use artifacts.scenes_path
-- FIX-008: assets artifact lacks explicit status/verdict/blockers/script_qa source fields; controlled artifact hardening risk, active consumers use artifacts.assets_path and asset fields
-- FIX-009: asset_resolver can produce weak resolved asset output without strong enough blockers
-- FIX-010: legacy s2_script has direct PROJECT_STATE write path; controlled legacy risk, not active runner path
-- FIX-011: state-mutating readiness helper defaults fixed in abec33e; remaining helper defaults are separate cleanup risk, not active runner path
-
-## Current next action
-
-Continue SYSTEM LOGIC AUDIT.
-
-Next safe target:
-Read-only select the next SYSTEM MAP MODE audit target from FLOWMIND_FIX_BACKLOG.md after d3ed993.
-
-Primary files to inspect:
-- FLOWMIND_FIX_BACKLOG.md
-- FLOWMIND_MODULE_STATUS.md
-- FLOWMIND_MODULE_INVENTORY.md
 - FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
 
-Goal:
-Continue system-control audit without module hardening, video-quality tuning, upload implementation, or legacy activation.
+Runtime claims require current repo and runtime evidence.
 
-Do not edit runtime code until the next target is read-only inspected and classified.
+---
 
-## Forbidden now
+## 4. Historical-use rule
 
-- video-quality tuning
-- renderer changes
-- Telegram integration
-- YouTube upload
-- Pexels/Pixabay integration
-- activating engine/module_runner.py
-- executing engine/modules/*
-- moving to READY_FOR_UPLOAD
-- approving upload
-- adding upload automation
-- polishing individual module quality beyond system-flow candidate level
+This file may be used only for:
 
-## Workflow rule
+- historical investigation
+- understanding previous decisions
+- comparing old and new operational states
+- debugging context drift
+- tracing why earlier work was performed
 
-Work one step at a time.
+It must not be used to resume work automatically.
 
-Do not proceed without user confirmation:
-виконано
+---
 
-Do not commit after every small edit.
-Commit only at the end of a logical checkpoint.
+## 5. Prohibitions
 
-Files must be changed only by full replacement.
-No heredoc.
-No partial edits.
-No production placeholders or stubs.
+Do not use this file to determine:
+
+- what to implement next
+- whether a runtime module is active
+- whether a fix is still open
+- whether a project is upload-ready
+- whether a phase transition is allowed
+- whether an old runtime contour is current
+- which commit is latest
+
+Do not promote historical statements from this file into current authority without new verification.
+
+---
+
+## 6. Project Sources rule
+
+This file should not remain an active Project Source after the authority-audit block is committed and synchronized.
+
+If retained anywhere for reference, it must remain clearly classified as:
+
+FROZEN LEGACY
+
+It must not compete with FLOWMIND_ACTIVE_MAP.md.
+
+---
+
+## 7. Recovery rule
+
+If a future chat encounters this file first:
+
+STOP.
+
+Do not resume from its historical contents.
+
+Resolve current state through the verified authority chain.
+
+---
+
+## 8. Final classification
+
+Classification:
+
+FROZEN LEGACY
+
+Authority:
+
+NONE for current work
+
+Historical value:
+
+YES
+
+Current-next-action value:
+
+NO
+
+Runtime-proof value:
+
+NO
 
 End.

@@ -1,216 +1,179 @@
-# FlowMind Canonical Structure
+# FLOWMIND CANONICAL STRUCTURE
 
-## 0. System layers
+Status: FROZEN LEGACY
+Project: FlowMind / Imagine What If
+Role: historical architecture checkpoint only
 
-### A. Topic Intelligence Layer
-- Topic Intelligence Lite v1
-- collects market signals
-- filters weak topics before production
-- outputs Topic Queue
+## 1. Purpose
 
-### B. Control Layer
-- Manifest
-- Dispatcher
-- Project State
+This file is retained as historical evidence of an earlier FlowMind architecture model.
 
-### C. Production Layer
-- Topic execution pipeline
-- artifact generation
+Earlier versions described:
+
+- Topic Intelligence Lite
+- Manifest / Dispatcher / Project State control model
+- production module sequence
 - QA
-
-### D. Publication Layer
 - Telegram approval
-- upload scheduling
-- publication
+- upload and publication flow
+- older lifecycle-state naming
+
+This file no longer defines the current canonical architecture.
 
 ---
 
-## 1. Core authority
+## 2. Why this file is frozen
 
-### [0] Manifest
-- immutable project definition
-- defines niche, mode, render profile, queue source, and project rules
-- must remain locked after creation
+Earlier versions contained architecture assumptions that are no longer current.
 
-### [1] Dispatcher
-- single control authority
-- only component allowed to mutate Project State
-- controls transitions and gate decisions
+Examples include:
 
-### [2] Project State
-- mutable only through dispatcher-controlled transitions
-- represents the current lifecycle phase
-- stores guards, approvals, halt state, and phase history
+- Topic Intelligence Lite as canonical front layer
+- Topic Queue as the only production-topic source
+- Telegram approval as part of canonical lifecycle
+- publication as part of the active canonical structure
+- older lifecycle states such as:
+  - TOPIC_SELECTED
+  - SCRIPT_READY
+  - SCENES_READY
+  - ASSETS_READY
+  - ASSEMBLY_READY
+  - QA_PASSED
+  - READY_FOR_REVIEW
+  - TELEGRAM_APPROVED
+  - SCHEDULED
+  - PUBLISHED
 
----
-
-## 2. Canonical flow
-
-### Topic selection flow
-[TI] Topic Intelligence Lite
-↓
-[QUEUE] Topic Queue
-↓
-[PPG] Pre-Production Gate
-
-### Production flow
-[3] TOPIC_SELECTED
-↓
-[4] SCRIPT_READY
-↓
-[5] SCENES_READY
-↓
-[6] ASSETS_READY
-↓
-[7] ASSEMBLY_READY
-↓
-[8] QA_PASSED
-
-### Review and publication flow
-[9] READY_FOR_REVIEW
-↓
-[10] TELEGRAM_APPROVED
-↓
-[11] READY_FOR_UPLOAD
-↓
-[12] SCHEDULED
-↓
-[13] PUBLISHED
+These concepts must not override newer verified authority.
 
 ---
 
-## 3. Topic Intelligence role
+## 3. Current authority routing
 
-Topic Intelligence Lite v1:
-- does not produce videos
-- does not write scripts
-- does not predict guaranteed virality
-- filters weak topics before production
+For high-level product intent use:
 
-Inputs:
-- Google Trends
-- YouTube market check
-- Reddit pain support
+- FLOWMIND_WORKING_TARGET.md
 
-Outputs:
-- Topic Queue
-- Top topic packets
-- shortlist
-- kill list
+For detailed target architecture use:
 
----
+- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
 
-## 4. Module sequence
+For current operational state use:
 
-### Topic Intelligence
-- collects signals
-- clusters and scores topic candidates
-- outputs topic packets
+- FLOWMIND_ACTIVE_MAP.md
 
-### Script Module
-- input: approved topic packet + manifest + allowed state
-- output: script artifact
+For control-plane semantics use:
 
-### Scenes Module
-- input: script artifact
-- output: scene breakdown
+- CANONICAL_DISPATCHER_SPEC.md
 
-### Assets Module
-- input: scenes
-- output: asset set
+For authority classification use:
 
-### Assembly Module
-- input: assets + structure
-- output: final video artifact
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
 
-### QA Module
-- input: final video artifact
-- output: QA result
+For operating discipline use:
 
-### Review Layer
-- input: QA-passed package
-- output: Telegram approval decision
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
 
-### Upload Layer
-- input: approved upload-ready package
-- output: publication side-effect
-- ends in PUBLISHED
+For execution discipline use:
+
+- docs/FLOWMIND_WORK_PROTOCOL_V1.md
+
+Runtime truth requires current repo and runtime evidence.
 
 ---
 
-## 5. Dependency rules
+## 4. Historical principles preserved
 
-Manifest
-→ defines project contract
+The following principles remain useful:
 
-Dispatcher
-→ controls state transitions
-→ enforces gate rules
+- one canonical control plane
+- explicit phase transitions
+- no module-level bypass of control authority
+- artifacts must align with valid runtime state
+- QA must gate unsafe progression
+- publication must not bypass approval policy
+- implementation details must not redefine architecture silently
 
-Project State
-→ represents active phase and approval state
+These principles are now governed by newer verified authority.
 
-Modules
-→ must not bypass dispatcher authority
-→ run only when their phase is valid
-
-Artifacts
-→ are outputs of module execution
-→ must align with current state phase
-
-Topic Queue
-→ is the only source of next production topic
+This file itself does not grant architecture authority.
 
 ---
 
-## 6. Hard invariants
+## 5. Obsolete architecture assumptions
 
-- Manifest is immutable after lock
-- Dispatcher is the only state authority
-- Only one active phase is valid at a time
-- Phase transitions must be explicit
-- No-op transitions are forbidden
-- Weak topics must not enter production
-- Upload cannot happen before QA pass
-- Upload cannot happen before Telegram approval
-- Phase history must always be preserved
-- Runtime execution must not rewrite manifest authority
+Do not treat the following as current requirements merely because they appeared in previous versions:
 
----
+- Telegram approval as mandatory architecture
+- Topic Intelligence Lite as canonical production entry
+- Topic Queue as exclusive topic authority
+- old READY_FOR_REVIEW / TELEGRAM_APPROVED lifecycle
+- SCHEDULED / PUBLISHED lifecycle model
+- old module sequence
+- old publication layer
+- old manifest/state assumptions
 
-## 7. What is inside the canonical structure
-- topic intelligence placement
-- control authority
-- lifecycle phases
-- module order
-- dependency direction
-- transition rules
-- artifact relationship to phases
-- approval and publication flow
+Each of these requires current verification or explicit re-approval before use.
 
 ---
 
-## 8. What is outside the canonical structure
-- implementation details of uploader
-- ffmpeg internals
-- provider-specific execution logic
-- optimization logic
-- forecasting engines
-- deep analytics
-- advanced multi-channel strategy
+## 6. Prohibitions
+
+Do not use this file to:
+
+- define current target architecture
+- determine current module order
+- determine current phase names
+- authorize Telegram integration
+- authorize upload implementation
+- define current topic-intelligence architecture
+- determine current next action
+- override CANONICAL_DISPATCHER_SPEC.md
+- override FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+- override newer runtime evidence
+
+Do not resurrect old architecture from Git history without audit.
 
 ---
 
-## 9. Canonical conclusion
+## 7. Historical-use rule
 
-The canonical structure of FlowMind is:
+Previous versions may be used only for:
 
-Topic Intelligence
-→ Topic Queue
-→ Pre-Production Gate
-→ Dispatcher-controlled Production
-→ QA
-→ Telegram Approval
-→ Upload / Publish
+- architecture history
+- tracing earlier design decisions
+- identifying obsolete assumptions
+- comparing old and current system models
+- understanding why certain constraints were introduced
 
-Execution details are separate and must not redefine the structure.
+Historical value does not equal current authority.
+
+---
+
+## 8. Final classification
+
+Classification:
+
+FROZEN LEGACY
+
+Current authority:
+
+NONE
+
+Historical value:
+
+YES
+
+Current architecture value:
+
+NO
+
+Current-next-action value:
+
+NO
+
+Runtime-proof value:
+
+NO
+
+End.
