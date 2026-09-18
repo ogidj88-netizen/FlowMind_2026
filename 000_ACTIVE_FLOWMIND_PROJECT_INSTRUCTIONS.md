@@ -20,35 +20,93 @@ If another uploaded Project Source conflicts with this file, this file wins.
 
 ---
 
-## 2. Product target authority
+## 2. Product authority hierarchy
+
+FlowMind uses two separate product-level authority roles.
+
+### FLOWMIND_WORKING_TARGET.md
 
 FLOWMIND_WORKING_TARGET.md defines:
 
-- what FlowMind is intended to become
-- the canonical target shape
-- system intent
-- scope boundaries
-- what belongs and does not belong in the target system
+- high-level product intent
+- optimization principles
+- scope discipline
+- minimalism / ROI boundaries
+- what kinds of complexity should be avoided
 
-FLOWMIND_WORKING_TARGET.md is trusted for product target and system intent.
+It is trusted for product intent and high-level direction.
 
-It is NOT proof that any runtime component is currently implemented or working.
+It is NOT the detailed current architecture specification.
 
-Before proposing architecture, modules, integrations, providers, or major technical changes, ChatGPT must check alignment with FLOWMIND_WORKING_TARGET.md.
+It is NOT runtime proof.
 
-If a proposal does not directly support the agreed target, it must not become active work.
+### FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+
+FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md defines:
+
+- the detailed target architecture
+- the accepted 12-module implementation structure
+- the target layers
+- module responsibilities
+- target artifacts
+- architecture destination
+- what must not be built yet
+
+It is trusted for detailed target architecture after content verification.
+
+It is NOT runtime proof.
+
+It does not prove that a module is implemented or working.
+
+### Product alignment rule
+
+Before proposing architecture, modules, integrations, providers, or major technical changes, ChatGPT must check alignment with both:
+
+- FLOWMIND_WORKING_TARGET.md
+- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+
+FLOWMIND_WORKING_TARGET.md answers:
+
+what kind of system we are building and why.
+
+FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md answers:
+
+what detailed target structure we are evolving toward.
+
+If these documents materially conflict:
+
+STOP.
+
+Do not silently choose one.
+
+Resolve the conflict using current repo evidence and explicit user decision before implementation.
 
 ---
 
 ## 3. Current operational context
 
-The active current operational context is:
+The current operational objective is defined by this file and the newest verified repo / runtime evidence.
 
-CHAT_START_BLOCK_FLOWMIND_CURRENT.md
+Current mode:
 
-It describes the last confirmed working state, active contour, current blockers, and current next action.
+SYSTEM MAP MODE
 
-It must not override newer direct runtime evidence from the current audit.
+Current objective:
+
+Audit and clean FlowMind authority, Project Sources, trust boundaries, and active system map before resuming production development.
+
+Historical operational documents may contain useful evidence but must not automatically control current work.
+
+This includes:
+
+- CHAT_START_BLOCK_FLOWMIND_CURRENT.md
+- FLOWMIND_CURRENT_WORK_ANCHOR.md
+
+Their filename or declared ACTIVE / CURRENT status is not sufficient authority.
+
+Their actual content and freshness must be verified.
+
+If their current action conflicts with newer verified repo or audit evidence, the newer verified evidence wins.
 
 ---
 
@@ -80,7 +138,8 @@ For every candidate authority file, ChatGPT must:
 6. compare it with:
    - this file;
    - FLOWMIND_WORKING_TARGET.md;
-   - CHAT_START_BLOCK_FLOWMIND_CURRENT.md;
+   - FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md;
+   - relevant current operational documents;
    - relevant current repo evidence;
    - relevant current terminal/runtime evidence;
 7. detect contradictions, stale assumptions, legacy instructions, or duplicated authority;
@@ -120,6 +179,7 @@ The following assumptions are explicitly forbidden:
 - "CURRENT" means the file is current
 - "CANONICAL" means the file is canonical
 - "TRUSTED" means the file is trusted
+- "FINAL" means the file is automatically authoritative
 - a newer-looking version number means the file is authoritative
 - a file is trusted because another document references it
 - a file is trusted because it exists in Project Sources
@@ -135,11 +195,12 @@ Names do not.
 
 Before any technical or architectural recommendation, ChatGPT must be able to answer:
 
-1. What part of FLOWMIND_WORKING_TARGET.md does this action support?
-2. Is this action inside the current active phase?
-3. Does it create a second active contour?
-4. Does it mix active, legacy, donor, archive, or unverified material?
-5. Does it directly improve at least one of:
+1. What product principle in FLOWMIND_WORKING_TARGET.md does this action support?
+2. What part of FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md does this action support?
+3. Is this action inside the current active phase?
+4. Does it create a second active contour?
+5. Does it mix active, legacy, donor, archive, or unverified material?
+6. Does it directly improve at least one of:
    - output quality
    - runtime stability
    - release speed
@@ -204,16 +265,22 @@ It must not silently return to active authority.
 ## 11. Authority roles
 
 This file:
-controls ChatGPT operating discipline and anti-drift rules.
+controls ChatGPT operating discipline, anti-drift rules, and current audit objective.
 
 FLOWMIND_WORKING_TARGET.md:
-controls product target and intended system shape.
+controls product intent and high-level product principles.
 
-CHAT_START_BLOCK_FLOWMIND_CURRENT.md:
-records the last confirmed operational checkpoint.
+FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md:
+controls the detailed target architecture and destination after content verification.
+
+Current operational documents:
+describe working checkpoints only after their freshness has been verified.
 
 Current repo + runtime evidence:
 prove what actually exists and works.
+
+Dispatcher / control specifications:
+control runtime state and transition rules within their verified scope.
 
 FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md and trust-boundary documents:
 may classify authority only after their own contents and freshness have been verified.
@@ -232,6 +299,8 @@ Current objective:
 
 Audit and clean FlowMind authority, Project Sources, trust boundaries, and active system map before resuming production development.
 
+This audit temporarily takes priority over older implementation-next-action instructions.
+
 ---
 
 ## 13. Forbidden now
@@ -239,6 +308,7 @@ Audit and clean FlowMind authority, Project Sources, trust boundaries, and activ
 Until the authority/source audit is complete:
 
 - do not tune video quality
+- do not implement Director Brain
 - do not add YouTube upload
 - do not add Telegram integration
 - do not add TikTok crossposting
@@ -249,6 +319,7 @@ Until the authority/source audit is complete:
 - do not trust unverified documents
 - do not redesign modules based on stale documents
 - do not add files to Project Sources without content verification
+- do not resume old "current next action" instructions from stale operational documents
 
 ---
 
@@ -264,6 +335,12 @@ READ
 → CHECK CONFLICTS
 → CLASSIFY
 → KEEP / REMOVE / UPDATE
+
+Known findings already established during this audit:
+
+- FLOWMIND_WORKING_TARGET.md is trusted for product intent and high-level principles;
+- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md is the verified detailed target architecture candidate and must remain separate from runtime proof;
+- operational documents with older implementation-next-action instructions must be re-audited before controlling work.
 
 Do not resume production implementation until the authority chain is internally consistent.
 
