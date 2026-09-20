@@ -2,49 +2,90 @@
 
 Status: ACTIVE OPERATIONAL MAP
 Project: FlowMind / Imagine What If
-Mode: SYSTEM MAP MODE
+Mode: PRODUCTION REENTRY MODE
 
 ## 1. Purpose
 
-This file defines the current operational work map for FlowMind.
+This file is the single current operational authority for FlowMind.
 
-It does not define permanent product architecture.
+It defines only:
 
-It is subordinate to:
+- where the project is now
+- current mode
+- current objective
+- current step
+- current allowed work
+- current forbidden work
+- current exit condition
 
-- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
-- verified product authority
-- verified runtime evidence
+It does NOT define:
 
-Its purpose is to define:
+- permanent operating discipline
+- high-level product intent
+- detailed target architecture
+- runtime truth
+- historical project state
 
-- where we are now
-- what current work is allowed
-- what is forbidden
-- what must be verified before implementation resumes
-- when to stop
+Authority routing:
 
-This file must not override newer verified repo or runtime evidence.
+- permanent operating discipline:
+  000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+- high-level product intent:
+  FLOWMIND_WORKING_TARGET.md
+
+- detailed target architecture:
+  FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+
+- authority classification:
+  FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+
+- MAP CHECK / anti-drift:
+  docs/FLOWMIND_MAP_GUARD_V1.md
+
+- execution discipline:
+  docs/FLOWMIND_WORK_PROTOCOL_V1.md
+
+- control-plane semantics:
+  CANONICAL_DISPATCHER_SPEC.md
+
+- actual implementation truth:
+  verified repo and runtime evidence
 
 ---
 
-## 2. Product direction
+## 2. Verified transition
 
-High-level product intent:
+The authority/source reconciliation phase is complete.
 
-- FLOWMIND_WORKING_TARGET.md
+Verified outcome:
 
-Detailed target architecture:
+- one current operational authority exists:
+  FLOWMIND_ACTIVE_MAP.md
 
-- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+- permanent operating discipline is separated from current operational state
 
-Interpretation:
+- product intent is separated from detailed target architecture
 
-FLOWMIND_WORKING_TARGET.md defines the product principles and optimization boundaries.
+- authority classification is separated from current operational state
 
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md defines the detailed destination architecture.
+- MAP GUARD no longer owns or caches current operational state
 
-Neither document is runtime proof.
+- stale operational authority has been removed or frozen
+
+- active authority files have been reconciled
+
+- Project Sources have been synchronized with the verified authority chain
+
+- repo validation / preflight passed
+
+- authority changes were committed and pushed
+
+Production work may therefore resume.
+
+This does NOT mean that historical implementation instructions become current again.
+
+Production work resumes only from verified current repo/runtime evidence.
 
 ---
 
@@ -52,21 +93,22 @@ Neither document is runtime proof.
 
 Current mode:
 
-SYSTEM MAP MODE
+PRODUCTION REENTRY MODE
 
 Current objective:
 
-Audit and clean:
+Resume real FlowMind product development by identifying exactly one highest-value implementation gap from verified current repo/runtime evidence and then implementing that gap without creating a second runtime contour.
 
-- Project Sources
-- authority documents
-- trust boundaries
-- operational maps
-- duplicated or stale "current next action" instructions
+The next implementation target must not be selected from:
 
-before production implementation resumes.
+- stale next-action documents
+- historical work anchors
+- old chat instructions
+- legacy modules
+- filename assumptions
+- architecture intent alone
 
-This authority/source audit temporarily takes priority over older implementation-next-action instructions.
+The target must be selected from current evidence.
 
 ---
 
@@ -74,66 +116,61 @@ This authority/source audit temporarily takes priority over older implementation
 
 Current step:
 
-Authority and Project Sources reconciliation.
+Identify the next concrete production implementation target.
 
-Goal:
+Required sequence:
 
-Create one internally consistent authority chain so that a new ChatGPT conversation cannot accidentally resume stale work.
+CURRENT REPO / RUNTIME EVIDENCE
+→ COMPARE WITH VERIFIED TARGET ARCHITECTURE
+→ IDENTIFY ONE REAL GAP
+→ VERIFY ROI / IMPACT
+→ AUTHORIZE ONE IMPLEMENTATION TARGET
+→ IMPLEMENT
+→ VALIDATE
 
-For every authority or Project Source file:
+Do not start implementation until the exact gap is evidenced.
 
-READ
-→ VERIFY CONTENT
-→ CHECK FRESHNESS
-→ CHECK CONFLICTS
-→ CLASSIFY
-→ KEEP / REMOVE / UPDATE
+Do not automatically resume Director Brain merely because historical documents previously named it as a next action.
 
-Classification must be exactly one of:
+Do not select a module merely because it appears important in the target architecture.
 
-- TRUSTED
-- FROZEN LEGACY
-- UNVERIFIED
+Evidence comes first.
 
 ---
 
-## 5. Current verified findings
+## 5. Target-selection criteria
 
-000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+The next production task must satisfy all of the following:
 
-- TRUSTED
-- controls ChatGPT operating discipline and anti-drift rules
+1. it exists inside the verified FlowMind target architecture;
 
-FLOWMIND_WORKING_TARGET.md
+2. current repo/runtime evidence shows that it is:
+   - missing,
+   - incomplete,
+   - incorrect,
+   - disconnected,
+   - or materially blocking the production pipeline;
 
-- TRUSTED for high-level product intent and principles
-- not the detailed current architecture specification
-- not runtime proof
+3. fixing it directly improves at least one of:
+   - output quality,
+   - runtime stability,
+   - production speed,
+   - automation,
+   - monetization potential;
 
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+4. it does not create a second runtime contour;
 
-- verified detailed target architecture
-- 12-module target structure
-- not runtime proof
-- does not define current working state
+5. it does not reactivate FROZEN LEGACY code;
 
-CHAT_START_BLOCK_FLOWMIND_CURRENT.md
+6. it does not require speculative infrastructure before measurable value exists;
 
-- stale as current operational authority
-- useful as historical operational evidence until updated or retired
-- old current-next-action instructions must not control current work
+7. it can be validated with concrete evidence.
 
-FLOWMIND_CURRENT_WORK_ANCHOR.md
+If several candidates exist:
 
-- stale as current operational authority
-- Director Brain preparation content remains historical evidence
-- old current-next-action instructions must not control current work
+choose the smallest change with the highest direct product impact.
 
-Previous FLOWMIND_ACTIVE_MAP.md state
-
-- stale repo/module-inventory current step
-- stale pipeline wording
-- old exit condition must not control current work
+Minimalism wins over architectural ambition.
 
 ---
 
@@ -141,136 +178,172 @@ Previous FLOWMIND_ACTIVE_MAP.md state
 
 Allowed:
 
-- read Project Sources
-- read repo authority documents
-- inspect file contents
-- inspect git history
-- inspect current runtime evidence
-- classify documents
-- update stale authority documents by full replacement
-- remove legacy documents from active Project Sources
-- synchronize verified authority files between GitHub and Project Sources
-- run validation and preflight checks
-- commit only after a meaningful audit block is complete
+- inspect current production repo files
+- inspect current runtime behavior
+- inspect generated production artifacts
+- run existing pipeline paths
+- run focused validation
+- compare actual implementation with verified target architecture
+- identify missing or broken production links
+- select one evidence-backed implementation target
+- modify production code after the target is verified
+- add or update tests directly required by that implementation
+- run relevant validation and preflight
+- commit and push verified work
+- synchronize an authority Project Source when that authority file itself changes
+
+File execution must follow:
+
+ONE STEP = ONE SPECIFIC FILE
+
+unless the user explicitly requests batch mode.
 
 ---
 
 ## 7. Forbidden actions now
 
-Until the authority/source audit is complete:
+Do not:
 
-- do not implement Director Brain
-- do not tune final video quality
-- do not change renderer behavior
-- do not add YouTube upload
-- do not add Telegram integration
-- do not add TikTok crossposting
-- do not add Pexels/Pixabay integration
-- do not add new provider integrations
-- do not rewrite dispatcher
-- do not rewrite runner
-- do not activate engine/module_runner.py
-- do not execute engine/modules/*
-- do not create a second runtime contour
-- do not open upload gate
-- do not approve upload
-- do not trust stale "CURRENT", "ACTIVE", "FINAL", or "TRUSTED" labels without content verification
-- do not resume an old next action merely because it exists in a historical document
+- restart authority/source cleanup without new evidence of an authority conflict
+- create another current operational document
+- create a second runtime contour
+- reactivate legacy runner paths
+- activate engine/module_runner.py without explicit verified authorization
+- activate engine/modules/* merely because they exist
+- rewrite dispatcher without evidence that dispatcher behavior is the actual blocker
+- add providers merely for optionality
+- add integrations merely because they are planned
+- add YouTube upload before the production pipeline is ready for publishing
+- add Telegram integration
+- add TikTok crossposting
+- add speculative Pexels/Pixabay integration
+- optimize infrastructure before the current production bottleneck is identified
+- treat target architecture as proof that a module already exists
+- treat historical status documents as current authorization
+- implement multiple unrelated gaps at once
 
 ---
 
 ## 8. Runtime truth rule
 
-Architecture documents describe intent.
+Runtime truth outranks documentation about implementation state.
 
-Runtime evidence proves implementation.
+A production capability is considered real only when supported by relevant evidence such as:
 
-A runtime component is considered real only when supported by relevant evidence such as:
-
-- implementation
-- validation
+- current implementation
+- successful execution
 - generated artifact
 - downstream consumption
 - runtime log
+- validation output
 - reproducible behavior
 
-Historical status documents are not runtime proof.
+A file saying that something exists is not enough.
+
+A target architecture saying that something should exist is not enough.
+
+A historical successful run is not automatically proof of current behavior.
 
 ---
 
-## 9. Operational document consolidation rule
+## 9. Production-contour rule
 
-FlowMind must not maintain multiple competing documents that all claim to define:
+FlowMind must have one active production contour.
 
-- where we are now
-- what the current next action is
-- what current work is allowed
+Before modifying code, verify that the change belongs to the current contour.
 
-During this audit:
+STOP if the proposed action would:
 
-- CHAT_START_BLOCK_FLOWMIND_CURRENT.md
-- FLOWMIND_CURRENT_WORK_ANCHOR.md
-- FLOWMIND_ACTIVE_MAP.md
+- create a parallel pipeline
+- introduce a second dispatcher path
+- introduce a second runner path
+- bypass the current manifest/state model
+- revive retired architecture
+- duplicate an existing responsibility without evidence
 
-must be reconciled.
+Extend the current verified contour.
 
-Final objective:
-
-one current operational authority for "where we are now".
-
-Historical checkpoints may remain in the repository but must not compete with the active operational authority.
+Do not build around it.
 
 ---
 
-## 10. Stop rule
+## 10. Decision rule
 
-STOP if:
+For every proposed implementation target, answer:
 
-- authority documents materially conflict
-- current source freshness is unknown
-- a file cannot be read completely enough to verify
-- an action would create a second runtime contour
-- an action would reactivate legacy code
-- production implementation is proposed before authority reconciliation is complete
-- a file is treated as trusted only because of its filename or declared status
-- the next action cannot be traced to the verified authority chain
+1. What exact current problem exists?
+2. What evidence proves it?
+3. What verified target-architecture responsibility does it map to?
+4. What product result improves if we fix it?
+5. What is the smallest correct implementation?
+6. How will runtime validation prove success?
 
-Do not guess.
+If these cannot be answered:
 
-Obtain evidence first.
+STOP.
+
+Gather evidence.
+
+Do not implement from assumption.
 
 ---
 
 ## 11. Exit condition
 
-The authority/source audit is complete only when:
+PRODUCTION REENTRY MODE ends only when:
 
-1. every active Project Source has been classified;
-2. stale or legacy Sources have been removed or explicitly frozen;
-3. product intent and detailed target architecture have distinct roles;
-4. one operational document defines current work;
-5. trust-boundary documents no longer conflict with verified authority;
-6. Project Sources and GitHub authority files are synchronized;
-7. no stale current-next-action instruction can override the verified current objective;
-8. repo validation passes.
+1. one exact implementation gap has been identified from current repo/runtime evidence;
 
-Only then may FlowMind resume production implementation.
+2. that gap has been mapped to the verified target architecture;
+
+3. its product / ROI impact has been established;
+
+4. exactly one implementation target has been authorized;
+
+5. the implementation has been completed;
+
+6. relevant validation passes;
+
+7. no second runtime contour or legacy reactivation was introduced;
+
+8. the resulting runtime behavior is evidenced.
+
+After that:
+
+FLOWMIND_ACTIVE_MAP.md must be updated to the next operational phase.
 
 ---
 
-## 12. One-step rule
+## 12. One-step execution rule
 
-Work proceeds:
+Operational work follows the permanent rule defined in:
+
+000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+Default:
+
+ONE STEP = ONE SPECIFIC FILE.
+
+For the current production re-entry phase:
 
 one file
-→ audit
+→ evidence
+→ verification
 → verdict
-→ KEEP / REMOVE / UPDATE
-→ verify
 → next file
 
-Commit only after a meaningful authority-audit block is complete.
+Do not jump ahead.
 
-No automatic jumping ahead.
+Do not batch files unless the user explicitly requests batch mode.
+
+---
+
+## 13. Current next action
+
+Current next action:
+
+Inspect current repo/runtime evidence to identify the single highest-value production implementation gap.
+
+No production code change is authorized until that exact gap is verified.
 
 End.
