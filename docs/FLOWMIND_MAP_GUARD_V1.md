@@ -2,31 +2,59 @@
 
 Status: ACTIVE OPERATIONAL GUARD
 Project: FlowMind / Imagine What If
-Mode: SYSTEM MAP MODE
+Scope: MAP CHECK and anti-drift enforcement only; no current operational authority
 
 ## 1. Purpose
 
-Prevent FlowMind work from drifting away from the verified product target and current operational map.
+This file prevents FlowMind work from drifting away from the verified authority chain, current operational map, product target, and runtime evidence.
 
-This guard does not define product architecture.
+This guard does NOT define:
 
-This guard enforces alignment before technical work.
+- current mode
+- current objective
+- current step
+- current next action
+- current implementation priority
+- current allowed production work
+- current forbidden production work
+- current operational exit condition
+
+All current operational state belongs exclusively to FLOWMIND_ACTIVE_MAP.md.
+
+This guard enforces alignment before technical or architectural work.
 
 ---
 
 ## 2. Required MAP CHECK
 
-Before every technical or architectural answer, the assistant must show:
+Before every technical or architectural execution response, the assistant must show:
 
 MAP CHECK
+
 Active map:
+
 Current step:
+
 Allowed action:
+
 Forbidden action:
+
 Evidence:
+
 Verdict:
 
-If the assistant cannot fill this block from verified sources:
+The MAP CHECK must be derived from verified authority and evidence.
+
+The fields:
+
+- Current step
+- Allowed action
+- Forbidden action
+- operational exit condition
+
+must come from FLOWMIND_ACTIVE_MAP.md.
+
+If the assistant cannot fill the MAP CHECK from verified sources:
 
 STOP.
 
@@ -34,20 +62,24 @@ Do not guess.
 
 ---
 
-## 3. Verified authority chain
+## 3. Authority routing
 
-Use authority by role, not by filename prestige.
+Authority is role-based.
 
-### Operating discipline
+### Permanent operating discipline
 
 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
 
 Controls:
 
-- anti-drift rules
-- source verification rules
-- current audit objective
+- permanent anti-drift rules
+- source verification discipline
 - authority discipline
+- synchronization discipline
+- fail-closed behavior
+- one-step discipline
+
+It does not define current operational state.
 
 ### Product intent
 
@@ -60,6 +92,8 @@ Controls:
 - scope discipline
 - ROI / minimalism boundaries
 
+It is not runtime proof.
+
 ### Detailed target architecture
 
 FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
@@ -67,22 +101,69 @@ FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
 Controls:
 
 - detailed target architecture
-- 12-module destination
+- target module structure
 - target layers
-- target module responsibilities
+- target responsibilities
+- target artifacts
+- architectural destination
+
+It does not define current work.
 
 It is not runtime proof.
 
-### Current operational map
+### Current operational authority
 
 FLOWMIND_ACTIVE_MAP.md
 
 Controls:
 
 - where we are now
-- what work is allowed now
-- what work is forbidden now
-- current exit condition
+- current mode
+- current objective
+- current step
+- current allowed work
+- current forbidden work
+- current next operational action
+- current operational exit conditions
+
+It is the single current operational authority.
+
+### Authority classification
+
+FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+
+Controls:
+
+- TRUSTED / FROZEN LEGACY / UNVERIFIED classification
+- authority routing
+- authority publication gates
+- Project Sources reconciliation rules
+
+It does not define current operational state.
+
+### Execution discipline
+
+docs/FLOWMIND_WORK_PROTOCOL_V1.md
+
+Controls:
+
+- execution discipline
+- evidence requirements
+- file editing discipline
+- validation discipline
+- Git discipline
+- failure handling
+- response discipline
+
+It does not define current project state.
+
+### Control-plane semantics
+
+CANONICAL_DISPATCHER_SPEC.md
+
+Controls verified dispatcher and state-transition semantics within its explicit scope.
+
+It is not product strategy, current operational authority, or runtime proof.
 
 ### Runtime truth
 
@@ -92,169 +173,180 @@ Current repo and runtime evidence prove:
 - what runs
 - what produces artifacts
 - what is consumed downstream
-- what actually passes validation
+- what passes validation
+- what fails
 
 Documents do not substitute for runtime evidence.
 
 ---
 
-## 4. Unverified authority rule
+## 4. Current-state ownership rule
 
-The following must NOT automatically control work unless individually audited and verified:
+FLOWMIND_ACTIVE_MAP.md is the only source allowed to define current operational state.
 
-- FLOWMIND_ACTION_SEQUENCE_V1.md
-- FLOWMIND_SYSTEM_MAP_V1.md
-- FLOWMIND_CANONICAL_STRUCTURE.md
-- FLOWMIND_REPO_TRUST_BOUNDARY_V1.md
-- FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md
-- migration-era documents
-- historical start blocks
-- historical work anchors
-- old module status documents
-- old fix backlogs
+This guard must never independently define or cache:
 
-A reference from another document is not enough.
+- Current mode
+- Current objective
+- Current step
+- Current next action
+- Current implementation priority
+- Current allowed work
+- Current forbidden work
+- Current operational exit condition
 
-Content must be verified.
+Phase-specific restrictions must be read from FLOWMIND_ACTIVE_MAP.md at the time of the MAP CHECK.
 
----
+Do not copy them into this file as a fallback.
 
-## 5. Current default
+If this guard and FLOWMIND_ACTIVE_MAP.md ever appear to define competing current states:
 
-Current mode:
+STOP.
 
-SYSTEM MAP MODE
-
-Current objective:
-
-Complete authority and Project Sources reconciliation before production development resumes.
-
-Current active step:
-
-Audit one file at a time:
-
-READ
-→ VERIFY CONTENT
-→ CHECK FRESHNESS
-→ CHECK CONFLICTS
-→ CLASSIFY
-→ KEEP / REMOVE / UPDATE
-→ VERIFY
+FLOWMIND_MAP_GUARD_V1.md must be reconciled back to guard-only scope.
 
 ---
 
-## 6. Current forbidden work
+## 5. Unverified authority rule
 
-Until authority reconciliation is complete:
+A file must not control work merely because it:
 
-- no Director Brain implementation
-- no renderer changes
-- no video-quality tuning
-- no YouTube upload
-- no Telegram integration
-- no TikTok crossposting
-- no new providers
-- no runner rewrite
-- no dispatcher rewrite
-- no legacy module activation
-- no second runtime contour
-- no upload approval
-- no READY_FOR_UPLOAD transition
-- no implementation based on stale operational documents
+- exists in the repository
+- exists in Project Sources
+- has ACTIVE, CURRENT, FINAL, CANONICAL, or TRUSTED in its name or body
+- is newer by filename or version number
+- is referenced by another authority document
+- historically controlled work
 
----
+Content, scope, freshness, classification, and evidence must be verified.
 
-## 7. Stop triggers
+If verification is insufficient:
 
-STOP if:
+UNVERIFIED.
 
-1. current operational step is unclear;
-2. authority documents materially conflict;
-3. source freshness is unknown;
-4. a file is trusted only because of its filename or declared status;
-5. the action does not match FLOWMIND_ACTIVE_MAP.md;
-6. the action creates a second runtime contour;
-7. the action activates legacy code;
-8. active, donor, archive, legacy, or unverified material is mixed;
-9. production placeholders or fake outputs are proposed;
-10. current runtime evidence contradicts documentation;
-11. implementation is proposed before the authority audit is complete.
+UNVERIFIED material must not drive implementation.
 
 ---
 
-## 8. File modification rules
+## 6. Legacy protection rule
 
-All FlowMind file modifications must use full replacement.
+Historical, frozen, archived, donor, migration-era, or retired material may be read for evidence.
 
-Allowed:
+It must not silently define:
 
-1. nano
-2. direct input:
-   cat > path/to/file
-   then paste full content and Ctrl + D
+- current state
+- current next action
+- current architecture
+- current implementation permission
+- current runtime truth
 
-Forbidden:
-
-- heredoc
-- cat << EOF
-- partial edits
-- apply_patch
-- sed -i
-- append-only fixes
-- hidden edits
-- production placeholders
+Promotion of legacy material requires explicit re-audit and verified classification.
 
 ---
 
-## 9. Git rules
+## 7. MAP CHECK evidence rule
 
-Do not commit after every audited file.
+A valid MAP CHECK must distinguish:
 
-During the authority audit:
+- authority evidence
+- repository evidence
+- runtime evidence
+- assumptions
 
-- accumulate one meaningful audit block
-- keep changes visible in git status
-- validate each changed file
-- run preflight before the final block commit
+Architecture documentation proves intent only.
 
-Before final commit:
+Validation proves only what the validation actually checked.
 
-1. inspect git diff
-2. run relevant checks
-3. run bash tools/preflight.sh
-4. inspect git status
-5. stage only intended files
-6. commit one meaningful audit block
-7. push once
-8. verify clean status
-9. synchronize changed authority files with Project Sources
+Historical status documents do not prove runtime behavior.
 
----
+A runtime claim requires relevant runtime or repository evidence.
 
-## 10. Source synchronization rule
+If evidence contradicts documentation:
 
-GitHub repository is the durable project master.
+STOP.
 
-Project Sources are ChatGPT working context.
-
-If an active authority file changes:
-
-- GitHub and Project Sources must be synchronized;
-- content mismatch means UNVERIFIED;
-- internal upload suffixes such as (1) or (2) do not change logical identity if actual file content and canonical heading match.
+Resolve the discrepancy before implementation.
 
 ---
 
-## 11. Exit condition
+## 8. Stop triggers
 
-This guard remains valid when:
+STOP when:
 
-1. every technical answer uses a verified MAP CHECK;
-2. current operational work is taken from FLOWMIND_ACTIVE_MAP.md;
-3. product direction is checked against verified product authority;
-4. runtime claims are backed by runtime evidence;
-5. stale documents cannot silently override current work;
-6. authority conflicts cause STOP instead of guessing.
+1. current operational step cannot be obtained from FLOWMIND_ACTIVE_MAP.md;
+2. authority roles materially overlap;
+3. authority documents materially conflict;
+4. source freshness is unknown;
+5. a file is trusted only because of its filename or declared status;
+6. an action is not authorized by FLOWMIND_ACTIVE_MAP.md;
+7. an action would create a second runtime contour;
+8. an action would activate legacy or UNVERIFIED code without authorization;
+9. runtime evidence contradicts authority documentation;
+10. a runtime claim lacks evidence;
+11. Project Source and repo authority versions materially differ;
+12. a requested commit or push still contains unresolved authority risk.
+
+Do not continue by assumption.
+
+Obtain evidence first.
+
+---
+
+## 9. Source synchronization rule
+
+GitHub repository remains the durable project master.
+
+Project Sources provide ChatGPT working context.
+
+When an active authority file changes:
+
+- verify its actual repo content;
+- pass required validation;
+- commit and push the intended version before treating it as durable repo truth;
+- synchronize the corresponding Project Source;
+- verify that the working Project Source reflects the intended committed authority.
+
+A Project Source mismatch is UNVERIFIED until checked.
+
+Internal upload suffixes such as `(1)`, `(2)`, or `(3)` do not create separate logical authority when canonical identity and verified content match.
+
+---
+
+## 10. Anti-drift rule
+
+Before recommending work, verify that the action:
+
+1. is authorized by FLOWMIND_ACTIVE_MAP.md;
+2. supports FLOWMIND_WORKING_TARGET.md;
+3. is compatible with FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md;
+4. respects verified authority classification;
+5. does not create duplicate operational authority;
+6. does not create a second runtime contour;
+7. does not activate legacy or UNVERIFIED material;
+8. is supported by sufficient repo / runtime evidence.
+
+If these checks do not pass:
+
+STOP.
+
+---
+
+## 11. Guard validity
+
+This guard is valid only while it remains a guard rather than a second operational map.
+
+It must:
+
+- require MAP CHECK;
+- route current state to FLOWMIND_ACTIVE_MAP.md;
+- route product intent to FLOWMIND_WORKING_TARGET.md;
+- route detailed architecture to FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md;
+- route classification to FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md;
+- route execution discipline to FLOWMIND_WORK_PROTOCOL_V1.md;
+- route runtime truth to verified repo and runtime evidence;
+- stop on unresolved authority conflicts.
+
+It must not store phase-specific current work.
 
 ---
 
@@ -262,12 +354,10 @@ This guard remains valid when:
 
 Work proceeds:
 
-one file
-→ audit
-→ verdict
-→ KEEP / REMOVE / UPDATE
-→ verify
-→ next file
+one step
+→ evidence
+→ verification
+→ next step
 
 No automatic jumping ahead.
 

@@ -2,10 +2,11 @@
 
 Status: HIGHEST PRIORITY ACTIVE PROJECT SOURCE
 Project: FlowMind / Imagine What If
+Scope: permanent operating discipline and anti-drift rules; no current operational authority
 
 ## 1. Purpose
 
-This file defines the highest-priority operating rules for ChatGPT work on FlowMind.
+This file defines the highest-priority permanent operating rules for ChatGPT work on FlowMind.
 
 Its purpose is to prevent:
 
@@ -14,19 +15,68 @@ Its purpose is to prevent:
 - stale-document authority
 - legacy reactivation
 - trusting files by filename instead of content
+- duplicated operational authority
 - building functionality that does not belong to the agreed FlowMind target
+- confusing target architecture with runtime proof
+- confusing historical work instructions with current authorization
 
-If another uploaded Project Source conflicts with this file, this file wins.
+If another uploaded Project Source conflicts with these permanent operating rules, this file wins within this scope.
+
+This file does NOT define:
+
+- current project state
+- current mode
+- current objective
+- current next action
+- current implementation sequence
+- current allowed production work
+
+Those belong exclusively to FLOWMIND_ACTIVE_MAP.md after verification.
 
 ---
 
-## 2. Product authority hierarchy
+## 2. Authority roles
 
-FlowMind uses two separate product-level authority roles.
+FlowMind authority is role-based.
 
-### FLOWMIND_WORKING_TARGET.md
+No document receives authority merely because of its filename, status label, age, location, or references from another file.
 
-FLOWMIND_WORKING_TARGET.md defines:
+### Permanent operating discipline
+
+000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+Controls:
+
+- anti-drift rules
+- source verification rules
+- authority discipline
+- synchronization discipline
+- fail-closed behavior
+- one-step work discipline
+
+It does not control current operational state.
+
+### Current operational authority
+
+FLOWMIND_ACTIVE_MAP.md
+
+Controls:
+
+- where we are now
+- current mode
+- current objective
+- current allowed work
+- current forbidden work
+- current next operational step
+- current exit conditions
+
+FLOWMIND_ACTIVE_MAP.md is the only document allowed to define the current operational state.
+
+### Product intent
+
+FLOWMIND_WORKING_TARGET.md
+
+Controls:
 
 - high-level product intent
 - optimization principles
@@ -34,36 +84,94 @@ FLOWMIND_WORKING_TARGET.md defines:
 - minimalism / ROI boundaries
 - what kinds of complexity should be avoided
 
-It is trusted for product intent and high-level direction.
-
-It is NOT the detailed current architecture specification.
+It is NOT detailed target architecture.
 
 It is NOT runtime proof.
 
-### FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+### Detailed target architecture
 
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md defines:
+FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
 
-- the detailed target architecture
-- the accepted 12-module implementation structure
-- the target layers
+Controls:
+
+- detailed target architecture
+- accepted 12-module target structure
+- target layers
 - module responsibilities
 - target artifacts
 - architecture destination
-- what must not be built yet
+- deferred architectural scope
 
-It is trusted for detailed target architecture after content verification.
+It is NOT current operational authority.
 
 It is NOT runtime proof.
 
-It does not prove that a module is implemented or working.
+It does not authorize implementation by itself.
 
-### Product alignment rule
+### Authority classification
 
-Before proposing architecture, modules, integrations, providers, or major technical changes, ChatGPT must check alignment with both:
+FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+
+Controls:
+
+- TRUSTED / FROZEN LEGACY / UNVERIFIED classification
+- authority routing
+- Project Sources reconciliation rules
+- publication / audit gates within its verified scope
+
+It does not replace FLOWMIND_ACTIVE_MAP.md as current operational authority.
+
+### Work discipline
+
+docs/FLOWMIND_WORK_PROTOCOL_V1.md
+
+Controls cooperation and execution discipline.
+
+### Map guard
+
+docs/FLOWMIND_MAP_GUARD_V1.md
+
+Controls mandatory MAP CHECK and anti-drift alignment.
+
+### Dispatcher specification
+
+CANONICAL_DISPATCHER_SPEC.md
+
+Controls verified control-plane semantics only.
+
+It is not:
+
+- product strategy
+- current operational authority
+- target architecture
+- runtime proof
+
+### Runtime truth
+
+Current repo and runtime evidence prove what actually exists and works.
+
+Relevant evidence may include:
+
+- implementation
+- validation output
+- generated artifacts
+- downstream consumption
+- runtime logs
+- reproducible execution
+- failure behavior
+
+Documents do not substitute for runtime evidence.
+
+---
+
+## 3. Product alignment rule
+
+Before proposing architecture, modules, integrations, providers, or major technical changes, ChatGPT must verify alignment with:
 
 - FLOWMIND_WORKING_TARGET.md
 - FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+- FLOWMIND_ACTIVE_MAP.md
+- relevant current repo / runtime evidence
 
 FLOWMIND_WORKING_TARGET.md answers:
 
@@ -73,40 +181,21 @@ FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md answers:
 
 what detailed target structure we are evolving toward.
 
-If these documents materially conflict:
+FLOWMIND_ACTIVE_MAP.md answers:
+
+what work is authorized now.
+
+Repo and runtime evidence answer:
+
+what actually exists and works.
+
+If these materially conflict:
 
 STOP.
 
 Do not silently choose one.
 
-Resolve the conflict using current repo evidence and explicit user decision before implementation.
-
----
-
-## 3. Current operational context
-
-The current operational objective is defined by this file and the newest verified repo / runtime evidence.
-
-Current mode:
-
-SYSTEM MAP MODE
-
-Current objective:
-
-Audit and clean FlowMind authority, Project Sources, trust boundaries, and active system map before resuming production development.
-
-Historical operational documents may contain useful evidence but must not automatically control current work.
-
-This includes:
-
-- CHAT_START_BLOCK_FLOWMIND_CURRENT.md
-- FLOWMIND_CURRENT_WORK_ANCHOR.md
-
-Their filename or declared ACTIVE / CURRENT status is not sufficient authority.
-
-Their actual content and freshness must be verified.
-
-If their current action conflicts with newer verified repo or audit evidence, the newer verified evidence wins.
+Resolve the conflict from verified evidence before implementation.
 
 ---
 
@@ -124,7 +213,7 @@ Before ChatGPT recommends that any file is:
 
 ChatGPT MUST first verify the actual contents of that exact file.
 
-Filename, path, age, reputation, or a reference from another document is NOT sufficient evidence.
+Filename, path, age, reputation, declared status, or a reference from another document is NOT sufficient evidence.
 
 ### Required verification
 
@@ -134,21 +223,22 @@ For every candidate authority file, ChatGPT must:
 2. read its actual current contents;
 3. identify its declared status and scope;
 4. identify what phase or historical state it describes;
-5. check whether its "current next action" is still current;
+5. check whether any operational instruction inside it is still current;
 6. compare it with:
    - this file;
    - FLOWMIND_WORKING_TARGET.md;
    - FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md;
-   - relevant current operational documents;
+   - FLOWMIND_ACTIVE_MAP.md;
+   - FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md;
    - relevant current repo evidence;
-   - relevant current terminal/runtime evidence;
-7. detect contradictions, stale assumptions, legacy instructions, or duplicated authority;
+   - relevant terminal / runtime evidence;
+7. detect contradictions, stale assumptions, legacy instructions, duplicated authority, or unsupported runtime claims;
 8. classify it as exactly one of:
    - TRUSTED
    - FROZEN LEGACY
    - UNVERIFIED
 
-Only after this verification may ChatGPT recommend adding or using the file as active authority.
+Only after this verification may ChatGPT recommend using the file as active authority.
 
 ---
 
@@ -158,14 +248,17 @@ If ChatGPT cannot read enough of a file to verify its contents:
 
 Status = UNVERIFIED.
 
-If two authority documents conflict and the conflict cannot be resolved from current evidence:
+If authority documents materially conflict and the conflict cannot be resolved from current verified evidence:
 
 STOP.
 
-Do not guess.
-Do not silently reconcile.
-Do not choose the file with the more convincing filename.
-Do not continue implementation on top of unresolved authority.
+Do not:
+
+- guess
+- silently reconcile
+- choose the file with the more convincing filename
+- continue implementation on top of unresolved authority
+- declare progress without evidence
 
 The next action must be to obtain evidence and resolve the conflict.
 
@@ -185,22 +278,112 @@ The following assumptions are explicitly forbidden:
 - a file is trusted because it exists in Project Sources
 - a file is trusted because it exists in the GitHub repository
 
-Content and verified authority determine trust.
+Content, verified scope, freshness, and evidence determine trust.
 
 Names do not.
 
 ---
 
-## 7. Product alignment gate
+## 7. Current-state ownership rule
 
-Before any technical or architectural recommendation, ChatGPT must be able to answer:
+Current operational state must exist in one place only:
 
-1. What product principle in FLOWMIND_WORKING_TARGET.md does this action support?
-2. What part of FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md does this action support?
-3. Is this action inside the current active phase?
-4. Does it create a second active contour?
-5. Does it mix active, legacy, donor, archive, or unverified material?
-6. Does it directly improve at least one of:
+FLOWMIND_ACTIVE_MAP.md
+
+No other active authority file may independently define:
+
+- Current mode
+- Current objective
+- Current next action
+- Current implementation priority
+- Current allowed production work
+- Current operational exit condition
+
+Other files may define permanent rules, product direction, target architecture, control semantics, or historical evidence.
+
+If another active file contains stale operational instructions:
+
+- do not execute them;
+- classify their role;
+- reconcile or remove the duplicated operational authority;
+- keep FLOWMIND_ACTIVE_MAP.md as the single current operational authority.
+
+---
+
+## 8. Project Sources rule
+
+Project Sources are working context for ChatGPT.
+
+They are NOT automatically source of truth merely because they are uploaded.
+
+A file may enter active Project Sources only after content verification when it is intended to influence active decisions.
+
+Legacy / archive files must not influence active decisions.
+
+Secrets, credentials, `.env` files, API keys, or equivalent secret configuration must never be used as architecture authority or uploaded as active Project Sources.
+
+---
+
+## 9. Source synchronization rule
+
+GitHub repository remains the durable project master.
+
+Project Sources provide ChatGPT working context.
+
+When an active authority document changes:
+
+- repo content must be verified;
+- validation gates required by current authority must pass;
+- the intended version must be committed and pushed before it is treated as durable repo truth;
+- the corresponding Project Source must be synchronized;
+- ChatGPT must not assume Project Source and repo copies are identical;
+- version or content mismatch must be treated as UNVERIFIED until checked.
+
+A technical upload suffix such as `(1)`, `(2)`, or `(3)` does not create a new logical authority if canonical identity and verified content show that it is the same source.
+
+---
+
+## 10. Legacy / archive rule
+
+Legacy or historical material may be read for evidence.
+
+It must not silently return to active authority.
+
+Examples include:
+
+- historical start blocks
+- historical work anchors
+- old module status documents
+- old fix backlogs
+- old IronCore references
+- old horror-specific rules
+- old Telegram / YouTube / TikTok provider plans
+- migration-era architecture
+- retired runtime contours
+- archived prompt systems
+
+Legacy material must not define:
+
+- current state
+- current next action
+- current architecture
+- current implementation permission
+
+Promotion from legacy requires explicit re-audit and verified authority classification.
+
+---
+
+## 11. Technical decision gate
+
+Before a technical or architectural recommendation, ChatGPT must be able to answer:
+
+1. What product principle in FLOWMIND_WORKING_TARGET.md does this support?
+2. What part of FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md does this support?
+3. Is this action allowed by FLOWMIND_ACTIVE_MAP.md?
+4. What current repo / runtime evidence supports it?
+5. Does it create a second active contour?
+6. Does it activate legacy or unverified material?
+7. Does it directly improve at least one of:
    - output quality
    - runtime stability
    - release speed
@@ -214,147 +397,112 @@ Do not proceed.
 
 ---
 
-## 8. Project Sources rule
+## 12. Permanent prohibitions
 
-Project Sources are working context for ChatGPT.
+Do not:
 
-They are NOT automatically source of truth merely because they are uploaded.
+- create a second current operational authority
+- treat architecture documentation as runtime proof
+- use historical next-action instructions as current authorization
+- activate legacy modules without explicit audit
+- create a second runtime contour
+- trust a document only because of its name or declared status
+- use UNVERIFIED material to drive implementation
+- claim a runtime result that was not observed
+- claim validation passed when it was not executed
+- hide or ignore material conflicts
+- commit or push unresolved authority changes
+- place secrets or API keys in code or authority documents
+- upload secrets as Project Sources
 
-A file may enter active Project Sources only after content verification when it is intended to influence active decisions.
-
-Legacy/archive files must not influence active decisions.
-
-Secrets, credentials, .env files, API keys, or equivalent secret configuration must never be used as architecture authority or uploaded as active Project Sources.
-
----
-
-## 9. Source synchronization rule
-
-GitHub repository remains the durable project master.
-
-Project Sources provide ChatGPT working context.
-
-When an active authority document is changed in GitHub:
-
-- its Project Source copy must be updated before ChatGPT relies on the new version;
-- ChatGPT must not assume that the Project Source copy and repo copy are identical;
-- version/content mismatch must be treated as UNVERIFIED until checked.
+Any additional phase-specific prohibition belongs in FLOWMIND_ACTIVE_MAP.md, not in this file.
 
 ---
 
-## 10. Legacy / archive block
+## 13. Evidence discipline
 
-The following files or concepts must not be treated as active authority unless explicitly re-audited and promoted:
+Facts and assumptions must be separated.
 
-- MASTER_PROMPTS_v2_FULL.txt
-- CHAT_START_BLOCK.txt
-- old FLOWMIND_MODULE_STATUS.md
-- old FLOWMIND_FIX_BACKLOG.md
-- old IronCore v3.5 references
-- old horror rules
-- old Telegram / YouTube / TikTok provider plans
-- old migration-era architecture
-- retired runtime contours
+Do not fabricate:
 
-Legacy may be read for historical context only.
+- API behavior
+- implementation status
+- runtime results
+- validation results
+- provider capabilities
+- architecture state
+- file freshness
 
-It must not silently return to active authority.
+When evidence is insufficient:
 
----
+state the uncertainty and obtain evidence.
 
-## 11. Authority roles
+Runtime truth outranks documentation about runtime state.
 
-This file:
-controls ChatGPT operating discipline, anti-drift rules, and current audit objective.
-
-FLOWMIND_WORKING_TARGET.md:
-controls product intent and high-level product principles.
-
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md:
-controls the detailed target architecture and destination after content verification.
-
-Current operational documents:
-describe working checkpoints only after their freshness has been verified.
-
-Current repo + runtime evidence:
-prove what actually exists and works.
-
-Dispatcher / control specifications:
-control runtime state and transition rules within their verified scope.
-
-FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md and trust-boundary documents:
-may classify authority only after their own contents and freshness have been verified.
-
-No document may grant itself permanent authority merely by declaring itself authoritative.
+Newer verified evidence outranks stale historical operational claims.
 
 ---
 
-## 12. Current mode
-
-Current mode:
-
-SYSTEM MAP MODE
-
-Current objective:
-
-Audit and clean FlowMind authority, Project Sources, trust boundaries, and active system map before resuming production development.
-
-This audit temporarily takes priority over older implementation-next-action instructions.
-
----
-
-## 13. Forbidden now
-
-Until the authority/source audit is complete:
-
-- do not tune video quality
-- do not implement Director Brain
-- do not add YouTube upload
-- do not add Telegram integration
-- do not add TikTok crossposting
-- do not add new provider integrations
-- do not activate engine/module_runner.py
-- do not execute engine/modules/*
-- do not create a second runtime contour
-- do not trust unverified documents
-- do not redesign modules based on stale documents
-- do not add files to Project Sources without content verification
-- do not resume old "current next action" instructions from stale operational documents
-
----
-
-## 14. Current next action
-
-Audit existing Project Sources and authority documents one by one.
-
-For every file:
-
-READ
-→ VERIFY CONTENT
-→ CHECK FRESHNESS
-→ CHECK CONFLICTS
-→ CLASSIFY
-→ KEEP / REMOVE / UPDATE
-
-Known findings already established during this audit:
-
-- FLOWMIND_WORKING_TARGET.md is trusted for product intent and high-level principles;
-- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md is the verified detailed target architecture candidate and must remain separate from runtime proof;
-- operational documents with older implementation-next-action instructions must be re-audited before controlling work.
-
-Do not resume production implementation until the authority chain is internally consistent.
-
----
-
-## 15. One-step rule
+## 14. One-step rule
 
 Work proceeds:
 
 one step
 → evidence
-→ user says "виконано" or provides output
+→ verification
 → next step
 
+A terminal output that conclusively proves completion is valid evidence.
+
+The user does not need to type the literal word "виконано" when supplied evidence already proves the step.
+
 Do not jump ahead.
+
+Do not expand scope without direct benefit to the current objective defined by FLOWMIND_ACTIVE_MAP.md.
+
+---
+
+## 15. Response discipline
+
+Technical execution responses should preserve:
+
+- MAP CHECK
+- critical analysis
+- explicit verdict when a real decision is being evaluated
+- one concrete next action
+
+Valid verdicts:
+
+- спрацює
+- ризиковано
+- не рекомендую
+
+Every execution response must end with:
+
+Самоперевірка + Наступний крок
+
+---
+
+## 16. Final authority rule
+
+Permanent operating discipline lives here.
+
+Product intent lives in FLOWMIND_WORKING_TARGET.md.
+
+Detailed destination architecture lives in FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md.
+
+Current operational state lives only in FLOWMIND_ACTIVE_MAP.md.
+
+Authority classification lives in FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md.
+
+Control-plane semantics live in CANONICAL_DISPATCHER_SPEC.md.
+
+Runtime truth lives in verified repo and runtime evidence.
+
+If these roles overlap materially:
+
+STOP.
+
+Reconcile authority before implementation.
 
 End.
