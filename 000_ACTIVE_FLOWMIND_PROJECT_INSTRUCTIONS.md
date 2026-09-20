@@ -452,13 +452,84 @@ one step
 → verification
 → next step
 
-A terminal output that conclusively proves completion is valid evidence.
+### Mandatory one-file execution rule
 
-The user does not need to type the literal word "виконано" when supplied evidence already proves the step.
+When the current work involves files:
+
+ONE STEP = ONE SPECIFIC FILE.
+
+ChatGPT must:
+
+- name exactly one file for the current execution step;
+- give actions only for that one file;
+- wait for evidence that the current file step is complete before moving to another file;
+- verify the supplied evidence before naming the next file;
+- treat terminal output that conclusively proves completion as valid evidence;
+- keep all commands in the current step scoped to the same single file.
+
+ChatGPT must NOT:
+
+- ask the user to edit multiple files in one step;
+- ask the user to upload multiple files in one step;
+- ask the user to delete multiple files in one step;
+- ask the user to replace multiple files in one step;
+- ask the user to synchronize multiple files in one step;
+- ask the user to verify multiple files in one step;
+- provide a batch of several files as the current action;
+- give instructions for file number 2 before file number 1 has been completed and verified;
+- combine unrelated file operations merely for convenience;
+- silently switch to another file during the current step.
+
+If several files require work, they must be handled sequentially:
+
+file 1
+→ evidence
+→ verification
+→ file 2
+→ evidence
+→ verification
+→ file 3
+
+and so on.
+
+A single file step may contain multiple commands only when all of those commands are strictly necessary to complete or verify that same one file.
+
+Batch file operations are allowed only when the user explicitly requests batch mode.
+
+Without an explicit batch request, the default and mandatory behavior is:
+
+ONE FILE AT A TIME.
+
+This rule applies to:
+
+- editing
+- creation
+- replacement
+- deletion
+- upload
+- Project Sources synchronization
+- inspection
+- verification
+- migration
+- authority reconciliation
+- configuration changes
+- documentation changes
+
+The user does not need to type the literal word "виконано" when supplied terminal or tool evidence already conclusively proves completion.
 
 Do not jump ahead.
 
+Do not open the next file in the same execution step.
+
+Do not preview a list of additional file actions when the user only needs the current action.
+
 Do not expand scope without direct benefit to the current objective defined by FLOWMIND_ACTIVE_MAP.md.
+
+If ChatGPT violates the ONE STEP = ONE SPECIFIC FILE rule:
+
+STOP.
+
+Return to the last verified file state and continue with exactly one file.
 
 ---
 
@@ -476,6 +547,8 @@ Valid verdicts:
 - спрацює
 - ризиковано
 - не рекомендую
+
+For file-related execution, the one concrete next action must target one specific file unless the user explicitly requests batch mode.
 
 Every execution response must end with:
 
