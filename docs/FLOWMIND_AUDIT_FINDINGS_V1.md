@@ -213,11 +213,12 @@ OPEN
 
 ---
 
-## AUDIT-004 — Hard-coded niche intelligence inside script, scene and asset planning
+## AUDIT-004 — Hard-coded niche intelligence inside script, Script QA, scene and asset planning
 
 Components:
 
 - engine/executors/script_executor.py
+- engine/executors/script_qa.py
 - engine/executors/scenes_executor.py
 - engine/executors/assets_executor.py
 
@@ -235,7 +236,7 @@ CONFIRMED — OPEN
 
 Evidence:
 
-The current SCRIPT, SCENES and ASSETS contour contains historical electricity / invisible-cost niche intelligence and fixed creative assumptions.
+The current SCRIPT, Script QA, SCENES and ASSETS contour contains historical electricity / invisible-cost niche intelligence and fixed creative assumptions.
 
 script_executor.py:
 
@@ -264,12 +265,54 @@ Manifest values such as:
 
 are interpolated into an otherwise pre-authored niche-specific script.
 
+script_qa.py also embeds domain-specific evaluation logic.
+
+Examples include:
+
+check_niche_match():
+
+special handling for:
+
+- money mistakes
+- invisible costs
+
+with required concepts including:
+
+- cost
+- bill
+- usage
+- rate
+- charge
+
+classify_paragraph() contains hard-coded concepts including:
+
+- rate
+- structure
+- pricing
+- fixed charges
+- time-of-use
+- kilowatt-hours
+- delivery charges
+- plan changes
+- refrigerator
+- water heater
+- dishwasher
+- dryer
+- dehumidifier
+- fridge
+- freezer
+- pool pump
+
+check_payoff_strength() also contains bill / pricing / usage-specific payoff concepts.
+
 scenes_executor.py and assets_executor.py similarly contain historical niche-specific creative assumptions.
 
-Current deterministic executors therefore combine execution with creative decisions including:
+Current deterministic executors therefore combine execution with creative/editorial decisions including:
 
 - script content
 - story structure
+- editorial quality heuristics
+- niche match
 - scene segmentation
 - asset-type selection
 - visual intent
@@ -285,13 +328,12 @@ This prevents the current contour from functioning as a general media-production
 
 Positive evidence:
 
-script_executor.py correctly uses:
+script_executor.py and script_qa.py use canonical state helpers:
 
 - load_state()
 - save_state_with_disk_guard()
-- SCRIPT phase guard
-- atomic artifact writes
-- explicit error handling
+
+They also use explicit phase guards, artifact persistence and explicit error handling.
 
 These control/persistence patterns should be preserved.
 
@@ -299,7 +341,7 @@ Required outcome:
 
 Brain / Editorial intelligence
 -> canonical narration
--> evidence-backed Script QA
+-> configurable evidence-backed Script QA
 -> Director / scene / shot intent
 -> asset requirements
 -> capability contracts
@@ -307,7 +349,9 @@ Brain / Editorial intelligence
 -> normalized artifacts
 -> deterministic validation
 
-Creative content must not be embedded as fixed niche prose inside deterministic runtime executors.
+Creative content and niche-specific quality assumptions must not be embedded as fixed domain logic inside deterministic runtime executors.
+
+Generic deterministic checks may remain where they are genuinely domain-independent.
 
 Resolution:
 
@@ -1216,15 +1260,11 @@ OPEN
 
 ---
 
-## AUDIT-017 — Script QA PASS is not evidence-backed enough for downstream trust
+## AUDIT-017 — Script QA PASS is not sufficiently evidence-backed or score-transparent for downstream trust
 
 Component:
 
-Script QA gate / runtime QA contract
-
-Implementation path:
-
-UNVERIFIED
+engine/executors/script_qa.py
 
 Supporting runtime evidence:
 
@@ -1232,7 +1272,7 @@ projects/P2026_TEST_001/script/script_qa.json
 
 Classification:
 
-UNKNOWN
+ADAPT
 
 Severity:
 
@@ -1244,167 +1284,180 @@ CONFIRMED — OPEN
 
 Evidence:
 
-The inspected Script QA artifact reports:
+The exact current Script QA producer is:
 
-score = 100
+engine/executors/script_qa.py
 
-verdict = PASS
+Current source declares:
 
-warnings = []
+QA_VERSION = 1.1.1
 
-failure_reasons = []
+The previously inspected runtime artifact declares:
 
-All seven scored checks receive maximum points.
+qa_version = 1.0.0
 
-However several check details do not expose evidence from the script that demonstrates the claimed quality property.
+Therefore that runtime artifact is historical evidence for an older Script QA implementation and must not be treated as runtime proof of the exact current v1.1.1 source.
+
+Current source-level evidence shows that Script QA performs real script-text analysis.
+
+It evaluates checks including:
+
+- duration
+- hook alignment
+- topic match
+- niche match
+- practical payoff
+- voiceover usability
+- fake-fact risk
+- first-30-seconds hook pressure
+- retention loop
+- scene-beat readiness
+- pattern interrupt
+- article mode
+- curiosity gap
+- payoff strength
+
+Therefore the problem is not that current Script QA performs no analysis.
+
+The confirmed issue is that the persisted check evidence is materially weaker than the analysis actually performed.
 
 Examples:
 
-hook_alignment:
+hook_alignment internally evaluates overlap between the manifest hook and the opening script text.
 
-15 / 15 points
+But its persisted detail is:
 
-detail:
+working_title=<working title>
 
-working_title=Your Power Bill Is Quietly Changing
+The persisted detail does not expose:
 
-The detail exposes the title but does not show how the script hook was compared with it.
+- the hook evaluated
+- opening span examined
+- matched hook terms
+- match ratio
+- reason for PASS
 
-topic_match:
+topic_match internally checks topic-word occurrence.
 
-15 / 15 points
+Its persisted detail is only:
 
-detail:
+topic=<topic>
 
-topic=Why your electricity bill rises even when usage looks normal
+practical_payoff internally counts payoff-action terms in the script.
 
-The detail exposes the topic but does not show script evidence establishing topical coverage.
+Its persisted detail is only:
 
-structure:
+audience=<audience>
 
-15 / 15 points
+voiceover_usability checks:
 
-detail:
+- bullet-like lines
+- braces
+- code fences
+- duplicate paragraphs
+- average sentence length
 
-requires coherent multi-part narration
-
-This describes the requirement rather than evidence that the script satisfies it.
-
-practical_payoff:
-
-15 / 15 points
-
-detail:
-
-audience=Global English
-
-Audience metadata is not evidence of practical payoff.
-
-voiceover_usability:
-
-15 / 15 points
-
-detail:
+Its persisted detail is only:
 
 requires spoken-narration-friendly script text
 
-Again the detail describes a requirement rather than the evaluated evidence.
-
-safety_no_fake_facts:
-
-10 / 10 points
-
-detail:
+safety_no_fake_facts persists only:
 
 blocks unsupported precise claims and fake citation patterns
 
-The artifact does not list:
+without recording which risk patterns were evaluated or found.
 
-- factual claims detected
-- unsupported claims detected
-- citation patterns inspected
-- evidence used for the PASS
+Several additional current checks similarly persist a description of the requirement rather than the actual measured evidence.
 
-duration_fit is more measurable:
+Score semantics also require clarification.
 
-word_count = 1000
-allowed_range = 928-1392
-estimated_minutes = 6.9
+Current scoring contains:
 
-but even this is a coarse script-length check rather than direct runtime duration proof.
+MIN_PASS_SCORE = 85
 
-Additional implementation evidence:
+but every failed check is added to failure_reasons.
 
-engine/executors/script_executor.py was inspected.
+Verdict becomes FAIL when:
 
-It creates:
+failure_reasons is non-empty
+or
+score < MIN_PASS_SCORE
 
-- script.txt
-- script_meta.json
+Three checks have zero scoring weight:
 
-It does not create:
+- no_article_mode
+- curiosity_gap
+- payoff_strength
 
-script_qa.json
+but failure of any of those checks still enters failure_reasons and produces FAIL.
 
-Therefore script_executor.py is not the Script QA producer.
+Therefore:
 
-Important evidence boundary:
+- score is not independently sufficient to understand verdict
+- a score of 100 can theoretically coexist with FAIL if a zero-point check fails
+- a normal PASS requires every current check to pass
+- under the current weighted check set, a successful PASS therefore effectively implies all scored checks passed and score = 100
 
-This finding does NOT yet prove that the actual Script QA producer performs no deeper text analysis internally.
+This makes the nominal 85-point threshold misleading as a representation of actual gate semantics.
 
-The exact producer implementation has not yet been verified.
+Historical runtime evidence:
 
-The confirmed defect is narrower:
+The older qa_version=1.0.0 artifact reports:
 
-the persisted QA artifact does not provide sufficient content-derived evidence to audit or reproduce why a script received 100/100 and PASS.
+- score = 100
+- verdict = PASS
+- warnings = []
+- failure_reasons = []
+- seven scored checks at maximum points
 
-Downstream executors already use:
+That artifact remains useful historical evidence.
 
-script_qa.verdict = PASS
-
-as a production gate.
+It is not evidence that current v1.1.1 produced the same result.
 
 Risk:
 
-A downstream component cannot distinguish between:
+Downstream executors consume:
 
-- a genuinely evaluated high-quality script
-- a metadata-driven PASS
-- a shallow heuristic PASS
-- an opaque internal evaluation whose reasoning was not persisted
+script_qa.verdict = PASS
 
-This weakens:
+but persisted QA evidence does not provide enough structured information to:
 
-- auditability
-- reproducibility
-- regression diagnosis
-- script-quality gating
-- future automated optimization
-- confidence in downstream production decisions
+- reproduce the decision
+- diagnose regressions
+- understand why a check passed
+- compare quality changes over time
+- use QA output safely as optimization data
+
+The score field also appears more graded than the actual fail-closed check semantics.
 
 Required outcome:
 
-Script QA must persist evidence derived from the actual script for each scored quality dimension.
+Script QA should preserve the useful current deterministic checks while making each result auditable.
 
-At minimum, where relevant:
+Persist evidence appropriate to each check, such as:
 
-- hook evidence and position
-- topic coverage evidence
-- structural evidence
-- practical payoff evidence
-- voiceover-readability evidence
-- factual-claim extraction
-- unsupported-claim / citation-risk evidence
-- explicit warnings and failure reasons
-- measurable scoring inputs
+- exact evaluated script span or position where appropriate
+- matched terms / counts
+- thresholds
+- calculated ratios
+- structural measurements
+- sentence metrics
+- risk-pattern hits
+- concrete failure evidence
 
-Qualitative AI judgment may be used when justified, but the artifact should persist structured rubric results and sufficient rationale/evidence to audit the PASS.
+Score semantics must also become explicit.
 
-A 100/100 result must not be justified only by restating manifest metadata or the rule being checked.
+Either:
 
-Before assigning a permanent implementation disposition:
+1. score is genuinely graded and MIN_PASS_SCORE determines acceptance together with explicitly critical checks;
 
-identify and inspect the actual current Script QA producer.
+or:
+
+2. the gate remains all-required-checks-pass, and the score should be treated as informational rather than implying an 85-point acceptance model.
+
+Do not fabricate rationale.
+
+Persist enough structured evidence to reconstruct why each check passed or failed.
 
 Resolution:
 
@@ -1544,6 +1597,131 @@ OPEN
 
 ---
 
+## AUDIT-019 — Script QA fake-fact safety check does not perform factual validation
+
+Component:
+
+engine/executors/script_qa.py
+
+Classification:
+
+ADAPT
+
+Severity:
+
+ORANGE
+
+Status:
+
+CONFIRMED — OPEN
+
+Evidence:
+
+The current check is named:
+
+safety_no_fake_facts
+
+Its persisted detail states:
+
+blocks unsupported precise claims and fake citation patterns
+
+The underlying implementation is:
+
+check_fake_fact_risk(script_text)
+
+It searches only for a fixed set of risky text patterns:
+
+- numeric percentage expressions
+- "study shows"
+- "research proves"
+- "experts say"
+- "according to"
+- "legal requirement"
+- "federal law"
+- "guaranteed"
+
+If none of those patterns are present, the function returns True.
+
+The implementation does not:
+
+- extract factual claims
+- classify factual claims by risk
+- identify factual claims lacking evidence
+- check external or internal sources
+- verify numbers other than detecting percentage syntax
+- verify dates
+- verify named entities
+- verify causality claims
+- validate citations
+- compare claims with source material
+- persist evidence supporting factual accuracy
+
+Therefore this is a lexical risk-pattern filter.
+
+It is not a factual-validation system.
+
+A false factual statement that avoids the listed phrases can receive:
+
+safety_no_fake_facts = PASS
+
+Risk:
+
+The check name and persisted detail create stronger assurance than the implementation supports.
+
+Downstream systems may interpret Script QA PASS as evidence that factual risk has been validated when only a small set of suspicious textual patterns was screened.
+
+This is particularly important for:
+
+- educational content
+- financial/cost claims
+- technical claims
+- legal/regulatory claims
+- health/safety-adjacent claims
+- quantitative claims
+- current-event claims
+
+Required outcome:
+
+Keep deterministic lexical risk detection as a cheap first filter.
+
+Add a separate evidence-backed claim-validation contract where factual risk justifies it.
+
+Minimal target flow:
+
+script
+-> factual claim extraction
+-> claim risk classification
+-> evidence/source requirement
+-> validation result
+-> structured PASS / WARN / FAIL evidence
+
+The system does not need to externally research every sentence.
+
+Low-risk narrative or clearly non-factual language may pass without external verification.
+
+Claims requiring verification should persist enough information to show:
+
+- claim text
+- claim type
+- risk level
+- evidence/source reference when required
+- validation result
+- failure/warning reason
+
+The implementation and artifact naming must distinguish:
+
+lexical fake-fact risk screening
+
+from:
+
+actual factual validation.
+
+Resolution:
+
+OPEN
+
+---
+
 # 3. Audited classifications
 
 engine/canonical_dispatcher.py
@@ -1571,6 +1749,9 @@ Makefile
 = KEEP
 
 engine/executors/script_executor.py
+= ADAPT
+
+engine/executors/script_qa.py
 = ADAPT
 
 engine/executors/scenes_executor.py
@@ -1608,9 +1789,6 @@ tools/render_visual_pacing_preview.py
 
 engine/executors/qa_executor.py
 = ADAPT
-
-Script QA producer implementation
-= UNKNOWN
 
 ---
 
@@ -1773,7 +1951,22 @@ Observed:
 - failure_reasons = []
 - all seven scored checks receive maximum points
 - multiple check details restate metadata or requirements rather than persisted script-derived evidence
-- exact Script QA producer implementation has not yet been verified
+
+Freshness note:
+
+The exact current producer is now verified as:
+
+engine/executors/script_qa.py
+
+with:
+
+QA_VERSION = 1.1.1
+
+Therefore this qa_version=1.0.0 artifact predates the current verified source implementation.
+
+It remains historical runtime evidence.
+
+It does not prove current v1.1.1 runtime behavior.
 
 These artifacts are runtime evidence.
 
@@ -1823,7 +2016,7 @@ Runtime and validation use the same Python interpreter-resolution policy.
 
 ---
 
-## M-004 — Brain-driven script, scene and asset requirement planning
+## M-004 — Brain-driven script, editorial QA, scene and asset requirement planning
 
 Source:
 
@@ -1831,11 +2024,16 @@ AUDIT-004
 
 Required outcome:
 
-Creative niche intelligence moves out of deterministic runtime executors.
+Creative and niche-specific intelligence moves out of deterministic runtime executors where it prevents general reuse.
 
-Preserve deterministic execution and canonical state handling.
+Preserve:
 
-Move actual creative responsibility to the appropriate Brain / Editorial / Director contracts.
+- deterministic execution
+- canonical state handling
+- useful generic quality checks
+- fail-closed validation
+
+Move configurable creative/editorial responsibility to appropriate Brain / Editorial / Director contracts.
 
 The production contour must support changing:
 
@@ -1844,6 +2042,7 @@ The production contour must support changing:
 - story
 - angle
 - script
+- editorial quality criteria
 - visual direction
 
 without editing Python source code.
@@ -2080,7 +2279,7 @@ Release approval remains separate.
 
 ---
 
-## M-017 — Evidence-backed Script QA
+## M-017 — Evidence-backed and score-transparent Script QA
 
 Source:
 
@@ -2090,28 +2289,41 @@ Related findings:
 
 - AUDIT-009
 - AUDIT-016
+- AUDIT-019
 
 Required outcome:
 
-Script QA must persist auditable script-derived evidence for every scored criterion.
+Preserve useful current Script QA checks but persist auditable script-derived evidence for every criterion.
 
-The contract should support:
+The contract should expose relevant data such as:
 
-- evidence-backed hook evaluation
-- topic coverage
-- structure quality
-- practical payoff
-- voiceover usability
-- factual-claim and citation-risk review
-- explicit warnings
-- explicit failure reasons
+- evaluated opening span
+- hook terms / matches
+- topic terms / matches
+- niche evidence
+- structure metrics
+- practical-payoff term counts
+- voiceover readability metrics
+- retention metrics
+- scene-beat classification evidence
+- pattern-interrupt measurements
+- curiosity/payoff evidence
+- warnings
+- failure reasons
 - reproducible scoring inputs
 
-Qualitative model judgment may be used when useful, but a PASS must include enough structured evidence to understand why it passed.
+Scoring semantics must be explicit.
 
-Do not treat manifest metadata itself as proof of script quality.
+If every check is mandatory, represent that directly.
 
-First identify and inspect the current Script QA producer before selecting its implementation disposition.
+If an 85-point threshold is intended to permit partial failures, distinguish:
+
+- critical mandatory checks
+- weighted advisory checks
+
+and derive verdict consistently.
+
+Do not treat manifest metadata itself as evidence of script quality.
 
 ---
 
@@ -2150,6 +2362,49 @@ Those remain separately tracked by M-013 and M-014.
 
 ---
 
+## M-019 — Evidence-backed factual claim validation
+
+Source:
+
+AUDIT-019
+
+Related findings:
+
+- AUDIT-004
+- AUDIT-017
+
+Required outcome:
+
+Keep cheap deterministic lexical risk screening as an early filter.
+
+Do not represent that filter as full factual validation.
+
+For factual claims requiring verification, use a structured contract:
+
+script
+-> claim extraction
+-> risk classification
+-> evidence/source requirement
+-> validation
+-> structured QA result
+
+The implementation should be proportional to risk and ROI.
+
+Do not externally research every sentence by default.
+
+Persist, where verification is required:
+
+- claim text
+- claim category
+- risk level
+- evidence/source reference
+- validation status
+- warning/failure reason
+
+A Script QA PASS must not imply factual verification beyond the checks that actually ran.
+
+---
+
 # 6. Modernization sequencing note
 
 No implementation priority is authorized by this audit file.
@@ -2182,6 +2437,7 @@ Script / QA / narration integrity:
 - M-009
 - M-016
 - M-017
+- M-019
 
 Audio correctness:
 
@@ -2201,7 +2457,7 @@ The final modernization plan must select the smallest high-impact change set aft
 
 Files materially audited:
 
-21
+22
 
 Supporting runtime artifacts materially inspected:
 
@@ -2209,11 +2465,11 @@ Supporting runtime artifacts materially inspected:
 
 Material findings:
 
-18
+19
 
 Confirmed findings:
 
-18
+19
 
 Confirmed RED blockers:
 
@@ -2221,7 +2477,7 @@ Confirmed RED blockers:
 
 Confirmed ORANGE findings:
 
-17
+18
 
 Confirmed YELLOW findings:
 
@@ -2233,7 +2489,7 @@ KEEP:
 
 ADAPT:
 
-15
+16
 
 REPLACE:
 
@@ -2245,7 +2501,7 @@ REMOVE:
 
 UNKNOWN:
 
-1
+0
 
 Current confirmed KEEP components:
 
@@ -2262,6 +2518,7 @@ Current confirmed ADAPT components:
 - tools/run_dispatcher_checks.py
 - tools/check_dispatcher.sh
 - engine/executors/script_executor.py
+- engine/executors/script_qa.py
 - engine/executors/scenes_executor.py
 - engine/executors/assets_executor.py
 - engine/executors/asset_resolver.py
@@ -2276,7 +2533,7 @@ Current confirmed ADAPT components:
 
 Current UNKNOWN components:
 
-- Script QA producer implementation
+None.
 
 Current direction:
 
