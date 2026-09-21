@@ -48,7 +48,7 @@ YELLOW
 = important but not currently blocking the audit or system.
 
 ORANGE
-= confirmed significant modernization or control issue with material architecture, reliability, cost, or quality impact.
+= confirmed significant modernization or control issue with material architecture, reliability, cost, quality, or validation impact.
 
 RED
 = critical defect, safety/control issue, or blocker that requires pausing the audit because continuing would be unsafe, misleading, or impossible.
@@ -189,6 +189,98 @@ OPEN
 
 ---
 
+### AUDIT-002
+
+Component:
+
+tools/run_dispatcher_checks.py
+
+Related finding:
+
+AUDIT-001
+
+Classification:
+
+ADAPT
+
+Severity:
+
+ORANGE
+
+Status:
+
+CONFIRMED — OPEN
+
+Finding:
+
+The dispatcher validation suite does not detect the unsafe HALT resume behavior identified in AUDIT-001.
+
+run_resume_test() constructs a synthetic state directly in phase:
+
+HALT
+
+with:
+
+resume_hint = "resume_to_audio"
+
+It then executes:
+
+resume_from_halt("AUDIO")
+
+and treats successful transition to AUDIO as the expected result.
+
+The test verifies:
+
+- resulting phase is AUDIO
+- halted becomes false
+- halt_reason is cleared
+- resume_hint is cleared
+
+But it does not verify:
+
+- which valid production phase existed before HALT
+- whether the requested resume target is derived from prior verified state
+- whether the requested target is constrained by resume_hint
+- whether arbitrary later-phase resume is rejected
+- whether HALT -> READY_FOR_UPLOAD is rejected
+- whether release gates can be bypassed through resume
+
+Therefore the validation suite can finish with:
+
+DISPATCHER_CHECKS_ALL_OK
+
+while AUDIT-001 remains present.
+
+Risk:
+
+Dispatcher checks may provide false confidence that canonical transition behavior is safe.
+
+The existing tests validate normal forward transitions, rollback protection, QA gating, upload approval gating, and one positive resume scenario, but they do not validate the security/integrity boundary of HALT resume.
+
+Current audit decision:
+
+Do not modify the validation suite during SYSTEM AUDIT MODE.
+
+Required future correction:
+
+After the HALT resume policy is corrected, dispatcher validation must include regression coverage for:
+
+- valid resume to the explicitly permitted phase
+- invalid resume to an unrelated earlier phase
+- invalid resume to an unrelated later phase
+- HALT -> READY_FOR_UPLOAD bypass attempt
+- mismatch between recorded resume destination and requested destination
+- preservation of QA and upload approval gates
+- failure behavior remaining fail-closed
+
+The existing positive resume test may remain only if the valid resume destination is established by verified prior state or an explicit canonical resume contract.
+
+Resolution status:
+
+OPEN
+
+---
+
 ## 5. Audited component classifications
 
 ### engine/canonical_dispatcher.py
@@ -271,6 +363,22 @@ No independent material defect identified.
 
 ---
 
+### tools/run_dispatcher_checks.py
+
+Classification:
+
+ADAPT
+
+Reason:
+
+The validation suite provides useful smoke, rollback, QA, and approval coverage.
+
+However, its resume validation does not detect AUDIT-001 and can report DISPATCHER_CHECKS_ALL_OK while unsafe HALT resume behavior remains possible.
+
+Confirmed AUDIT-002 requires future correction.
+
+---
+
 ## 6. Modernization backlog
 
 Current modernization items:
@@ -293,19 +401,41 @@ Implementation remains unauthorized during SYSTEM AUDIT MODE.
 
 ---
 
+### M-002 — HALT resume regression coverage
+
+Source:
+
+AUDIT-002
+
+Dependency:
+
+M-001
+
+Priority:
+
+To be ranked after system audit.
+
+Required outcome:
+
+Dispatcher checks must fail when an unauthorized HALT resume target is requested and must prove preservation of QA and upload approval gates.
+
+Implementation remains unauthorized during SYSTEM AUDIT MODE.
+
+---
+
 ## 7. Current audit summary
 
 Files materially audited:
 
-5
+6
 
 Material findings:
 
-1
+2
 
 Confirmed findings:
 
-1
+2
 
 Confirmed RED blockers:
 
@@ -313,7 +443,7 @@ Confirmed RED blockers:
 
 Confirmed ORANGE findings:
 
-1
+2
 
 KEEP:
 
@@ -321,7 +451,7 @@ KEEP:
 
 ADAPT:
 
-1
+2
 
 REPLACE:
 
