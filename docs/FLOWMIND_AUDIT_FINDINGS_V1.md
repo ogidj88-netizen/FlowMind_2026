@@ -94,26 +94,25 @@ resume_from_halt() does not use the normal ALLOWED_PHASE_TRANSITIONS path.
 
 No HALT-specific resume guard was observed.
 
-engine/state_validator.py validates state structure, phase names, manifest integrity and HALT consistency, but does not validate legal transition semantics.
+state_validator.py validates state structure and integrity but not legal transition semantics.
 
-engine/state_store.py validates state and mutation boundaries and provides atomic durable writes, but also does not validate legal transition semantics.
+state_store.py validates state and mutation boundaries but not legal transition semantics.
 
 Therefore no inspected lower-level guard prevents a structurally valid transition such as:
 
 HALT -> READY_FOR_UPLOAD
 
-when that target is present in RESUMABLE_PHASES.
-
 Risk:
 
-HALT resume can potentially bypass the normal sequential production and release transition path.
+HALT resume can bypass the normal sequential production and release path.
 
 Required future outcome:
 
-- valid resume destination must come from verified prior state or explicit canonical resume policy
-- arbitrary resume targets must fail closed
-- QA and release gates must remain impossible to bypass
-- regression tests must prove invalid resume attempts fail
+- derive valid resume destination from verified prior state or canonical resume policy
+- reject arbitrary targets
+- fail closed
+- preserve QA and release gates
+- add regression coverage
 
 Resolution:
 
@@ -145,25 +144,20 @@ CONFIRMED — OPEN
 
 Evidence:
 
-run_resume_test() creates a synthetic HALT state and successfully executes:
+run_resume_test() creates HALT state and treats:
 
 resume_from_halt("AUDIO")
 
-The test verifies only that:
+as successful expected behavior.
 
-- phase becomes AUDIO
-- halted becomes false
-- halt_reason is cleared
-- resume_hint is cleared
+It verifies state cleanup but does not verify:
 
-It does not verify:
-
-- actual phase before HALT
+- prior phase
 - canonical permitted resume destination
-- resume_hint/target consistency
-- rejection of arbitrary resume targets
+- resume target consistency
+- rejection of arbitrary targets
 - rejection of HALT -> READY_FOR_UPLOAD
-- preservation of release gates through resume
+- preservation of release gates
 
 Therefore the suite can report:
 
@@ -173,7 +167,7 @@ while AUDIT-001 remains present.
 
 Required future outcome:
 
-After AUDIT-001 is corrected, add negative regression coverage for invalid resume destinations and release-gate bypass attempts.
+After AUDIT-001 is corrected, add negative regression coverage for invalid resume destinations and release-gate bypass.
 
 Resolution:
 
@@ -201,27 +195,26 @@ CONFIRMED — OPEN
 
 Evidence:
 
-tools/dispatcher.sh selects runtime Python using:
+tools/dispatcher.sh selects:
 
 1. .venv/bin/python
-2. fallback to python3
-3. explicit failure if unavailable
+2. python3 fallback
 
 tools/check_dispatcher.sh instead invokes:
 
 python
 
-directly for compilation and dispatcher checks.
+directly.
 
 Risk:
 
-Validation may run under a different interpreter/environment from the actual dispatcher runtime.
+Validation may execute under a different Python environment from runtime.
 
-No evidence currently proves this mismatch has caused a production failure.
+No evidence currently proves an actual production failure from this mismatch.
 
 Required future outcome:
 
-Validation and runtime must use the same Python interpreter-selection policy.
+Runtime and validation must use the same interpreter-selection policy.
 
 Resolution:
 
@@ -249,7 +242,7 @@ CONFIRMED — OPEN
 
 Evidence:
 
-Scene generation contains hard-coded domain terms including examples such as:
+Scene generation contains hard-coded domain terms such as:
 
 - refrigerator
 - water heater
@@ -257,77 +250,160 @@ Scene generation contains hard-coded domain terms including examples such as:
 - freezer
 - pool pump
 - bill
-- charges
 - kilowatt
 - fixed charges
 
-Visual intent contains niche-specific assumptions such as:
+Visual intent also contains assumptions about:
 
-- utility bill visuals
+- utility bills
 - household energy use
-- hidden-cost explanation
+- hidden costs
 
-The executor also combines several creative responsibilities:
+The executor combines:
 
 - script segmentation
 - scene generation
 - asset-type selection
 - visual-intent generation
-- on-screen text generation
-- production-note generation
+- on-screen text
+- production notes
 
-Current segmentation is primarily paragraph-driven.
-
-Current fixed policy also includes:
+Fixed policy includes:
 
 - WORDS_PER_MINUTE = 145
 - MIN_SCENE_COUNT = 6
 - MAX_SCENE_COUNT = 18
-- English-only content execution
+- English-only execution
 
 Risk:
 
-A supposedly reusable FlowMind production component contains creative intelligence specialized for one historical niche.
-
-This reduces:
-
-- generality
-- creative quality
-- adaptability to new niches
-- usefulness of Director Brain
-- provider interchangeability
-
-It also mixes responsibilities that target architecture v2.2 separates across scene/shot planning, visual concept, asset strategy and overlay/text planning.
+Reusable FlowMind production logic contains historical niche-specific creative intelligence and mixes responsibilities belonging to Brain / Director / Shot / Visual planning.
 
 Positive evidence:
 
-The executor has useful structural behavior worth preserving:
+Useful boundaries remain:
 
-- canonical SCENES phase guard
+- SCENES phase guard
 - script QA gate
-- structured scenes artifact
+- structured artifact generation
 - placeholder rejection
-- explicit validation
+- validation
+- canonical state registration
+- surfaced failures
+
+Required future outcome:
+
+Preserve validation and artifact/state boundaries.
+
+Move creative decision logic toward:
+
+FlowMind Brain / Director
+-> capability contract
+-> selected provider
+-> normalized scene / shot / visual plan
+-> deterministic validation and persistence
+
+Resolution:
+
+OPEN
+
+---
+
+### AUDIT-005 — Scene-level assembly contract blocks shot-aware production
+
+Component:
+
+engine/executors/assembly_executor.py
+
+Classification:
+
+ADAPT
+
+Severity:
+
+ORANGE
+
+Status:
+
+CONFIRMED — OPEN
+
+Evidence:
+
+The executor currently behaves as an assembly planning stage.
+
+Input assets are required to have:
+
+- provider_status = planned
+- license_status = pending
+- local_path = null
+- source_url = null
+
+Output always reports:
+
+- assembly_status = planned
+- render_ready = false
+
+That planning-only behavior is not by itself considered a defect.
+
+The material limitation is the timeline contract.
+
+build_asset_index() rejects more than one asset with the same scene_id.
+
+For every scene, run_assembly_executor() retrieves one asset by scene_id and creates exactly one timeline item.
+
+validate_timeline() requires:
+
+timeline length == scene count
+
+Therefore the current contract is structurally:
+
+scene
+-> one asset
+-> one timeline item
+
+It cannot natively represent multiple shots or beats inside one scene with different assets, timing, motion, or visual roles.
+
+This conflicts with FlowMind target architecture v2.2 where Director / Shot Planner / Visual Pacing must be able to drive shot-aware or beat-aware production.
+
+Additional contract risk:
+
+validate_assets_payload() allows asset_count to exceed scene_count.
+
+However assets whose scene_id does not correspond to an actual scene are not explicitly rejected by the observed assembly logic and may not appear in the resulting timeline.
+
+Risk:
+
+- production assembly remains scene-level
+- Director/Visual Pacing decisions cannot become first-class production timeline structure
+- richer multi-shot editing requires an external bridge instead of being represented by the canonical assembly contract
+- unused or orphan asset-plan entries may pass input validation
+
+Positive evidence:
+
+The executor has useful responsibilities worth preserving:
+
+- ASSEMBLY phase guard
+- script QA dependency
+- scene and asset validation
+- deterministic planning artifact
+- explicit render readiness state
 - canonical state artifact registration
 - surfaced failures
 
 Required future outcome:
 
-Preserve the useful executor/artifact boundary, but remove hard-coded niche creative intelligence.
+Preserve the deterministic planning and validation boundary but evolve the assembly contract toward:
 
-Target direction:
+scene
+-> shot / beat plan
+-> one or more resolved assets
+-> timing and motion instructions
+-> normalized production timeline
+-> renderer
 
-FlowMind Brain / Director decision
--> capability contract
--> selected AI provider where appropriate
--> normalized scene / shot / visual plan
--> deterministic validation
--> artifact persistence
--> canonical state registration
+Do not bind the canonical assembly contract to a specific external media or rendering provider.
 
-Do not move provider identity into the canonical contract.
-
-Fixed pacing and language policy should become configurable or decision-derived only where real use cases require it.
+The exact migration must be selected after the remaining production and render path is audited.
 
 Resolution:
 
@@ -362,6 +438,9 @@ Makefile
 = KEEP
 
 engine/executors/scenes_executor.py
+= ADAPT
+
+engine/executors/assembly_executor.py
 = ADAPT
 
 ---
@@ -404,7 +483,7 @@ AUDIT-003
 
 Required outcome:
 
-Dispatcher runtime and dispatcher validation use the same Python interpreter-selection policy.
+Dispatcher runtime and validation use the same Python interpreter-selection policy.
 
 ---
 
@@ -416,9 +495,25 @@ AUDIT-004
 
 Required outcome:
 
-Remove historical niche-specific creative logic from scenes_executor while preserving useful validation, artifact and canonical-state boundaries.
+Remove historical niche-specific creative logic from scenes_executor while preserving validation, artifact and canonical-state boundaries.
 
-Scene, shot, visual, asset and overlay decisions must follow target architecture v2.2 responsibilities and remain provider-agnostic at the contract level.
+Creative planning remains provider-agnostic at the canonical contract level.
+
+---
+
+### M-005 — Shot-aware assembly contract
+
+Source:
+
+AUDIT-005
+
+Required outcome:
+
+Evolve scene-level assembly planning into a production contract capable of representing multiple shots or beats per scene without creating a second runtime contour.
+
+Preserve deterministic validation and canonical state integration.
+
+Final implementation direction must be selected only after downstream production/render components are audited.
 
 ---
 
@@ -426,15 +521,15 @@ Scene, shot, visual, asset and overlay decisions must follow target architecture
 
 Files materially audited:
 
-9
+10
 
 Material findings:
 
-4
+5
 
 Confirmed findings:
 
-4
+5
 
 Confirmed RED blockers:
 
@@ -442,7 +537,7 @@ Confirmed RED blockers:
 
 Confirmed ORANGE findings:
 
-3
+4
 
 Confirmed YELLOW findings:
 
@@ -454,7 +549,7 @@ KEEP:
 
 ADAPT:
 
-4
+5
 
 REPLACE:
 
