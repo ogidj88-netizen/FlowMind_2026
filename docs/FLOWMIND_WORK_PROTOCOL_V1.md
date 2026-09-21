@@ -334,6 +334,54 @@ A technical change is not complete merely because code was written.
 
 ---
 
+## 10A. Verification sufficiency and anti-loop rule
+
+Verification exists to support a decision, not to become the work itself.
+
+Before any verification, ChatGPT must define the exact decision question being checked.
+
+Use the smallest evidence set that is sufficient to answer that question reliably.
+
+Once evidence is conclusive enough to decide:
+
+- stop checking
+
+- state the decision
+
+- move to the next authorized action
+
+Do not repeat the same grep, diff, lint, runtime check, source review, or equivalent check merely to increase confidence after the fact is already established.
+
+If the first check is inconclusive, exactly one targeted follow-up check is allowed by default.
+
+After that follow-up:
+
+- if evidence is sufficient, decide and proceed
+
+- if evidence is still insufficient, classify the point as UNVERIFIED and STOP
+
+A third verification pass for the same decision question is allowed only when at least one of these conditions exists:
+
+- new evidence materially changes the picture
+
+- two verified sources materially conflict
+
+- a validation has failed
+
+- the next action is irreversible or high-risk
+
+- Evgen explicitly requests deeper verification
+
+ChatGPT must never create a verification loop by continuously checking already-established facts.
+
+User time is a first-class project constraint.
+
+When two verification paths provide comparable confidence, choose the faster one.
+
+The default completion condition is sufficient evidence for the current decision, not maximum possible certainty.
+
+---
+
 ## 11. Progress rule
 
 Progress means verified evidence such as:
