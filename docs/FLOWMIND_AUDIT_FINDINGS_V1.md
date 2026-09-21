@@ -4,48 +4,65 @@ Status: ACTIVE AUDIT RECORD
 Project: FlowMind / Imagine What If
 Mode: SYSTEM AUDIT MODE
 Authority: NONE
-Purpose: persistent record of material findings discovered during system audit
 
-This file is not operational authority, target architecture, runtime proof, or implementation authorization.
+Purpose:
+
+Persistent record of material findings discovered during system audit.
+
+This file is not:
+
+- operational authority
+- target architecture
+- runtime proof
+- implementation authorization
 
 ---
 
 ## 1. Classification
 
 KEEP
-= component fits the target with no material modernization requirement found.
+
+= useful as-is; no material modernization requirement found.
 
 ADAPT
-= component remains useful but requires future modification.
+
+= useful responsibility remains, but implementation requires modification.
 
 REPLACE
-= responsibility remains necessary but should move to a stronger implementation or external provider.
+
+= responsibility remains, but current implementation should be replaced.
 
 REMOVE
-= component is obsolete, duplicated, harmful, or unnecessary.
+
+= obsolete, duplicated, harmful, or unnecessary.
 
 UNKNOWN
-= evidence is insufficient.
+
+= insufficient evidence.
 
 Severity:
 
 GREEN
+
 = healthy.
 
 YELLOW
-= confirmed or plausible issue worth correcting, but low immediate impact.
+
+= material but lower-impact issue.
 
 ORANGE
-= confirmed material architecture, reliability, quality, control, or validation problem.
+
+= confirmed significant architecture, control, reliability, validation, automation, or quality issue.
 
 RED
-= critical blocker requiring audit pause because continuing would be unsafe, misleading, or impossible.
 
-During SYSTEM AUDIT MODE, YELLOW and ORANGE findings are recorded but not implemented by default.
+= critical blocker requiring audit pause.
+
+SYSTEM AUDIT MODE rule:
+
+YELLOW and ORANGE findings are recorded but not implemented by default.
 
 RED may pause the audit.
-
-A finding closes only after correction and validation evidence exist.
 
 ---
 
@@ -56,12 +73,6 @@ A finding closes only after correction and validation evidence exist.
 Component:
 
 engine/canonical_dispatcher.py
-
-Related:
-
-- engine/state_validator.py
-- engine/state_store.py
-- tools/dispatcher_cli.py
 
 Classification:
 
@@ -77,42 +88,39 @@ CONFIRMED — OPEN
 
 Evidence:
 
-resume_from_halt() accepts any target contained in RESUMABLE_PHASES.
+resume_from_halt() accepts any target contained in RESUMABLE_PHASES rather than deriving one permitted resume destination from verified prior state.
 
-Observed resumable targets include:
+The resume path directly mutates state after HALT-specific checks but does not use the normal sequential ALLOWED_PHASE_TRANSITIONS model.
 
-- TOPIC
-- SCRIPT
-- SCENES
-- ASSETS
-- ASSEMBLY
-- AUDIO
-- QA
-- READY_FOR_UPLOAD
+No inspected lower-level validation in:
 
-resume_from_halt() does not use the normal ALLOWED_PHASE_TRANSITIONS path.
+- engine/state_validator.py
+- engine/state_store.py
 
-No HALT-specific resume guard was observed.
-
-state_validator.py validates state structure and integrity but not legal transition semantics.
-
-state_store.py validates state and mutation boundaries but not legal transition semantics.
-
-Therefore no inspected lower-level guard prevents a structurally valid transition such as:
+prevents a structurally valid resume such as:
 
 HALT -> READY_FOR_UPLOAD
 
 Risk:
 
-HALT resume can bypass the normal sequential production and release path.
+Normal sequential production and release gates can be bypassed during HALT resume.
 
-Required future outcome:
+Preserve:
 
-- derive valid resume destination from verified prior state or canonical resume policy
-- reject arbitrary targets
-- fail closed
-- preserve QA and release gates
-- add regression coverage
+- narrow dispatcher responsibility
+- explicit HALT state
+- state history
+- validation before persistence
+- fail-closed errors
+
+Required outcome:
+
+- explicit canonical resume policy
+- verified resume destination derived from safe state/history
+- rejection of arbitrary resume targets
+- QA/release gate preservation
+- fail-closed invalid target behavior
+- regression coverage
 
 Resolution:
 
@@ -126,10 +134,6 @@ Component:
 
 tools/run_dispatcher_checks.py
 
-Related:
-
-AUDIT-001
-
 Classification:
 
 ADAPT
@@ -144,30 +148,38 @@ CONFIRMED — OPEN
 
 Evidence:
 
-run_resume_test() creates HALT state and treats:
+run_resume_test() treats direct:
 
-resume_from_halt("AUDIO")
+HALT -> AUDIO
 
-as successful expected behavior.
+resume as expected success but does not test:
 
-It verifies state cleanup but does not verify:
+- verified prior phase
+- permitted resume destination
+- invalid arbitrary resume targets
+- HALT -> READY_FOR_UPLOAD
+- release-gate bypass
 
-- prior phase
-- canonical permitted resume destination
-- resume target consistency
-- rejection of arbitrary targets
-- rejection of HALT -> READY_FOR_UPLOAD
-- preservation of release gates
-
-Therefore the suite can report:
+Therefore:
 
 DISPATCHER_CHECKS_ALL_OK
 
-while AUDIT-001 remains present.
+can occur while AUDIT-001 remains present.
 
-Required future outcome:
+Risk:
 
-After AUDIT-001 is corrected, add negative regression coverage for invalid resume destinations and release-gate bypass.
+Validation can report healthy dispatcher behavior while an unsafe resume path remains possible.
+
+Preserve:
+
+- deterministic dispatcher smoke checks
+- forward transition checks
+- rollback/failure checks
+- explicit validation output
+
+Required outcome:
+
+Add negative resume regression coverage after AUDIT-001 is corrected.
 
 Resolution:
 
@@ -195,12 +207,13 @@ CONFIRMED — OPEN
 
 Evidence:
 
-tools/dispatcher.sh selects:
+tools/dispatcher.sh resolves runtime Python through:
 
-1. .venv/bin/python
-2. python3 fallback
+- .venv/bin/python
+- python3 fallback
+- explicit failure when neither exists
 
-tools/check_dispatcher.sh instead invokes:
+tools/check_dispatcher.sh invokes:
 
 python
 
@@ -208,13 +221,13 @@ directly.
 
 Risk:
 
-Validation may execute under a different Python environment from runtime.
+Validation and runtime may execute under different Python environments.
 
-No evidence currently proves an actual production failure from this mismatch.
+No current evidence proves that this mismatch has already caused a production failure.
 
-Required future outcome:
+Required outcome:
 
-Runtime and validation must use the same interpreter-selection policy.
+Use the same interpreter-resolution policy for runtime and validation.
 
 Resolution:
 
@@ -222,11 +235,12 @@ OPEN
 
 ---
 
-### AUDIT-004 — Hard-coded niche intelligence inside SCENES executor
+### AUDIT-004 — Hard-coded niche intelligence inside scene and asset planning
 
-Component:
+Components:
 
-engine/executors/scenes_executor.py
+- engine/executors/scenes_executor.py
+- engine/executors/assets_executor.py
 
 Classification:
 
@@ -242,7 +256,7 @@ CONFIRMED — OPEN
 
 Evidence:
 
-Scene generation contains hard-coded domain terms such as:
+SCENES creative logic contains historical niche-specific concepts including:
 
 - refrigerator
 - water heater
@@ -252,56 +266,70 @@ Scene generation contains hard-coded domain terms such as:
 - bill
 - kilowatt
 - fixed charges
-
-Visual intent also contains assumptions about:
-
 - utility bills
-- household energy use
+- home energy
 - hidden costs
 
-The executor combines:
+SCENES also combines responsibilities for:
 
-- script segmentation
-- scene generation
+- scene segmentation
 - asset-type selection
-- visual-intent generation
+- visual intent
 - on-screen text
 - production notes
 
-Fixed policy includes:
+with fixed assumptions including:
 
-- WORDS_PER_MINUTE = 145
-- MIN_SCENE_COUNT = 6
-- MAX_SCENE_COUNT = 18
+- 145 WPM
+- 6–18 scenes
 - English-only execution
+
+ASSETS planning continues the niche coupling.
+
+build_asset_query() contains hard-coded queries including:
+
+- utility bill cost breakdown usage rate fixed charges
+- checklist compare electricity bill usage rate fixed charges
+- home appliances electricity usage refrigerator water heater
+- household energy costs simple home finance
+
+This means reusable FlowMind runtime logic contains creative intelligence specific to one historical electricity / invisible-cost content example.
 
 Risk:
 
-Reusable FlowMind production logic contains historical niche-specific creative intelligence and mixes responsibilities belonging to Brain / Director / Shot / Visual planning.
+Changing niche or creative direction requires code-level behavior changes instead of Brain / Director decisions.
 
-Positive evidence:
+The current executor chain mixes deterministic execution responsibilities with productive intelligence.
 
-Useful boundaries remain:
+Preserve:
 
 - SCENES phase guard
-- script QA gate
-- structured artifact generation
-- placeholder rejection
-- validation
+- ASSETS phase guard
+- Script QA dependency
+- structured artifacts
+- required-field validation
+- forbidden-marker validation
+- deterministic persistence
 - canonical state registration
 - surfaced failures
 
-Required future outcome:
-
-Preserve validation and artifact/state boundaries.
-
-Move creative decision logic toward:
+Required outcome:
 
 FlowMind Brain / Director
+
+-> semantic scene / shot intent
+
+-> asset requirements
+
 -> capability contract
--> selected provider
--> normalized scene / shot / visual plan
+
+-> selected provider / resolver
+
+-> normalized artifacts
+
 -> deterministic validation and persistence
+
+Creative query generation must come from content context or Director decisions rather than historical niche constants embedded in runtime code.
 
 Resolution:
 
@@ -309,11 +337,18 @@ OPEN
 
 ---
 
-### AUDIT-005 — Scene-level assembly contract blocks shot-aware production
+### AUDIT-005 — Scene-level asset, assembly and render contract blocks shot-aware production
 
-Component:
+Components:
 
-engine/executors/assembly_executor.py
+- engine/executors/assets_executor.py
+- engine/executors/assembly_executor.py
+- engine/executors/final_render_executor.py
+
+Supporting runtime evidence:
+
+- projects/P2026_TEST_001/assets/assets.json
+- projects/P2026_TEST_001/assets/resolved_assets.json
 
 Classification:
 
@@ -329,81 +364,104 @@ CONFIRMED — OPEN
 
 Evidence:
 
-The executor currently behaves as an assembly planning stage.
+The limitation begins during asset planning.
 
-Input assets are required to have:
+assets_executor.py builds:
 
-- provider_status = planned
-- license_status = pending
-- local_path = null
-- source_url = null
+one asset entry for each scene
 
-Output always reports:
+through the effective contract:
 
-- assembly_status = planned
-- render_ready = false
+scene
+-> one asset_id
+-> one asset_type
+-> one asset_query
+-> duration of the scene
 
-That planning-only behavior is not by itself considered a defect.
+The current runtime artifact confirms:
 
-The material limitation is the timeline contract.
+9 scenes
+-> 9 planned assets
 
-build_asset_index() rejects more than one asset with the same scene_id.
+The resolved-assets artifact confirms:
 
-For every scene, run_assembly_executor() retrieves one asset by scene_id and creates exactly one timeline item.
+9 scenes
+-> 9 resolved assets
 
-validate_timeline() requires:
+Assembly continues the same structure.
 
-timeline length == scene count
+build_asset_index() rejects more than one asset for the same scene_id.
 
-Therefore the current contract is structurally:
+Assembly represents:
 
 scene
 -> one asset
 -> one timeline item
 
-It cannot natively represent multiple shots or beats inside one scene with different assets, timing, motion, or visual roles.
+validate_timeline() requires:
 
-This conflicts with FlowMind target architecture v2.2 where Director / Shot Planner / Visual Pacing must be able to drive shot-aware or beat-aware production.
+timeline length == scene count
 
-Additional contract risk:
+Final rendering continues the same contract.
 
-validate_assets_payload() allows asset_count to exceed scene_count.
+final_render_executor.py builds one render job per timeline scene using:
 
-However assets whose scene_id does not correspond to an actual scene are not explicitly rejected by the observed assembly logic and may not appear in the resulting timeline.
+- one scene_id
+- one asset_id
+- one visual asset
+- one audio segment
+
+For image assets the same image is held for the scene duration.
+
+For video assets the same visual asset may be looped for the scene duration.
+
+Scene MP4 files are then concatenated into the canonical final video.
 
 Risk:
 
-- production assembly remains scene-level
-- Director/Visual Pacing decisions cannot become first-class production timeline structure
-- richer multi-shot editing requires an external bridge instead of being represented by the canonical assembly contract
-- unused or orphan asset-plan entries may pass input validation
+The canonical production contract cannot naturally represent:
 
-Positive evidence:
+- multiple shots inside one scene
+- multiple visual assets inside one scene
+- shot-specific timing
+- shot-specific provider outputs
+- semantic visual changes inside long narration scenes
 
-The executor has useful responsibilities worth preserving:
+This structurally creates slideshow / PowerPoint-style output even when downstream pacing logic exists.
 
-- ASSEMBLY phase guard
-- script QA dependency
-- scene and asset validation
-- deterministic planning artifact
-- explicit render readiness state
-- canonical state artifact registration
-- surfaced failures
+Preserve:
 
-Required future outcome:
+- planning-only separation in assets/assembly
+- structured asset metadata
+- deterministic validation
+- resolved asset references
+- timeline ordering
+- duration validation
+- FFmpeg/FFprobe technical checks
+- canonical state registration
+- final render report
 
-Preserve the deterministic planning and validation boundary but evolve the assembly contract toward:
+Required outcome:
 
 scene
--> shot / beat plan
--> one or more resolved assets
--> timing and motion instructions
+
+-> shot / beat requirements
+
+-> one or more asset requirements
+
+-> resolved assets
+
+-> shot timing + motion + visual role
+
 -> normalized production timeline
--> renderer
 
-Do not bind the canonical assembly contract to a specific external media or rendering provider.
+-> final renderer
 
-The exact migration must be selected after the remaining production and render path is audited.
+The target contract must support:
+
+1 scene -> 1..N shots -> 1..N assets
+
+where creative intent requires it.
 
 Resolution:
 
@@ -411,41 +469,507 @@ OPEN
 
 ---
 
-## 3. Audited component classifications
+### AUDIT-006 — Visual Pacing is post-render and disconnected from canonical production render
+
+Components:
+
+- engine/executors/visual_pacing_executor.py
+- engine/executors/final_render_executor.py
+
+Positive donor component:
+
+tools/render_visual_pacing_preview.py
+
+Classification:
+
+ADAPT
+
+Severity:
+
+ORANGE
+
+Status:
+
+CONFIRMED — OPEN
+
+Evidence:
+
+visual_pacing_executor.py requires:
+
+PROJECT_STATE.phase = QA
+
+and also requires:
+
+final_render_report.verdict = PASS
+
+plus an already existing:
+
+PROJECT_STATE.artifacts.final_video_path
+
+Therefore visual_pacing_plan.json is generated only after a canonical final render already exists and has passed its render report.
+
+final_render_executor.py does not consume:
+
+- visual_pacing_plan
+- beats
+- visual_action
+- motion_profile
+- display_text
+
+The canonical renderer therefore remains scene-level.
+
+The pacing plan cannot influence the final video that was required as its own precondition.
+
+Beat structure is also limited by the upstream one-asset-per-scene contract.
+
+Each beat inside the same scene reuses the same:
+
+- asset_id
+- source_visual_path
+- source_audio_path
+
+Variation is generated mainly through:
+
+- crop
+- pan
+- zoom
+- display-text decisions
+
+Visual actions are largely produced by deterministic sequencing rather than semantic Director decisions.
+
+Fixed pacing policy includes:
+
+- target beat duration = 5.0 sec
+- minimum beat duration = 3.0 sec
+- maximum beat duration = 6.5 sec
+
+validate_beats() also requires:
+
+beat_count > scene_count
+
+which can reject valid material where one natural beat per scene is appropriate.
+
+Positive evidence:
+
+tools/render_visual_pacing_preview.py proves that usable beat-level rendering logic already exists.
+
+The preview renderer:
+
+- consumes visual_pacing_plan.json
+- validates beat timing
+- renders individual beat segments
+- applies motion_profile
+- applies visual_action
+- trims/synchronizes audio for beat segments
+- validates duration drift
+- concatenates beat segments
+- creates a preview report
+
+It correctly remains isolated from canonical production state.
+
+It explicitly does not:
+
+- replace production final_video.mp4
+- update PROJECT_STATE
+- approve upload
+
+Risk:
+
+FlowMind already contains useful beat-level rendering capability, but it exists outside the canonical production path.
+
+Building a second renderer from scratch would waste existing verified functionality.
+
+Preserve:
+
+- audio master clock
+- beat timing contract
+- duration consistency validation
+- source file verification
+- structured visual_pacing_plan
+- existing preview beat rendering logic
+- motion/action FFmpeg implementation
+- explicit preview isolation
+- fail-closed validation
+
+Required future outcome:
+
+FlowMind Brain / Director
+
+-> shot and pacing decisions
+
+-> provider execution / resolved assets
+
+-> normalized shot/beat production plan
+
+-> canonical renderer consumes that plan
+
+-> QA evaluates rendered output
+
+The existing preview renderer should be treated as a donor implementation for the future production render bridge rather than as a second production contour.
+
+Deterministic motion heuristics may remain as fallback behavior but must not replace Director decisions.
+
+Resolution:
+
+OPEN
+
+---
+
+### AUDIT-007 — QA executor contains a circular release gate and cannot produce QA PASS
+
+Component:
+
+engine/executors/qa_executor.py
+
+Classification:
+
+ADAPT
+
+Severity:
+
+ORANGE
+
+Status:
+
+CONFIRMED — OPEN
+
+Evidence:
+
+QA first evaluates production checks.
+
+It then computes upload_ready using:
+
+all existing checks PASS
+
+and:
+
+state.qa_passed is True
+
+and:
+
+state.approved_for_upload is True
+
+The upload_readiness check is then appended to the QA checks.
+
+However the canonical control model separates:
+
+QA PASS
+
+from:
+
+release / upload approval
+
+QA is expected to establish whether quality passed.
+
+Release approval belongs after successful QA.
+
+The implementation then explicitly sets:
+
+verdict = "BLOCKED"
+
+qa_passed = False
+
+approved_for_upload = False
+
+regardless of the preceding technical checks.
+
+When PROJECT_STATE is persisted, the executor explicitly writes:
+
+candidate_state["qa_passed"] = False
+
+The returned result also reports:
+
+qa_passed = False
+
+Risk:
+
+The QA executor cannot itself produce the state required for the normal:
+
+QA -> READY_FOR_UPLOAD
+
+transition.
+
+The release condition depends on values that QA itself cannot legitimately possess beforehand.
+
+This creates a circular gate:
+
+QA requires prior QA/release approval
+
+while QA is supposed to generate the QA result needed before release approval.
+
+Required outcome:
+
+QA executor:
+
+-> evaluate output
+-> PASS or FAIL
+-> persist verified qa_passed result
+
+Dispatcher:
+
+-> enforce QA -> READY_FOR_UPLOAD using qa_passed
+
+Release / human approval:
+
+-> produce approved_for_upload separately
+
+Dispatcher:
+
+-> enforce READY_FOR_UPLOAD -> UPLOADED
+
+QA must not require upload approval in order to decide whether QA itself passed.
+
+verdict must be derived from actual QA checks rather than hard-coded BLOCKED.
+
+Resolution:
+
+OPEN
+
+---
+
+### AUDIT-008 — Asset Resolver is local-only and can resolve weak semantic matches
+
+Component:
+
+engine/executors/asset_resolver.py
+
+Classification:
+
+ADAPT
+
+Severity:
+
+ORANGE
+
+Status:
+
+CONFIRMED — OPEN
+
+Evidence:
+
+Current resolver mode is hard-coded:
+
+PROVIDER_MODE = "local_existing_only"
+
+Approved media sources are limited to:
+
+- assets_library
+- projects/<project_id>/manual_assets
+
+The resolver supports only:
+
+stock_first_no_repeat
+
+and rejects other stock policies.
+
+No provider adapter or external execution path exists in this resolver.
+
+This means autonomous asset acquisition is not currently implemented here.
+
+The local fallback and licensing behavior are useful, but candidate selection also has a match-quality weakness.
+
+score_candidate() awards points for:
+
+- asset_id filename match
+- scene_id filename match
+- asset_type filename match
+- query-token filename overlap
+- compatible file extension
+
+A compatible file extension alone can provide a positive score.
+
+For example:
+
+a stock_video candidate receives points merely for being:
+
+.mp4
+.mov
+.mkv
+
+even if its filename has no semantic overlap with the asset query.
+
+Image asset types receive the same type-only extension bonus.
+
+choose_candidate() accepts any candidate with:
+
+score > 0
+
+and selects the highest score.
+
+There is no minimum semantic-match threshold.
+
+Therefore a licensed but semantically unrelated media file can be selected and marked:
+
+provider_status = resolved
+
+license_status = cleared
+
+resolution_status = ready
+
+provided it wins the local score.
+
+Risk:
+
+Two separate limitations exist:
+
+1. autonomous/provider-based asset resolution is absent from the current resolver;
+2. local fallback resolution can incorrectly classify a weak type-only match as production-ready.
+
+This can create visually irrelevant output while the technical state reports successful asset resolution.
+
+Positive evidence worth preserving:
+
+- local fallback capability
+- approved search directories
+- no-repeat used_paths behavior
+- deterministic candidate ranking
+- explicit blocked assets
+- license sidecar requirement
+- source_provider recording
+- license_note recording
+- blocker reporting
+- resolved/blocked counts
+- forbidden-marker validation
+- canonical artifact registration
+- fail-closed validation
+
+Required outcome:
+
+Asset Requirement Planner
+
+-> provider-neutral capability request
+
+-> selected provider adapter or approved local fallback
+
+-> candidate quality validation
+
+-> license validation
+
+-> normalized resolved asset
+
+Local fallback should remain supported.
+
+Provider adapters should remain replaceable.
+
+Candidate acceptance must require meaningful correspondence to the requested asset, not merely a compatible extension.
+
+Suitable approaches may include:
+
+- explicit asset/scene binding
+- provider-returned request IDs
+- metadata matching
+- semantic similarity threshold
+- deterministic minimum score requiring semantic evidence
+
+The exact implementation should be selected during modernization planning.
+
+Resolution:
+
+OPEN
+
+---
+
+## 3. Audited classifications
 
 engine/canonical_dispatcher.py
+
 = ADAPT
 
 tools/dispatcher_cli.py
+
 = KEEP
 
 tools/dispatcher.sh
+
 = KEEP
 
 engine/state_validator.py
+
 = KEEP
 
 engine/state_store.py
+
 = KEEP
 
 tools/run_dispatcher_checks.py
+
 = ADAPT
 
 tools/check_dispatcher.sh
+
 = ADAPT
 
 Makefile
+
 = KEEP
 
 engine/executors/scenes_executor.py
+
+= ADAPT
+
+engine/executors/assets_executor.py
+
+= ADAPT
+
+engine/executors/asset_resolver.py
+
 = ADAPT
 
 engine/executors/assembly_executor.py
+
+= ADAPT
+
+engine/executors/final_render_executor.py
+
+= ADAPT
+
+engine/executors/visual_pacing_executor.py
+
+= ADAPT
+
+tools/render_visual_pacing_preview.py
+
+= KEEP
+
+engine/executors/qa_executor.py
+
 = ADAPT
 
 ---
 
-## 4. Modernization backlog
+## 4. Supporting runtime evidence inspected
+
+projects/P2026_TEST_001/assets/assets.json
+
+Observed:
+
+- 9 planned assets
+- 9 scenes
+- effective one-asset-per-scene planning model
+- provider_status = planned
+- local_path = null
+- source_url = null
+- license_status = pending
+
+projects/P2026_TEST_001/assets/resolved_assets.json
+
+Observed:
+
+- 9 resolved assets
+- 9 scenes
+- one resolved asset per scene in the current project
+- provider_mode = local_existing_only
+- source_provider = manual
+- licenses cleared through local evidence
+- no blockers in the inspected artifact
+
+These artifacts are runtime evidence.
+
+They are not operational authority.
+
+---
+
+## 5. Modernization backlog
 
 ### M-001 — HALT resume safety
 
@@ -455,7 +979,7 @@ AUDIT-001
 
 Required outcome:
 
-HALT resume cannot bypass canonical transition and release rules.
+HALT resume cannot bypass canonical production or release transition rules.
 
 ---
 
@@ -471,7 +995,7 @@ M-001
 
 Required outcome:
 
-Dispatcher validation proves unauthorized resume targets fail closed.
+Dispatcher validation rejects unsafe or arbitrary HALT resume targets.
 
 ---
 
@@ -483,11 +1007,11 @@ AUDIT-003
 
 Required outcome:
 
-Dispatcher runtime and validation use the same Python interpreter-selection policy.
+Dispatcher runtime and validation use the same Python interpreter-resolution policy.
 
 ---
 
-### M-004 — Brain-driven scene planning
+### M-004 — Brain-driven scene and asset requirement planning
 
 Source:
 
@@ -495,41 +1019,151 @@ AUDIT-004
 
 Required outcome:
 
-Remove historical niche-specific creative logic from scenes_executor while preserving validation, artifact and canonical-state boundaries.
+Niche-specific creative intelligence moves out of deterministic runtime executors.
 
-Creative planning remains provider-agnostic at the canonical contract level.
+Scene / asset requirements are produced from current content intent rather than hard-coded historical topic logic.
 
 ---
 
-### M-005 — Shot-aware assembly contract
+### M-005 — Shot-aware asset, assembly and render contract
 
 Source:
 
 AUDIT-005
 
+Dependency:
+
+M-004
+
 Required outcome:
 
-Evolve scene-level assembly planning into a production contract capable of representing multiple shots or beats per scene without creating a second runtime contour.
+Canonical production supports:
 
-Preserve deterministic validation and canonical state integration.
+scene
+-> 1..N shots
+-> 1..N asset requirements
+-> resolved assets
+-> timing / motion
+-> production timeline
+-> renderer
 
-Final implementation direction must be selected only after downstream production/render components are audited.
+without forcing one asset and one render item per scene.
 
 ---
 
-## 5. Current audit summary
+### M-006 — Pre-render Director / Visual Pacing integration
+
+Source:
+
+AUDIT-006
+
+Dependencies:
+
+M-004
+M-005
+
+Required outcome:
+
+Visual pacing / shot decisions exist before canonical final rendering and are consumed by the production renderer.
+
+Reuse proven beat-rendering behavior from:
+
+tools/render_visual_pacing_preview.py
+
+where appropriate.
+
+Do not create a second production contour.
+
+---
+
+### M-007 — QA and release-gate separation
+
+Source:
+
+AUDIT-007
+
+Required outcome:
+
+QA derives and persists its own PASS / FAIL result.
+
+Upload approval remains a separate release decision after QA.
+
+qa_passed must not depend on approved_for_upload.
+
+---
+
+### M-008 — Provider-capable and semantically safe asset resolution
+
+Source:
+
+AUDIT-008
+
+Dependencies:
+
+M-004
+M-005
+
+Required outcome:
+
+Preserve local fallback and license validation while introducing a provider-neutral resolution contract.
+
+Resolved assets must satisfy meaningful request correspondence before being marked ready.
+
+Type-only / extension-only candidate matches must not be sufficient for production acceptance.
+
+---
+
+## 6. Modernization sequencing note
+
+No implementation priority is authorized by this audit file.
+
+Priority will be selected after sufficient system audit evidence exists.
+
+Current evidence suggests several connected modernization groups:
+
+Control plane:
+
+- M-001
+- M-002
+- M-003
+
+Creative / Director / production quality:
+
+- M-004
+- M-005
+- M-006
+
+Asset autonomy and correctness:
+
+- M-008
+
+QA / release correctness:
+
+- M-007
+
+Do not implement all groups at once.
+
+The final modernization plan must select the smallest high-impact change set after the audit exit conditions are satisfied.
+
+---
+
+## 7. Current audit summary
 
 Files materially audited:
 
-10
+16
+
+Supporting runtime artifacts materially inspected:
+
+2
 
 Material findings:
 
-5
+8
 
 Confirmed findings:
 
-5
+8
 
 Confirmed RED blockers:
 
@@ -537,7 +1171,7 @@ Confirmed RED blockers:
 
 Confirmed ORANGE findings:
 
-4
+7
 
 Confirmed YELLOW findings:
 
@@ -545,11 +1179,11 @@ Confirmed YELLOW findings:
 
 KEEP:
 
-5
+6
 
 ADAPT:
 
-5
+10
 
 REPLACE:
 
@@ -563,8 +1197,32 @@ UNKNOWN:
 
 0
 
+Current confirmed KEEP components:
+
+- tools/dispatcher_cli.py
+- tools/dispatcher.sh
+- engine/state_validator.py
+- engine/state_store.py
+- Makefile
+- tools/render_visual_pacing_preview.py
+
+Current confirmed ADAPT components:
+
+- engine/canonical_dispatcher.py
+- tools/run_dispatcher_checks.py
+- tools/check_dispatcher.sh
+- engine/executors/scenes_executor.py
+- engine/executors/assets_executor.py
+- engine/executors/asset_resolver.py
+- engine/executors/assembly_executor.py
+- engine/executors/final_render_executor.py
+- engine/executors/visual_pacing_executor.py
+- engine/executors/qa_executor.py
+
 Current direction:
 
 Continue system audit.
+
+No production implementation is authorized by this file.
 
 End.
