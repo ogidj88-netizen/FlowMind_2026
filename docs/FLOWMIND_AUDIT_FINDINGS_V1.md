@@ -48,10 +48,10 @@ YELLOW
 = important but not currently blocking the audit or system.
 
 ORANGE
-= significant modernization issue with material cost, quality, or architecture impact.
+= confirmed significant modernization or control issue with material architecture, reliability, cost, or quality impact.
 
 RED
-= critical defect, safety/control issue, or blocker that may justify pausing the audit for immediate correction.
+= critical defect, safety/control issue, or blocker that requires pausing the audit because continuing would be unsafe, misleading, or impossible.
 
 ---
 
@@ -59,10 +59,10 @@ RED
 
 During SYSTEM AUDIT MODE:
 
-- findings are recorded
+- material findings are recorded
 - production code is not modified by default
 - YELLOW and ORANGE findings normally wait until modernization planning
-- RED findings may pause the audit if continuing would be unsafe, misleading, or impossible
+- RED findings pause the audit when continuing would be unsafe, misleading, or impossible
 - suspected defects must not be silently upgraded to confirmed defects
 - insufficient evidence remains explicitly unresolved
 
@@ -78,23 +78,29 @@ Component:
 
 engine/canonical_dispatcher.py
 
+Related components inspected:
+
+- engine/state_validator.py
+- engine/state_store.py
+- tools/dispatcher_cli.py
+
 Classification:
 
-ADAPT / RISK
+ADAPT
 
 Severity:
 
-YELLOW
+ORANGE
 
 Status:
 
-OPEN — requires additional evidence
+CONFIRMED — OPEN
 
 Finding:
 
-HALT resume policy may permit resuming directly into any phase included in RESUMABLE_PHASES.
+HALT resume policy permits resuming directly into any phase included in RESUMABLE_PHASES.
 
-Observed implementation allows targets including:
+Observed resumable targets include:
 
 - TOPIC
 - SCRIPT
@@ -105,73 +111,227 @@ Observed implementation allows targets including:
 - QA
 - READY_FOR_UPLOAD
 
-resume_from_halt() does not use the normal allowed-transition path.
+resume_from_halt() does not use the normal ALLOWED_PHASE_TRANSITIONS path.
 
-It validates that the requested target belongs to RESUMABLE_PHASES and then invokes phase guards.
+Instead it:
 
-Current phase guards shown in this file cover:
+1. verifies current phase is HALT
+2. checks only that requested target belongs to RESUMABLE_PHASES
+3. directly changes phase
+4. clears HALT state
+5. appends phase history
+6. invokes _assert_phase_guards("HALT", target, candidate_state)
+7. writes the candidate state
+
+Observed _assert_phase_guards() rules cover:
 
 - AUDIO -> QA
 - QA -> READY_FOR_UPLOAD
 - READY_FOR_UPLOAD -> UPLOADED
 
-No HALT-specific phase guard was observed in canonical_dispatcher.py.
+No HALT-specific resume guard exists in canonical_dispatcher.py.
+
+Verification of engine/state_validator.py confirmed:
+
+- state structure is validated
+- phase names are validated
+- phase_history structure is validated
+- HALT/halted consistency is validated
+- manifest integrity is validated
+
+But state_validator.py does not validate legal phase-transition semantics.
+
+Verification of engine/state_store.py confirmed:
+
+- candidate state is validated
+- immutable/runtime mutation boundaries are checked
+- manifest mutation rules are checked
+- writes are atomic and disk-guarded
+
+But state_store.py does not validate legal phase-transition semantics.
+
+Therefore no inspected lower-level guard prevents a structurally valid transition such as:
+
+HALT -> READY_FOR_UPLOAD
+
+when READY_FOR_UPLOAD is included in RESUMABLE_PHASES.
 
 Risk:
 
-A HALT resume may potentially bypass intended sequential production transition rules.
+The canonical control plane can bypass normal sequential phase-transition rules during HALT resume.
 
-This is NOT yet classified as a confirmed runtime defect because lower-level state validation or disk guards may reject an unsafe resumed state.
+This may allow a project to resume at a later production/release phase without proving that the required normal transition path was completed.
 
-Evidence still required:
+Current audit decision:
 
-Audit the relevant canonical state validation path.
+Do not repair during SYSTEM AUDIT MODE.
 
-Future decision:
+This is a confirmed ORANGE control-plane defect, but it does not currently block or invalidate the audit because the resume path is not required for audit execution.
 
-If lower-level validation does not prevent unsafe HALT resume:
+Required future correction:
 
-- restrict resume destination according to verified prior state / resume policy
+Resume must be constrained by verified prior state and explicit resume policy.
+
+A future implementation should:
+
+- record or derive the only valid resume destination
+- reject arbitrary resume targets
 - preserve fail-closed behavior
-- add validation proving invalid resume targets fail
+- preserve phase history
+- prevent bypass of QA or release gates
+- add tests proving invalid HALT resume targets fail
 
-If lower-level validation already prevents the unsafe transition:
+Do not duplicate transition semantics inside state_validator.py or state_store.py unless the final architecture provides a single shared transition-policy contract.
 
-- downgrade or close this finding
+Resolution status:
 
-Do not modify canonical_dispatcher.py during audit unless this becomes a verified RED blocker.
-
----
-
-## 5. Modernization backlog
-
-The modernization backlog is generated from OPEN audit findings after sufficient system understanding exists.
-
-Do not implement findings merely because they are listed here.
-
-Priority must later be based on:
-
-- severity
-- business impact
-- architecture impact
-- reliability
-- monetization impact
-- implementation cost
-- dependency order
+OPEN
 
 ---
 
-## 6. Current audit summary
+## 5. Audited component classifications
+
+### engine/canonical_dispatcher.py
+
+Classification:
+
+ADAPT
+
+Reason:
+
+Core control-plane responsibility is correct and should remain internal FlowMind logic.
+
+Confirmed AUDIT-001 requires future correction.
+
+---
+
+### tools/dispatcher_cli.py
+
+Classification:
+
+KEEP
+
+Reason:
+
+Thin operator interface over CanonicalDispatcher.
+
+Does not duplicate phase or state logic.
+
+No independent material defect identified.
+
+---
+
+### tools/dispatcher.sh
+
+Classification:
+
+KEEP
+
+Reason:
+
+Thin shell entrypoint into dispatcher_cli.py.
+
+Uses fail-fast shell behavior and does not create a parallel runtime contour.
+
+No material defect identified.
+
+---
+
+### engine/state_validator.py
+
+Classification:
+
+KEEP
+
+Reason:
+
+Provides structural state validation, manifest validation, type checks, immutable-state protection, and integrity validation.
+
+Transition semantics should remain owned by control-plane transition policy rather than being duplicated here.
+
+No independent material defect identified.
+
+---
+
+### engine/state_store.py
+
+Classification:
+
+KEEP
+
+Reason:
+
+Provides validated, atomic and durable PROJECT_STATE writes.
+
+Uses temp file replacement, fsync, validation, mutation guards, and cleanup on failure.
+
+Transition semantics are outside its current responsibility.
+
+No independent material defect identified.
+
+---
+
+## 6. Modernization backlog
+
+Current modernization items:
+
+### M-001 — HALT resume safety
+
+Source:
+
+AUDIT-001
+
+Priority:
+
+To be ranked after system audit.
+
+Required outcome:
+
+HALT resume cannot bypass canonical production or release transition rules.
+
+Implementation remains unauthorized during SYSTEM AUDIT MODE.
+
+---
+
+## 7. Current audit summary
 
 Files materially audited:
 
-1
+5
 
 Material findings:
 
 1
 
+Confirmed findings:
+
+1
+
 Confirmed RED blockers:
+
+0
+
+Confirmed ORANGE findings:
+
+1
+
+KEEP:
+
+4
+
+ADAPT:
+
+1
+
+REPLACE:
+
+0
+
+REMOVE:
+
+0
+
+UNKNOWN:
 
 0
 
