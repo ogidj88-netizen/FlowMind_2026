@@ -45,7 +45,7 @@ GREEN
 = healthy / no material action required.
 
 YELLOW
-= important but not currently blocking the audit or system.
+= confirmed or plausible issue that should be corrected but does not currently block the audit or production architecture.
 
 ORANGE
 = confirmed significant modernization or control issue with material architecture, reliability, cost, quality, or validation impact.
@@ -255,8 +255,6 @@ Risk:
 
 Dispatcher checks may provide false confidence that canonical transition behavior is safe.
 
-The existing tests validate normal forward transitions, rollback protection, QA gating, upload approval gating, and one positive resume scenario, but they do not validate the security/integrity boundary of HALT resume.
-
 Current audit decision:
 
 Do not modify the validation suite during SYSTEM AUDIT MODE.
@@ -273,7 +271,81 @@ After the HALT resume policy is corrected, dispatcher validation must include re
 - preservation of QA and upload approval gates
 - failure behavior remaining fail-closed
 
-The existing positive resume test may remain only if the valid resume destination is established by verified prior state or an explicit canonical resume contract.
+Resolution status:
+
+OPEN
+
+---
+
+### AUDIT-003
+
+Component:
+
+tools/check_dispatcher.sh
+
+Classification:
+
+ADAPT
+
+Severity:
+
+YELLOW
+
+Status:
+
+CONFIRMED — OPEN
+
+Finding:
+
+The dispatcher validation wrapper does not use the same Python interpreter selection policy as the active dispatcher runtime wrapper.
+
+Observed runtime wrapper behavior in tools/dispatcher.sh:
+
+1. prefer .venv/bin/python
+2. otherwise use python3
+3. fail explicitly if neither exists
+
+Observed validation wrapper behavior in tools/check_dispatcher.sh:
+
+- uses python directly for py_compile
+- uses python directly for run_dispatcher_checks.py
+
+Therefore dispatcher validation may execute under a different Python interpreter or environment than the actual dispatcher runtime.
+
+Risk:
+
+Validation may pass or fail in an environment that is not identical to the environment used by the active dispatcher command surface.
+
+This creates avoidable uncertainty around runtime validation.
+
+No current evidence proves that this mismatch has caused an actual production failure.
+
+Additional relationship:
+
+tools/check_dispatcher.sh ultimately runs tools/run_dispatcher_checks.py.
+
+Therefore its final:
+
+[dispatcher-check] OK
+
+also inherits the incomplete HALT resume validation described by AUDIT-002.
+
+That inherited limitation is not classified as a separate additional defect.
+
+Current audit decision:
+
+Do not modify during SYSTEM AUDIT MODE.
+
+Required future correction:
+
+Dispatcher validation should use the same interpreter-resolution policy as the canonical runtime command surface.
+
+Preferred outcome:
+
+- use the project virtual environment when available
+- use the same fallback policy as dispatcher.sh
+- fail explicitly when the required runtime is unavailable
+- avoid validating with one Python environment and running production with another
 
 Resolution status:
 
@@ -323,7 +395,7 @@ Reason:
 
 Thin shell entrypoint into dispatcher_cli.py.
 
-Uses fail-fast shell behavior and does not create a parallel runtime contour.
+Uses fail-fast shell behavior and explicit interpreter selection.
 
 No material defect identified.
 
@@ -379,6 +451,22 @@ Confirmed AUDIT-002 requires future correction.
 
 ---
 
+### tools/check_dispatcher.sh
+
+Classification:
+
+ADAPT
+
+Reason:
+
+The wrapper is structurally simple and fail-fast.
+
+However, it uses python directly instead of matching the canonical runtime interpreter-selection policy.
+
+Confirmed AUDIT-003 requires future correction.
+
+---
+
 ## 6. Modernization backlog
 
 Current modernization items:
@@ -423,19 +511,37 @@ Implementation remains unauthorized during SYSTEM AUDIT MODE.
 
 ---
 
+### M-003 — Dispatcher validation runtime consistency
+
+Source:
+
+AUDIT-003
+
+Priority:
+
+To be ranked after system audit.
+
+Required outcome:
+
+Dispatcher validation and dispatcher runtime use the same Python interpreter-selection policy.
+
+Implementation remains unauthorized during SYSTEM AUDIT MODE.
+
+---
+
 ## 7. Current audit summary
 
 Files materially audited:
 
-6
+7
 
 Material findings:
 
-2
+3
 
 Confirmed findings:
 
-2
+3
 
 Confirmed RED blockers:
 
@@ -445,13 +551,17 @@ Confirmed ORANGE findings:
 
 2
 
+Confirmed YELLOW findings:
+
+1
+
 KEEP:
 
 4
 
 ADAPT:
 
-2
+3
 
 REPLACE:
 
