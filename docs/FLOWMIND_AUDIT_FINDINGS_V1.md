@@ -6,79 +6,58 @@ Mode: SYSTEM AUDIT MODE
 Authority: NONE
 Purpose: persistent record of material findings discovered during system audit
 
-This file is NOT:
-
-- current operational authority
-- target architecture
-- runtime proof
-- implementation authorization
-
-It records material audit findings so they are not lost.
+This file is not operational authority, target architecture, runtime proof, or implementation authorization.
 
 ---
 
-## 1. Finding types
+## 1. Classification
 
 KEEP
-= component fits the target and no material modernization issue is identified.
-
-RISK
-= potential problem exists but additional evidence is required.
+= component fits the target with no material modernization requirement found.
 
 ADAPT
-= component should remain but requires future modification.
+= component remains useful but requires future modification.
 
 REPLACE
-= responsibility remains necessary but should probably move to a better implementation or external provider.
+= responsibility remains necessary but should move to a stronger implementation or external provider.
 
 REMOVE
-= component is unnecessary, obsolete, duplicated, or harmful.
+= component is obsolete, duplicated, harmful, or unnecessary.
 
-GAP
-= required capability is materially missing.
+UNKNOWN
+= evidence is insufficient.
 
----
-
-## 2. Severity
+Severity:
 
 GREEN
-= healthy / no material action required.
+= healthy.
 
 YELLOW
-= confirmed or plausible issue that should be corrected but does not currently block the audit or production architecture.
+= confirmed or plausible issue worth correcting, but low immediate impact.
 
 ORANGE
-= confirmed significant modernization or control issue with material architecture, reliability, cost, quality, or validation impact.
+= confirmed material architecture, reliability, quality, control, or validation problem.
 
 RED
-= critical defect, safety/control issue, or blocker that requires pausing the audit because continuing would be unsafe, misleading, or impossible.
+= critical blocker requiring audit pause because continuing would be unsafe, misleading, or impossible.
+
+During SYSTEM AUDIT MODE, YELLOW and ORANGE findings are recorded but not implemented by default.
+
+RED may pause the audit.
+
+A finding closes only after correction and validation evidence exist.
 
 ---
 
-## 3. Resolution rule
+## 2. Findings
 
-During SYSTEM AUDIT MODE:
-
-- material findings are recorded
-- production code is not modified by default
-- YELLOW and ORANGE findings normally wait until modernization planning
-- RED findings pause the audit when continuing would be unsafe, misleading, or impossible
-- suspected defects must not be silently upgraded to confirmed defects
-- insufficient evidence remains explicitly unresolved
-
-A finding is closed only after implementation and validation evidence exist.
-
----
-
-## 4. Findings
-
-### AUDIT-001
+### AUDIT-001 — Unsafe HALT resume policy
 
 Component:
 
 engine/canonical_dispatcher.py
 
-Related components inspected:
+Related:
 
 - engine/state_validator.py
 - engine/state_store.py
@@ -96,9 +75,9 @@ Status:
 
 CONFIRMED — OPEN
 
-Finding:
+Evidence:
 
-HALT resume policy permits resuming directly into any phase included in RESUMABLE_PHASES.
+resume_from_halt() accepts any target contained in RESUMABLE_PHASES.
 
 Observed resumable targets include:
 
@@ -113,89 +92,42 @@ Observed resumable targets include:
 
 resume_from_halt() does not use the normal ALLOWED_PHASE_TRANSITIONS path.
 
-Instead it:
+No HALT-specific resume guard was observed.
 
-1. verifies current phase is HALT
-2. checks only that requested target belongs to RESUMABLE_PHASES
-3. directly changes phase
-4. clears HALT state
-5. appends phase history
-6. invokes _assert_phase_guards("HALT", target, candidate_state)
-7. writes the candidate state
+engine/state_validator.py validates state structure, phase names, manifest integrity and HALT consistency, but does not validate legal transition semantics.
 
-Observed _assert_phase_guards() rules cover:
-
-- AUDIO -> QA
-- QA -> READY_FOR_UPLOAD
-- READY_FOR_UPLOAD -> UPLOADED
-
-No HALT-specific resume guard exists in canonical_dispatcher.py.
-
-Verification of engine/state_validator.py confirmed:
-
-- state structure is validated
-- phase names are validated
-- phase_history structure is validated
-- HALT/halted consistency is validated
-- manifest integrity is validated
-
-But state_validator.py does not validate legal phase-transition semantics.
-
-Verification of engine/state_store.py confirmed:
-
-- candidate state is validated
-- immutable/runtime mutation boundaries are checked
-- manifest mutation rules are checked
-- writes are atomic and disk-guarded
-
-But state_store.py does not validate legal phase-transition semantics.
+engine/state_store.py validates state and mutation boundaries and provides atomic durable writes, but also does not validate legal transition semantics.
 
 Therefore no inspected lower-level guard prevents a structurally valid transition such as:
 
 HALT -> READY_FOR_UPLOAD
 
-when READY_FOR_UPLOAD is included in RESUMABLE_PHASES.
+when that target is present in RESUMABLE_PHASES.
 
 Risk:
 
-The canonical control plane can bypass normal sequential phase-transition rules during HALT resume.
+HALT resume can potentially bypass the normal sequential production and release transition path.
 
-This may allow a project to resume at a later production/release phase without proving that the required normal transition path was completed.
+Required future outcome:
 
-Current audit decision:
+- valid resume destination must come from verified prior state or explicit canonical resume policy
+- arbitrary resume targets must fail closed
+- QA and release gates must remain impossible to bypass
+- regression tests must prove invalid resume attempts fail
 
-Do not repair during SYSTEM AUDIT MODE.
-
-This is a confirmed ORANGE control-plane defect, but it does not currently block or invalidate the audit because the resume path is not required for audit execution.
-
-Required future correction:
-
-Resume must be constrained by verified prior state and explicit resume policy.
-
-A future implementation should:
-
-- record or derive the only valid resume destination
-- reject arbitrary resume targets
-- preserve fail-closed behavior
-- preserve phase history
-- prevent bypass of QA or release gates
-- add tests proving invalid HALT resume targets fail
-
-Do not duplicate transition semantics inside state_validator.py or state_store.py unless the final architecture provides a single shared transition-policy contract.
-
-Resolution status:
+Resolution:
 
 OPEN
 
 ---
 
-### AUDIT-002
+### AUDIT-002 — Dispatcher validation misses unsafe resume
 
 Component:
 
 tools/run_dispatcher_checks.py
 
-Related finding:
+Related:
 
 AUDIT-001
 
@@ -211,73 +143,45 @@ Status:
 
 CONFIRMED — OPEN
 
-Finding:
+Evidence:
 
-The dispatcher validation suite does not detect the unsafe HALT resume behavior identified in AUDIT-001.
-
-run_resume_test() constructs a synthetic state directly in phase:
-
-HALT
-
-with:
-
-resume_hint = "resume_to_audio"
-
-It then executes:
+run_resume_test() creates a synthetic HALT state and successfully executes:
 
 resume_from_halt("AUDIO")
 
-and treats successful transition to AUDIO as the expected result.
+The test verifies only that:
 
-The test verifies:
-
-- resulting phase is AUDIO
+- phase becomes AUDIO
 - halted becomes false
 - halt_reason is cleared
 - resume_hint is cleared
 
-But it does not verify:
+It does not verify:
 
-- which valid production phase existed before HALT
-- whether the requested resume target is derived from prior verified state
-- whether the requested target is constrained by resume_hint
-- whether arbitrary later-phase resume is rejected
-- whether HALT -> READY_FOR_UPLOAD is rejected
-- whether release gates can be bypassed through resume
+- actual phase before HALT
+- canonical permitted resume destination
+- resume_hint/target consistency
+- rejection of arbitrary resume targets
+- rejection of HALT -> READY_FOR_UPLOAD
+- preservation of release gates through resume
 
-Therefore the validation suite can finish with:
+Therefore the suite can report:
 
 DISPATCHER_CHECKS_ALL_OK
 
 while AUDIT-001 remains present.
 
-Risk:
+Required future outcome:
 
-Dispatcher checks may provide false confidence that canonical transition behavior is safe.
+After AUDIT-001 is corrected, add negative regression coverage for invalid resume destinations and release-gate bypass attempts.
 
-Current audit decision:
-
-Do not modify the validation suite during SYSTEM AUDIT MODE.
-
-Required future correction:
-
-After the HALT resume policy is corrected, dispatcher validation must include regression coverage for:
-
-- valid resume to the explicitly permitted phase
-- invalid resume to an unrelated earlier phase
-- invalid resume to an unrelated later phase
-- HALT -> READY_FOR_UPLOAD bypass attempt
-- mismatch between recorded resume destination and requested destination
-- preservation of QA and upload approval gates
-- failure behavior remaining fail-closed
-
-Resolution status:
+Resolution:
 
 OPEN
 
 ---
 
-### AUDIT-003
+### AUDIT-003 — Dispatcher validation Python mismatch
 
 Component:
 
@@ -295,181 +199,174 @@ Status:
 
 CONFIRMED — OPEN
 
-Finding:
+Evidence:
 
-The dispatcher validation wrapper does not use the same Python interpreter selection policy as the active dispatcher runtime wrapper.
+tools/dispatcher.sh selects runtime Python using:
 
-Observed runtime wrapper behavior in tools/dispatcher.sh:
+1. .venv/bin/python
+2. fallback to python3
+3. explicit failure if unavailable
 
-1. prefer .venv/bin/python
-2. otherwise use python3
-3. fail explicitly if neither exists
+tools/check_dispatcher.sh instead invokes:
 
-Observed validation wrapper behavior in tools/check_dispatcher.sh:
+python
 
-- uses python directly for py_compile
-- uses python directly for run_dispatcher_checks.py
-
-Therefore dispatcher validation may execute under a different Python interpreter or environment than the actual dispatcher runtime.
+directly for compilation and dispatcher checks.
 
 Risk:
 
-Validation may pass or fail in an environment that is not identical to the environment used by the active dispatcher command surface.
+Validation may run under a different interpreter/environment from the actual dispatcher runtime.
 
-This creates avoidable uncertainty around runtime validation.
+No evidence currently proves this mismatch has caused a production failure.
 
-No current evidence proves that this mismatch has caused an actual production failure.
+Required future outcome:
 
-Additional relationship:
+Validation and runtime must use the same Python interpreter-selection policy.
 
-tools/check_dispatcher.sh ultimately runs tools/run_dispatcher_checks.py.
-
-Therefore its final:
-
-[dispatcher-check] OK
-
-also inherits the incomplete HALT resume validation described by AUDIT-002.
-
-That inherited limitation is not classified as a separate additional defect.
-
-Current audit decision:
-
-Do not modify during SYSTEM AUDIT MODE.
-
-Required future correction:
-
-Dispatcher validation should use the same interpreter-resolution policy as the canonical runtime command surface.
-
-Preferred outcome:
-
-- use the project virtual environment when available
-- use the same fallback policy as dispatcher.sh
-- fail explicitly when the required runtime is unavailable
-- avoid validating with one Python environment and running production with another
-
-Resolution status:
+Resolution:
 
 OPEN
 
 ---
 
-## 5. Audited component classifications
+### AUDIT-004 — Hard-coded niche intelligence inside SCENES executor
 
-### engine/canonical_dispatcher.py
+Component:
 
-Classification:
-
-ADAPT
-
-Reason:
-
-Core control-plane responsibility is correct and should remain internal FlowMind logic.
-
-Confirmed AUDIT-001 requires future correction.
-
----
-
-### tools/dispatcher_cli.py
-
-Classification:
-
-KEEP
-
-Reason:
-
-Thin operator interface over CanonicalDispatcher.
-
-Does not duplicate phase or state logic.
-
-No independent material defect identified.
-
----
-
-### tools/dispatcher.sh
-
-Classification:
-
-KEEP
-
-Reason:
-
-Thin shell entrypoint into dispatcher_cli.py.
-
-Uses fail-fast shell behavior and explicit interpreter selection.
-
-No material defect identified.
-
----
-
-### engine/state_validator.py
-
-Classification:
-
-KEEP
-
-Reason:
-
-Provides structural state validation, manifest validation, type checks, immutable-state protection, and integrity validation.
-
-Transition semantics should remain owned by control-plane transition policy rather than being duplicated here.
-
-No independent material defect identified.
-
----
-
-### engine/state_store.py
-
-Classification:
-
-KEEP
-
-Reason:
-
-Provides validated, atomic and durable PROJECT_STATE writes.
-
-Uses temp file replacement, fsync, validation, mutation guards, and cleanup on failure.
-
-Transition semantics are outside its current responsibility.
-
-No independent material defect identified.
-
----
-
-### tools/run_dispatcher_checks.py
+engine/executors/scenes_executor.py
 
 Classification:
 
 ADAPT
 
-Reason:
+Severity:
 
-The validation suite provides useful smoke, rollback, QA, and approval coverage.
+ORANGE
 
-However, its resume validation does not detect AUDIT-001 and can report DISPATCHER_CHECKS_ALL_OK while unsafe HALT resume behavior remains possible.
+Status:
 
-Confirmed AUDIT-002 requires future correction.
+CONFIRMED — OPEN
+
+Evidence:
+
+Scene generation contains hard-coded domain terms including examples such as:
+
+- refrigerator
+- water heater
+- dryer
+- freezer
+- pool pump
+- bill
+- charges
+- kilowatt
+- fixed charges
+
+Visual intent contains niche-specific assumptions such as:
+
+- utility bill visuals
+- household energy use
+- hidden-cost explanation
+
+The executor also combines several creative responsibilities:
+
+- script segmentation
+- scene generation
+- asset-type selection
+- visual-intent generation
+- on-screen text generation
+- production-note generation
+
+Current segmentation is primarily paragraph-driven.
+
+Current fixed policy also includes:
+
+- WORDS_PER_MINUTE = 145
+- MIN_SCENE_COUNT = 6
+- MAX_SCENE_COUNT = 18
+- English-only content execution
+
+Risk:
+
+A supposedly reusable FlowMind production component contains creative intelligence specialized for one historical niche.
+
+This reduces:
+
+- generality
+- creative quality
+- adaptability to new niches
+- usefulness of Director Brain
+- provider interchangeability
+
+It also mixes responsibilities that target architecture v2.2 separates across scene/shot planning, visual concept, asset strategy and overlay/text planning.
+
+Positive evidence:
+
+The executor has useful structural behavior worth preserving:
+
+- canonical SCENES phase guard
+- script QA gate
+- structured scenes artifact
+- placeholder rejection
+- explicit validation
+- canonical state artifact registration
+- surfaced failures
+
+Required future outcome:
+
+Preserve the useful executor/artifact boundary, but remove hard-coded niche creative intelligence.
+
+Target direction:
+
+FlowMind Brain / Director decision
+-> capability contract
+-> selected AI provider where appropriate
+-> normalized scene / shot / visual plan
+-> deterministic validation
+-> artifact persistence
+-> canonical state registration
+
+Do not move provider identity into the canonical contract.
+
+Fixed pacing and language policy should become configurable or decision-derived only where real use cases require it.
+
+Resolution:
+
+OPEN
 
 ---
 
-### tools/check_dispatcher.sh
+## 3. Audited component classifications
 
-Classification:
+engine/canonical_dispatcher.py
+= ADAPT
 
-ADAPT
+tools/dispatcher_cli.py
+= KEEP
 
-Reason:
+tools/dispatcher.sh
+= KEEP
 
-The wrapper is structurally simple and fail-fast.
+engine/state_validator.py
+= KEEP
 
-However, it uses python directly instead of matching the canonical runtime interpreter-selection policy.
+engine/state_store.py
+= KEEP
 
-Confirmed AUDIT-003 requires future correction.
+tools/run_dispatcher_checks.py
+= ADAPT
+
+tools/check_dispatcher.sh
+= ADAPT
+
+Makefile
+= KEEP
+
+engine/executors/scenes_executor.py
+= ADAPT
 
 ---
 
-## 6. Modernization backlog
-
-Current modernization items:
+## 4. Modernization backlog
 
 ### M-001 — HALT resume safety
 
@@ -477,15 +374,9 @@ Source:
 
 AUDIT-001
 
-Priority:
-
-To be ranked after system audit.
-
 Required outcome:
 
-HALT resume cannot bypass canonical production or release transition rules.
-
-Implementation remains unauthorized during SYSTEM AUDIT MODE.
+HALT resume cannot bypass canonical transition and release rules.
 
 ---
 
@@ -499,15 +390,9 @@ Dependency:
 
 M-001
 
-Priority:
-
-To be ranked after system audit.
-
 Required outcome:
 
-Dispatcher checks must fail when an unauthorized HALT resume target is requested and must prove preservation of QA and upload approval gates.
-
-Implementation remains unauthorized during SYSTEM AUDIT MODE.
+Dispatcher validation proves unauthorized resume targets fail closed.
 
 ---
 
@@ -517,31 +402,39 @@ Source:
 
 AUDIT-003
 
-Priority:
-
-To be ranked after system audit.
-
 Required outcome:
 
-Dispatcher validation and dispatcher runtime use the same Python interpreter-selection policy.
-
-Implementation remains unauthorized during SYSTEM AUDIT MODE.
+Dispatcher runtime and dispatcher validation use the same Python interpreter-selection policy.
 
 ---
 
-## 7. Current audit summary
+### M-004 — Brain-driven scene planning
+
+Source:
+
+AUDIT-004
+
+Required outcome:
+
+Remove historical niche-specific creative logic from scenes_executor while preserving useful validation, artifact and canonical-state boundaries.
+
+Scene, shot, visual, asset and overlay decisions must follow target architecture v2.2 responsibilities and remain provider-agnostic at the contract level.
+
+---
+
+## 5. Current audit summary
 
 Files materially audited:
 
-7
+9
 
 Material findings:
 
-3
+4
 
 Confirmed findings:
 
-3
+4
 
 Confirmed RED blockers:
 
@@ -549,7 +442,7 @@ Confirmed RED blockers:
 
 Confirmed ORANGE findings:
 
-2
+3
 
 Confirmed YELLOW findings:
 
@@ -557,11 +450,11 @@ Confirmed YELLOW findings:
 
 KEEP:
 
-4
+5
 
 ADAPT:
 
-3
+4
 
 REPLACE:
 
