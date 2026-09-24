@@ -13,11 +13,12 @@ REPO_ROOT = CURRENT_FILE.parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from engine.executors.asset_resolver import AssetResolverError, run_asset_resolver
 from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "assets_executor"
-EXECUTOR_VERSION = "1.0.0"
+EXECUTOR_VERSION = "1.1.0"
 
 ALLOWED_ASSET_TYPES = {
     "stock_video",
@@ -427,13 +428,33 @@ def run_assets_executor(state_path: Path) -> dict[str, Any]:
 
     saved_state = save_state_with_disk_guard(state_path, candidate_state)
 
+    try:
+        resolver_result = run_asset_resolver(state_path)
+    except AssetResolverError as exc:
+        raise AssetsExecutorError(f"asset resolution failed: {exc}") from exc
+
+    blocked_count = int(resolver_result.get("blocked_count", 0))
+    if blocked_count > 0:
+        raise AssetsExecutorError(
+            f"asset resolution blocked {blocked_count} required assets"
+        )
+
+    resolved_assets_path = require_non_empty_string(
+        resolver_result.get("resolved_assets_path"),
+        "resolver_result.resolved_assets_path",
+    )
+
     return {
         "status": "ASSETS_EXECUTOR_OK",
         "project_id": project_id,
         "phase": saved_state["phase"],
         "assets_path": str(assets_path),
         "asset_count": len(assets),
-        "provider_status": "planned",
+        "provider_status": "resolved",
+        "resolved_assets_path": resolved_assets_path,
+        "resolved_count": int(resolver_result.get("resolved_count", 0)),
+        "blocked_count": blocked_count,
+        "provider_mode": resolver_result.get("provider_mode"),
     }
 
 

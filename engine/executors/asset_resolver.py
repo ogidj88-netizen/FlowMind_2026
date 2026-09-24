@@ -17,7 +17,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 RESOLVER_NAME = "asset_resolver"
-RESOLVER_VERSION = "1.0.0"
+RESOLVER_VERSION = "1.1.0"
 PROVIDER_MODE = "local_existing_only"
 
 APPROVED_ASSET_DIRS = (
@@ -536,8 +536,8 @@ def resolve_assets(
 def run_asset_resolver(state_path: Path) -> dict[str, Any]:
     state = load_state(state_path)
 
-    if state["phase"] != "QA":
-        raise AssetResolverError("Asset Resolver may run only when phase is QA")
+    if state["phase"] != "ASSETS":
+        raise AssetResolverError("Asset Resolver may run only when phase is ASSETS")
 
     project_id = require_non_empty_string(state["project_id"], "project_id")
     manifest = state["manifest"]
