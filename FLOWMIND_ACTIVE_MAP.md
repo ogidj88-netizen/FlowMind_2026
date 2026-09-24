@@ -2,7 +2,8 @@
 
 Status: ACTIVE OPERATIONAL MAP
 Project: FlowMind / Imagine What If
-Mode: SYSTEM AUDIT MODE
+Mode: TARGET ARCHITECTURE PROMOTION MODE
+Updated: 2026-09-24
 
 ## 1. Purpose
 
@@ -35,7 +36,7 @@ Authority routing:
   FLOWMIND_WORKING_TARGET.md
 
 - detailed target architecture:
-  FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+  FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
 
 - authority classification:
   FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
@@ -54,392 +55,464 @@ Authority routing:
 
 ---
 
-## 2. Verified transition
+## 2. Verified Background
 
-The authority/source reconciliation phase is complete.
+The previous authority/source reconciliation phase was completed successfully.
 
-The production re-entry investigation produced useful evidence, but implementation is intentionally paused.
+Verified outcome before the V3.1 transition:
 
-The project direction has been reconsidered after the long development pause and major changes in the external AI market.
+- one current operational authority existed:
+  FLOWMIND_ACTIVE_MAP.md
 
-Verified decisions:
+- permanent operating discipline was separated from current operational state
 
-- FlowMind remains worth evaluating and continuing
-- FlowMind is not intended to compete as its own foundation model or commodity media generator
-- FlowMind target architecture is v2.2
-- FlowMind is the decision and orchestration brain above replaceable external AI providers
-- monetization and performance feedback are long-term core intelligence concerns
-- internal use comes first
-- later service or SaaS commercialization remains possible but is not current scope
-- unnecessary custom capabilities should be removed or replaced when stronger external solutions exist
-- no production implementation should continue until the existing system has been audited against the updated target
-- user time is a first-class constraint
-- verification must stop once sufficient evidence exists
+- product intent was separated from detailed target architecture
+
+- authority classification was separated from current operational state
+
+- MAP GUARD no longer owned or cached current operational state
+
+- stale operational authority had been removed or frozen
+
+- active authority files had been reconciled
+
+- Project Sources had been synchronized with the then-published authority chain
+
+- repo validation / preflight had passed
+
+- authority changes had been committed and pushed
+
+Production re-entry subsequently exposed real runtime evidence and enabled a new architecture review.
+
+That review resulted in an explicitly authorized V3.1 target architecture candidate.
+
+V3.1 promotion is now the current work.
+
+This does NOT mean V3.1 capabilities are implemented.
+
+Target architecture remains distinct from runtime truth.
 
 ---
 
-## 3. Current mode
+## 3. Current Mode
 
 Current mode:
 
-SYSTEM AUDIT MODE
+TARGET ARCHITECTURE PROMOTION MODE
 
 Current objective:
 
-Perform one evidence-based audit of the existing FlowMind system before further production implementation.
+Promote FLOWMIND_TARGET_ARCHITECTURE_V3_1.md into the single trusted detailed target architecture while preserving:
 
-The audit must determine:
+- one current operational authority
+- one production contour
+- current verified runtime truth
+- existing control-plane semantics
+- full auditability
+- fail-closed publication discipline
 
-- what currently exists
-- what actually works
-- what is incomplete
-- what is broken
-- what is duplicated
-- what is obsolete
-- what should remain internal FlowMind logic
-- what should be delegated to external AI or service providers
-- what should be removed
-- what is still missing relative to target architecture v2.2
+This is an authority/documentation transition.
 
-The audit exists to produce a modernization decision.
-
-It does not exist to maximize documentation or verification activity.
+It is NOT a production runtime rewrite.
 
 ---
 
-## 4. Audit principle
+## 4. Why This Mode Exists
 
-The audit compares:
+The previously trusted detailed target architecture was:
 
-CURRENT VERIFIED SYSTEM
+FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
 
-against:
+A new candidate has now been created:
 
-FLOWMIND TARGET ARCHITECTURE V2.2
+FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
 
-The purpose is not to preserve old work merely because time was invested in it.
+The V3.1 candidate consolidates later verified architecture decisions including:
 
-The purpose is also not to rewrite everything from zero.
+- simplified logical ownership boundaries
+- Opportunity Intelligence
+- Packaging-first Editorial Brain
+- two-pass Director
+- Media Router
+- deterministic rendering
+- Quality and Compliance
+- persistent Learning Loop
+- External / Competitor Intelligence
+- persistent FlowMind memory
+- cloud-first target
+- Capability Registry
+- Capability Evolution Loop
+- Human Decision Gateway
+- cost and latency governance
 
-Each inspected component must earn its place.
+The user explicitly authorized finalization and promotion of V3.1.
 
-Default classifications:
+The promotion must still satisfy publication and verification gates.
+
+---
+
+## 5. Current Step
+
+Current step:
+
+Complete the V3.1 authority migration.
+
+Required sequence:
+
+V3.1 CANDIDATE CREATED
+→ VERIFY CONTENT
+→ UPDATE AUTHORITY REGISTRY
+→ UPDATE TRUSTED AUTHORITY REFERENCES
+→ VERIFY AUTHORITY CONSISTENCY
+→ RUN RELEVANT VALIDATION / PREFLIGHT
+→ REVIEW GIT DIFF / STATUS
+→ COMMIT
+→ PUSH
+→ SYNCHRONIZE PROJECT SOURCES
+→ VERIFY FINAL AUTHORITY CHAIN
+→ RETURN TO PRODUCTION REENTRY
+
+Do not treat V3.1 as durable published authority until this sequence completes.
+
+---
+
+## 6. Verified Progress In This Transition
+
+Verified so far:
+
+### V3.1 target file
+
+`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
+
+- created
+- non-empty
+- expected header present
+- Authority Note present
+- expected ending present
+- suspicious terminal/session contamination check passed
+- candidate file currently exists as an untracked repo file
+
+### Source of Truth Registry
+
+`FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
+
+- updated locally for the intended V3.1 authority state
+- V3.1 target references present
+- V2.1 retained as historical/FROZEN LEGACY after successful publication
+- registry consistency line verified
+- `git diff --check` passed for the edited registry
+
+### Permanent project instructions
+
+`000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
+
+- original local file verified against known content
+- detailed-target routing updated from V2.1 to V3.1
+- old V2.1 detailed-target references removed
+- V3.1 references verified
+- `git diff --check` passed
+
+### Active Map baseline
+
+Before this edit:
+
+- local Active Map matched Git HEAD
+- local SHA and Git HEAD SHA matched
+- no local diff existed
+- Project Source copy did not byte-match current repo copy and must therefore be synchronized later
+
+This proves the repo copy is the current durable baseline for this edit.
+
+---
+
+## 7. Allowed Actions Now
+
+Allowed:
+
+- inspect one current authority file at a time
+- replace one current authority file at a time
+- update references from V2.1 to V3.1 where authority role requires it
+- verify each changed authority file
+- compare changed authority files for consistency
+- inspect validation/preflight scripts before execution when required
+- run relevant authority validation
+- run preflight when safe and relevant
+- inspect git diff
+- inspect git status
+- commit only intended V3.1 authority migration files
+- push the verified authority migration
+- synchronize changed active Project Sources after push
+- remove/supersede stale active Project Source copies where required
+- verify the final authority chain
+- update this Active Map after successful publication to return to production work
+
+File execution follows:
+
+ONE STEP = ONE SPECIFIC FILE
+
+unless the user explicitly authorizes batch mode.
+
+---
+
+## 8. Forbidden Actions Now
+
+Do not:
+
+- modify production implementation code
+- implement V3.1 runtime capabilities merely because they appear in the target
+- create another current operational document
+- create a second runtime contour
+- create a second dispatcher
+- activate legacy runner paths
+- reactivate FROZEN LEGACY runtime modules
+- rewrite dispatcher behavior
+- add new providers
+- add optional integrations
+- activate YouTube upload
+- add Telegram integration
+- add TikTok integration
+- build speculative infrastructure
+- perform provider/model migration
+- modify learning policies
+- run paid provider jobs merely for this authority migration
+- treat V3.1 documentation as implementation evidence
+- commit unrelated runtime baseline directories
+- silently include unrelated untracked files in the authority commit
+
+---
+
+## 9. V2.1 Transition Rule
+
+During successful V3.1 publication:
+
+`FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
+
+transitions from:
+
+TRUSTED detailed target architecture
+
+to:
+
+FROZEN LEGACY historical target architecture.
+
+It may remain in Git for:
+
+- history
+- migration evidence
+- architectural comparison
+
+It must not remain in the active Project Source authority set after V3.1 publication.
+
+V2.1 runtime-era code is NOT automatically legacy merely because the V2.1 architecture document becomes FROZEN LEGACY.
+
+Runtime components are classified from current repo/runtime evidence.
+
+---
+
+## 10. V3.1 Promotion Rule
+
+`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md` becomes durable trusted detailed target architecture only after:
+
+1. exact candidate content is verified
+2. authority references are reconciled
+3. no material authority conflict remains
+4. relevant validation passes
+5. preflight passes where applicable
+6. git diff is reviewed
+7. only intended migration files are staged
+8. commit succeeds
+9. push succeeds
+10. active Project Sources are synchronized
+11. final authority chain is verified
+
+Until then:
+
+the migration is in progress.
+
+Fail closed if publication fails.
+
+---
+
+## 11. Runtime Truth Rule
+
+Runtime truth remains independent of this migration.
+
+A V3.1 capability is operationally real only when supported by evidence such as:
+
+- current implementation
+- valid inputs
+- successful execution
+- generated output
+- downstream consumption
+- validation output
+- reproducible runtime behavior
+- failure behavior
+
+Architecture does not manufacture runtime truth.
+
+Changing target documentation does not change implementation status.
+
+---
+
+## 12. Production Contour Rule
+
+FlowMind must continue to have one production contour.
+
+The V3.1 architecture migration must not:
+
+- create a parallel pipeline
+- create a second dispatcher
+- create a second runner authority
+- bypass existing state
+- bypass existing manifest/control semantics
+- reactivate retired implementation automatically
+
+After architecture publication, existing runtime components must be classified against V3.1 as:
 
 - KEEP
-- ADAPT
+- MODIFY
 - REPLACE
 - REMOVE
-- UNKNOWN
+- MISSING
 
-Meaning:
-
-KEEP
-= current implementation still fits the target and provides value.
-
-ADAPT
-= useful implementation exists but must change to fit the target.
-
-REPLACE
-= capability is still required, but a stronger external provider or simpler implementation should perform it.
-
-REMOVE
-= capability is unnecessary, duplicated, obsolete, or economically unjustified.
-
-UNKNOWN
-= evidence is insufficient for a decision.
-
-UNKNOWN must not be converted into a guess.
+That comparison happens only after the authority migration completes.
 
 ---
 
-## 5. Audit questions
+## 13. Project Sources Rule For This Transition
 
-For each relevant component, answer only what is necessary:
+GitHub repository remains the durable project master.
 
-1. What responsibility does it currently own?
-2. Is it part of the active runtime contour?
-3. What evidence shows that it actually works?
-4. Which v2.2 target responsibility does it map to?
-5. Is this responsibility strategic FlowMind intelligence or commodity execution?
-6. Should FlowMind own it internally?
-7. Could an external AI/service now perform it better, cheaper, or more reliably?
-8. Does keeping it improve:
-   - monetization potential,
-   - decision quality,
-   - content quality,
-   - automation,
-   - reliability,
-   - speed?
-9. Classification:
-   KEEP / ADAPT / REPLACE / REMOVE / UNKNOWN.
-10. What is the smallest future action required?
+Project Sources are ChatGPT working context.
 
-Do not answer questions that are irrelevant to the component being inspected.
+Current Project Sources may temporarily contain the previous published authority while the V3.1 migration is still local.
 
----
+Do not synchronize candidate working copies before the intended repo versions:
 
-## 6. Strategic ownership rule
+- pass validation
+- are committed
+- are pushed
 
-FlowMind should preferentially own:
+After push:
 
-- canonical state
-- orchestration
-- decision logic
-- opportunity evaluation
-- business rules
-- provider selection logic
-- validation logic
-- quality gates
-- performance interpretation
-- monetization interpretation
-- decision memory
-- feedback loops
+- synchronize every changed active authority Project Source
+- add the verified V3.1 target source
+- ensure V2.1 no longer participates as active target authority
+- verify Project Source content matches intended committed repo content
 
-FlowMind should not automatically own commodity execution capabilities.
-
-Examples of potentially external execution:
-
-- general LLM reasoning
-- search
-- trend data
-- image generation
-- video generation
-- TTS
-- music generation
-- stock media sourcing
-- transcription
-- rendering services
-- analytics sources
-
-Whether a capability is internal or external must be decided from evidence, quality, cost, reliability, and strategic value.
-
-Do not replace working internal logic merely because an external tool exists.
-
-Do not preserve inferior internal execution merely because it already exists.
+Any stale Project Source mismatch is UNVERIFIED until synchronized.
 
 ---
 
-## 7. Provider rule
+## 14. Git Safety Rule
 
-Named providers are implementation choices, not architecture.
+The V3.1 authority commit must contain only intended authority migration files.
 
-During audit, identify provider coupling where relevant.
+Known runtime baseline directories currently exist as untracked working-tree artifacts:
 
-Target:
+- `projects/FM_RUNTIME_BASELINE_20260923/`
+- `projects/FM_RUNTIME_BASELINE_20260923_R2/`
+- `projects/FM_RUNTIME_BASELINE_20260923_R3/`
 
-FlowMind module
--> capability contract
--> selected provider
--> normalized result
--> validation
--> downstream artifact
+They must NOT be accidentally staged merely because they are visible in `git status`.
 
-The audit may recommend provider abstraction.
+Do not use broad staging such as:
 
-The audit must not automatically implement provider abstraction.
+`git add .`
 
-Automatic multi-provider routing remains deferred until justified by evidence.
+for this migration.
 
----
-
-## 8. Monetization rule
-
-The system is ultimately judged by business outcomes.
-
-Audit priority should favor components that affect:
-
-- selection of economically useful opportunities
-- audience demand
-- hooks and retention
-- content quality
-- production cost
-- production speed
-- ability to collect performance data
-- ability to connect content decisions to revenue outcomes
-
-A technically elegant component with little economic impact has low priority.
-
-A simple component with direct economic impact may have high priority.
+Stage exact intended files only.
 
 ---
 
-## 9. Audit execution rule
+## 15. Exit Condition
 
-Audit proceeds one file at a time.
+TARGET ARCHITECTURE PROMOTION MODE ends only when all of the following are true:
+
+1. `FLOWMIND_TARGET_ARCHITECTURE_V3_1.md` is verified
+
+2. `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md` correctly classifies:
+   - V3.1 as detailed target architecture
+   - V2.1 as FROZEN LEGACY after publication
+
+3. all active authority documents route detailed architecture to V3.1
+
+4. no active authority document incorrectly treats V2.1 as current detailed target
+
+5. no current operational authority duplication exists
+
+6. validation required for the authority migration passes
+
+7. preflight passes where applicable
+
+8. intended Git diff is reviewed
+
+9. only intended authority migration files are committed
+
+10. push succeeds
+
+11. changed active Project Sources are synchronized
+
+12. V3.1 is present in active Project Sources as the detailed target
+
+13. V2.1 is removed from active target decision context
+
+14. final authority chain is verified
+
+15. runtime truth remains unchanged unless separately evidenced
+
+After all conditions pass:
+
+update `FLOWMIND_ACTIVE_MAP.md` again.
+
+Return to:
+
+PRODUCTION REENTRY MODE
+
+Then execute:
+
+CURRENT REPO / RUNTIME EVIDENCE
+→ COMPARE WITH V3.1
+→ KEEP / MODIFY / REPLACE / REMOVE / MISSING
+→ IDENTIFY ONE HIGHEST-VALUE REAL GAP
+→ VERIFY ROI / IMPACT
+→ AUTHORIZE ONE IMPLEMENTATION TARGET
+→ IMPLEMENT
+→ VALIDATE
+
+---
+
+## 16. One-Step Execution Rule
+
+Operational work follows the permanent rule defined in:
+
+`000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
 
 Default:
 
 ONE STEP = ONE SPECIFIC FILE.
 
-For each file:
+For this migration:
 
-inspect
--> understand responsibility
--> obtain sufficient evidence
--> classify
--> stop checking
--> move to next file
+one authority file
+→ evidence
+→ verification
+→ verdict
+→ next authority file
 
-Do not:
+Do not jump ahead.
 
-- repeatedly verify an established fact
-- inspect unrelated files in the same step
-- modify code during evidence collection
-- create speculative replacement architecture
-- create new providers during audit
-- refactor while still determining what exists
-
-If a file points to another file that must be inspected:
-
-finish classification of the current file first when possible.
-
-Then move to the next file as a separate step.
+Do not batch files unless the user explicitly requests batch mode.
 
 ---
 
-## 10. Audit scope
-
-The audit may inspect:
-
-- production entrypoints
-- dispatcher/control logic
-- canonical state handling
-- executors
-- modules
-- provider integrations
-- artifact contracts
-- renderer
-- validation
-- QA
-- generated runtime artifacts
-- configuration
-- tests where needed to establish behavior
-
-Legacy material is inspected only when necessary to determine whether active code depends on it.
-
-Do not perform a general legacy archaeology exercise.
-
----
-
-## 11. Code freeze during audit
-
-Production code modification is not authorized during SYSTEM AUDIT MODE.
-
-Allowed exceptions:
-
-- none by default
-
-If a critical defect is discovered:
-
-record it.
-
-Do not immediately repair it unless Evgen explicitly ends or pauses the audit and authorizes implementation.
-
-The purpose is to understand the whole system before changing its structure.
-
-This prevents local fixes from locking us into obsolete architecture.
-
----
-
-## 12. Verification sufficiency
-
-Verification follows:
-
-docs/FLOWMIND_WORK_PROTOCOL_V1.md
-
-Key rule:
-
-sufficient evidence
--> decision
--> stop checking
-
-Default maximum:
-
-- one primary check
-- one targeted follow-up only if required
-
-More checking requires a specific reason under the protocol.
-
-User time is the most constrained resource.
-
----
-
-## 13. Forbidden actions now
-
-Do not:
-
-- modify production Python code
-- resume qa_executor.py work
-- implement the previously identified QA blocker
-- automatically resume Director Brain
-- rewrite dispatcher
-- build a new runner
-- create a second runtime contour
-- reactivate frozen legacy
-- add providers
-- add speculative integrations
-- build automatic provider routing
-- build SaaS infrastructure
-- implement YouTube upload
-- implement monetization automation
-- optimize code before audit evidence exists
-- start multiple audit files in one step
-- preserve a component only because work was previously invested in it
-
----
-
-## 14. Audit output
-
-The audit must ultimately produce a clear modernization picture.
-
-For the current FlowMind system we must know:
-
-- what stays
-- what changes
-- what is replaced externally
-- what is deleted
-- what is missing
-- what becomes the FlowMind Brain
-- what remains commodity execution
-- what the shortest route to a monetizable internal system is
-
-The audit is complete only when there is enough evidence to choose the modernization plan.
-
-It is not necessary to inspect every file in the repository.
-
-Stop when further inspection would not materially change the modernization decision.
-
----
-
-## 15. Exit condition
-
-SYSTEM AUDIT MODE ends when:
-
-1. the active production contour is understood;
-2. the major current components are classified;
-3. material obsolete or duplicated areas are identified;
-4. internal strategic intelligence is separated from commodity execution;
-5. relevant provider coupling is understood;
-6. major gaps against target architecture v2.2 are identified;
-7. the modernization direction is clear;
-8. the shortest path to first monetizable operation can be selected;
-9. further inspection is unlikely to materially change the decision;
-10. Evgen approves moving from audit to implementation planning.
-
-Only then may implementation work resume.
-
----
-
-## 16. Current next action
+## 17. Current Next Action
 
 Current next action:
 
-Begin the evidence-based audit of the existing FlowMind production system.
+Continue reconciling remaining TRUSTED authority references from the superseded V2.1 target to the V3.1 target, one verified authority file at a time.
 
-Start from the current active production entry/control path, not from historical architecture documents.
-
-Inspect one specific file at a time.
-
-No production code change is authorized during the audit.
+No production implementation work is authorized during this transition.
 
 End.

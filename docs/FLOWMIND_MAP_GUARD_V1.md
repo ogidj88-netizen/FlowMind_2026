@@ -96,20 +96,24 @@ It is not runtime proof.
 
 ### Detailed target architecture
 
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
 
 Controls:
 
 - detailed target architecture
-- target module structure
-- target layers
+- seven logical system blocks
+- target capability ownership
 - target responsibilities
-- target artifacts
+- target artifacts and contracts
 - architectural destination
+- migration principles
+- deferred architectural scope
 
 It does not define current work.
 
 It is not runtime proof.
+
+It does not authorize implementation by itself.
 
 ### Current operational authority
 
@@ -318,7 +322,7 @@ Before recommending work, verify that the action:
 
 1. is authorized by FLOWMIND_ACTIVE_MAP.md;
 2. supports FLOWMIND_WORKING_TARGET.md;
-3. is compatible with FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md;
+3. is compatible with FLOWMIND_TARGET_ARCHITECTURE_V3_1.md;
 4. respects verified authority classification;
 5. does not create duplicate operational authority;
 6. does not create a second runtime contour;
@@ -340,7 +344,7 @@ It must:
 - require MAP CHECK;
 - route current state to FLOWMIND_ACTIVE_MAP.md;
 - route product intent to FLOWMIND_WORKING_TARGET.md;
-- route detailed architecture to FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md;
+- route detailed architecture to FLOWMIND_TARGET_ARCHITECTURE_V3_1.md;
 - route classification to FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md;
 - route execution discipline to FLOWMIND_WORK_PROTOCOL_V1.md;
 - route runtime truth to verified repo and runtime evidence;

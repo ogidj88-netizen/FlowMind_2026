@@ -90,16 +90,17 @@ It is NOT runtime proof.
 
 ### Detailed target architecture
 
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
 
 Controls:
 
 - detailed target architecture
-- accepted 12-module target structure
-- target layers
-- module responsibilities
-- target artifacts
+- seven logical system blocks
+- target capability ownership
+- cross-cutting architectural foundations
+- target artifacts and contracts
 - architecture destination
+- migration principles
 - deferred architectural scope
 
 It is NOT current operational authority.
@@ -169,7 +170,7 @@ Documents do not substitute for runtime evidence.
 Before proposing architecture, modules, integrations, providers, or major technical changes, ChatGPT must verify alignment with:
 
 - FLOWMIND_WORKING_TARGET.md
-- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+- FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
 - FLOWMIND_ACTIVE_MAP.md
 - relevant current repo / runtime evidence
 
@@ -177,9 +178,9 @@ FLOWMIND_WORKING_TARGET.md answers:
 
 what kind of system we are building and why.
 
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md answers:
+FLOWMIND_TARGET_ARCHITECTURE_V3_1.md answers:
 
-what detailed target structure we are evolving toward.
+what detailed target structure and capability ownership we are evolving toward.
 
 FLOWMIND_ACTIVE_MAP.md answers:
 
@@ -227,7 +228,7 @@ For every candidate authority file, ChatGPT must:
 6. compare it with:
    - this file;
    - FLOWMIND_WORKING_TARGET.md;
-   - FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md;
+   - FLOWMIND_TARGET_ARCHITECTURE_V3_1.md;
    - FLOWMIND_ACTIVE_MAP.md;
    - FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md;
    - relevant current repo evidence;
@@ -378,7 +379,7 @@ Promotion from legacy requires explicit re-audit and verified authority classifi
 Before a technical or architectural recommendation, ChatGPT must be able to answer:
 
 1. What product principle in FLOWMIND_WORKING_TARGET.md does this support?
-2. What part of FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md does this support?
+2. What part of FLOWMIND_TARGET_ARCHITECTURE_V3_1.md does this support?
 3. Is this action allowed by FLOWMIND_ACTIVE_MAP.md?
 4. What current repo / runtime evidence supports it?
 5. Does it create a second active contour?
@@ -562,7 +563,7 @@ Permanent operating discipline lives here.
 
 Product intent lives in FLOWMIND_WORKING_TARGET.md.
 
-Detailed destination architecture lives in FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md.
+Detailed destination architecture lives in FLOWMIND_TARGET_ARCHITECTURE_V3_1.md.
 
 Current operational state lives only in FLOWMIND_ACTIVE_MAP.md.
 

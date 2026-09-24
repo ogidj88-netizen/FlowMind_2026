@@ -250,7 +250,7 @@ FLOWMIND_WORKING_TARGET.md
 
 Detailed target architecture must come from:
 
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
 
 Runtime truth must come from current repo and runtime evidence.
 
