@@ -2,7 +2,7 @@
 
 Status: ACTIVE OPERATIONAL MAP
 Project: FlowMind / Imagine What If
-Mode: TARGET ARCHITECTURE PROMOTION MODE
+Mode: PRODUCTION REENTRY MODE
 Updated: 2026-09-24
 
 ## 1. Purpose
@@ -55,42 +55,31 @@ Authority routing:
 
 ---
 
-## 2. Verified Background
+## 2. Verified Authority Transition
 
-The previous authority/source reconciliation phase was completed successfully.
+The V3.1 target-architecture promotion sequence has completed.
 
-Verified outcome before the V3.1 transition:
+Verified outcome:
 
-- one current operational authority existed:
-  FLOWMIND_ACTIVE_MAP.md
+- FLOWMIND_TARGET_ARCHITECTURE_V3_1.md is the trusted detailed target architecture
 
-- permanent operating discipline was separated from current operational state
+- FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md is FROZEN LEGACY historical architecture
 
-- product intent was separated from detailed target architecture
+- all active authority references route detailed target architecture to V3.1
 
-- authority classification was separated from current operational state
+- changed authority files passed required validation / preflight
 
-- MAP GUARD no longer owned or cached current operational state
+- intended authority migration was committed and pushed
 
-- stale operational authority had been removed or frozen
+- changed active Project Sources were synchronized
 
-- active authority files had been reconciled
+- V2.1 was removed from active Project Source target-decision context
 
-- Project Sources had been synchronized with the then-published authority chain
+- final authority-chain verification passed
 
-- repo validation / preflight had passed
+This authority transition did not change runtime implementation truth.
 
-- authority changes had been committed and pushed
-
-Production re-entry subsequently exposed real runtime evidence and enabled a new architecture review.
-
-That review resulted in an explicitly authorized V3.1 target architecture candidate.
-
-V3.1 promotion is now the current work.
-
-This does NOT mean V3.1 capabilities are implemented.
-
-Target architecture remains distinct from runtime truth.
+Architecture publication is not implementation evidence.
 
 ---
 
@@ -98,56 +87,46 @@ Target architecture remains distinct from runtime truth.
 
 Current mode:
 
-TARGET ARCHITECTURE PROMOTION MODE
+PRODUCTION REENTRY MODE
 
 Current objective:
 
-Promote FLOWMIND_TARGET_ARCHITECTURE_V3_1.md into the single trusted detailed target architecture while preserving:
+Resume real FlowMind product development from verified repo and runtime evidence.
 
-- one current operational authority
-- one production contour
-- current verified runtime truth
-- existing control-plane semantics
-- full auditability
-- fail-closed publication discipline
+The immediate objective is to compare the verified current implementation against the trusted V3.1 target architecture and identify exactly one highest-value real implementation gap.
 
-This is an authority/documentation transition.
+Do not select work from architecture importance alone.
 
-It is NOT a production runtime rewrite.
+Do not select work from historical next-action documents.
+
+Do not automatically resume a previously planned module.
+
+Evidence and ROI determine the next implementation target.
 
 ---
 
-## 4. Why This Mode Exists
+## 4. Verified Runtime Evidence Baseline
 
-The previously trusted detailed target architecture was:
+The AS-IS runtime walkthrough was completed before V3.1 promotion.
 
-FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md
+Verified runtime baseline projects include:
 
-A new candidate has now been created:
+- projects/FM_RUNTIME_BASELINE_20260923/
+- projects/FM_RUNTIME_BASELINE_20260923_R2/
+- projects/FM_RUNTIME_BASELINE_20260923_R3/
 
-FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
+These baselines are evidence artifacts.
 
-The V3.1 candidate consolidates later verified architecture decisions including:
+Do not modify them merely to make current runtime appear compliant with V3.1.
 
-- simplified logical ownership boundaries
-- Opportunity Intelligence
-- Packaging-first Editorial Brain
-- two-pass Director
-- Media Router
-- deterministic rendering
-- Quality and Compliance
-- persistent Learning Loop
-- External / Competitor Intelligence
-- persistent FlowMind memory
-- cloud-first target
-- Capability Registry
-- Capability Evolution Loop
-- Human Decision Gateway
-- cost and latency governance
+Do not repeat the complete AS-IS walkthrough unless:
 
-The user explicitly authorized finalization and promotion of V3.1.
+- evidence is missing
+- current code materially changed
+- a contradiction is discovered
+- the selected implementation target requires narrower verification
 
-The promotion must still satisfy publication and verification gates.
+Existing runtime findings must be reused before performing new broad inspection.
 
 ---
 
@@ -155,364 +134,271 @@ The promotion must still satisfy publication and verification gates.
 
 Current step:
 
-Complete the V3.1 authority migration.
+Compare verified current runtime against V3.1 and identify one highest-value implementation gap.
 
 Required sequence:
 
-V3.1 CANDIDATE CREATED
-→ VERIFY CONTENT
-→ UPDATE AUTHORITY REGISTRY
-→ UPDATE TRUSTED AUTHORITY REFERENCES
-→ VERIFY AUTHORITY CONSISTENCY
-→ RUN RELEVANT VALIDATION / PREFLIGHT
-→ REVIEW GIT DIFF / STATUS
-→ COMMIT
-→ PUSH
-→ SYNCHRONIZE PROJECT SOURCES
-→ VERIFY FINAL AUTHORITY CHAIN
-→ RETURN TO PRODUCTION REENTRY
-
-Do not treat V3.1 as durable published authority until this sequence completes.
-
----
-
-## 6. Verified Progress In This Transition
-
-Verified so far:
-
-### V3.1 target file
-
-`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
-
-- created
-- non-empty
-- expected header present
-- Authority Note present
-- expected ending present
-- suspicious terminal/session contamination check passed
-- candidate file currently exists as an untracked repo file
-
-### Source of Truth Registry
-
-`FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
-
-- updated locally for the intended V3.1 authority state
-- V3.1 target references present
-- V2.1 retained as historical/FROZEN LEGACY after successful publication
-- registry consistency line verified
-- `git diff --check` passed for the edited registry
-
-### Permanent project instructions
-
-`000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
-
-- original local file verified against known content
-- detailed-target routing updated from V2.1 to V3.1
-- old V2.1 detailed-target references removed
-- V3.1 references verified
-- `git diff --check` passed
-
-### Active Map baseline
-
-Before this edit:
-
-- local Active Map matched Git HEAD
-- local SHA and Git HEAD SHA matched
-- no local diff existed
-- Project Source copy did not byte-match current repo copy and must therefore be synchronized later
-
-This proves the repo copy is the current durable baseline for this edit.
-
----
-
-## 7. Allowed Actions Now
-
-Allowed:
-
-- inspect one current authority file at a time
-- replace one current authority file at a time
-- update references from V2.1 to V3.1 where authority role requires it
-- verify each changed authority file
-- compare changed authority files for consistency
-- inspect validation/preflight scripts before execution when required
-- run relevant authority validation
-- run preflight when safe and relevant
-- inspect git diff
-- inspect git status
-- commit only intended V3.1 authority migration files
-- push the verified authority migration
-- synchronize changed active Project Sources after push
-- remove/supersede stale active Project Source copies where required
-- verify the final authority chain
-- update this Active Map after successful publication to return to production work
-
-File execution follows:
-
-ONE STEP = ONE SPECIFIC FILE
-
-unless the user explicitly authorizes batch mode.
-
----
-
-## 8. Forbidden Actions Now
-
-Do not:
-
-- modify production implementation code
-- implement V3.1 runtime capabilities merely because they appear in the target
-- create another current operational document
-- create a second runtime contour
-- create a second dispatcher
-- activate legacy runner paths
-- reactivate FROZEN LEGACY runtime modules
-- rewrite dispatcher behavior
-- add new providers
-- add optional integrations
-- activate YouTube upload
-- add Telegram integration
-- add TikTok integration
-- build speculative infrastructure
-- perform provider/model migration
-- modify learning policies
-- run paid provider jobs merely for this authority migration
-- treat V3.1 documentation as implementation evidence
-- commit unrelated runtime baseline directories
-- silently include unrelated untracked files in the authority commit
-
----
-
-## 9. V2.1 Transition Rule
-
-During successful V3.1 publication:
-
-`FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
-
-transitions from:
-
-TRUSTED detailed target architecture
-
-to:
-
-FROZEN LEGACY historical target architecture.
-
-It may remain in Git for:
-
-- history
-- migration evidence
-- architectural comparison
-
-It must not remain in the active Project Source authority set after V3.1 publication.
-
-V2.1 runtime-era code is NOT automatically legacy merely because the V2.1 architecture document becomes FROZEN LEGACY.
-
-Runtime components are classified from current repo/runtime evidence.
-
----
-
-## 10. V3.1 Promotion Rule
-
-`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md` becomes durable trusted detailed target architecture only after:
-
-1. exact candidate content is verified
-2. authority references are reconciled
-3. no material authority conflict remains
-4. relevant validation passes
-5. preflight passes where applicable
-6. git diff is reviewed
-7. only intended migration files are staged
-8. commit succeeds
-9. push succeeds
-10. active Project Sources are synchronized
-11. final authority chain is verified
-
-Until then:
-
-the migration is in progress.
-
-Fail closed if publication fails.
-
----
-
-## 11. Runtime Truth Rule
-
-Runtime truth remains independent of this migration.
-
-A V3.1 capability is operationally real only when supported by evidence such as:
-
-- current implementation
-- valid inputs
-- successful execution
-- generated output
-- downstream consumption
-- validation output
-- reproducible runtime behavior
-- failure behavior
-
-Architecture does not manufacture runtime truth.
-
-Changing target documentation does not change implementation status.
-
----
-
-## 12. Production Contour Rule
-
-FlowMind must continue to have one production contour.
-
-The V3.1 architecture migration must not:
-
-- create a parallel pipeline
-- create a second dispatcher
-- create a second runner authority
-- bypass existing state
-- bypass existing manifest/control semantics
-- reactivate retired implementation automatically
-
-After architecture publication, existing runtime components must be classified against V3.1 as:
-
-- KEEP
-- MODIFY
-- REPLACE
-- REMOVE
-- MISSING
-
-That comparison happens only after the authority migration completes.
-
----
-
-## 13. Project Sources Rule For This Transition
-
-GitHub repository remains the durable project master.
-
-Project Sources are ChatGPT working context.
-
-Current Project Sources may temporarily contain the previous published authority while the V3.1 migration is still local.
-
-Do not synchronize candidate working copies before the intended repo versions:
-
-- pass validation
-- are committed
-- are pushed
-
-After push:
-
-- synchronize every changed active authority Project Source
-- add the verified V3.1 target source
-- ensure V2.1 no longer participates as active target authority
-- verify Project Source content matches intended committed repo content
-
-Any stale Project Source mismatch is UNVERIFIED until synchronized.
-
----
-
-## 14. Git Safety Rule
-
-The V3.1 authority commit must contain only intended authority migration files.
-
-Known runtime baseline directories currently exist as untracked working-tree artifacts:
-
-- `projects/FM_RUNTIME_BASELINE_20260923/`
-- `projects/FM_RUNTIME_BASELINE_20260923_R2/`
-- `projects/FM_RUNTIME_BASELINE_20260923_R3/`
-
-They must NOT be accidentally staged merely because they are visible in `git status`.
-
-Do not use broad staging such as:
-
-`git add .`
-
-for this migration.
-
-Stage exact intended files only.
-
----
-
-## 15. Exit Condition
-
-TARGET ARCHITECTURE PROMOTION MODE ends only when all of the following are true:
-
-1. `FLOWMIND_TARGET_ARCHITECTURE_V3_1.md` is verified
-
-2. `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md` correctly classifies:
-   - V3.1 as detailed target architecture
-   - V2.1 as FROZEN LEGACY after publication
-
-3. all active authority documents route detailed architecture to V3.1
-
-4. no active authority document incorrectly treats V2.1 as current detailed target
-
-5. no current operational authority duplication exists
-
-6. validation required for the authority migration passes
-
-7. preflight passes where applicable
-
-8. intended Git diff is reviewed
-
-9. only intended authority migration files are committed
-
-10. push succeeds
-
-11. changed active Project Sources are synchronized
-
-12. V3.1 is present in active Project Sources as the detailed target
-
-13. V2.1 is removed from active target decision context
-
-14. final authority chain is verified
-
-15. runtime truth remains unchanged unless separately evidenced
-
-After all conditions pass:
-
-update `FLOWMIND_ACTIVE_MAP.md` again.
-
-Return to:
-
-PRODUCTION REENTRY MODE
-
-Then execute:
-
-CURRENT REPO / RUNTIME EVIDENCE
-→ COMPARE WITH V3.1
+VERIFIED CURRENT REPO / RUNTIME EVIDENCE
+→ MAP EXISTING COMPONENTS TO V3.1
+→ CLASSIFY EACH RELEVANT COMPONENT
 → KEEP / MODIFY / REPLACE / REMOVE / MISSING
-→ IDENTIFY ONE HIGHEST-VALUE REAL GAP
+→ IDENTIFY ONE MATERIAL GAP
 → VERIFY ROI / IMPACT
 → AUTHORIZE ONE IMPLEMENTATION TARGET
 → IMPLEMENT
 → VALIDATE
 
----
-
-## 16. One-Step Execution Rule
-
-Operational work follows the permanent rule defined in:
-
-`000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
-
-Default:
-
-ONE STEP = ONE SPECIFIC FILE.
-
-For this migration:
-
-one authority file
-→ evidence
-→ verification
-→ verdict
-→ next authority file
-
-Do not jump ahead.
-
-Do not batch files unless the user explicitly requests batch mode.
+No implementation change starts before the exact gap is evidenced and authorized.
 
 ---
 
-## 17. Current Next Action
+## 6. Classification Rule
+
+For each relevant existing component use exactly one classification:
+
+### KEEP
+
+Current implementation already satisfies the required V3.1 responsibility sufficiently for the present production stage.
+
+### MODIFY
+
+The current component is useful but requires a controlled change to satisfy the V3.1 responsibility.
+
+### REPLACE
+
+The current implementation is structurally incompatible with the required responsibility and modification would create greater risk or complexity than replacement.
+
+### REMOVE
+
+The component is redundant, unsafe, obsolete, or creates competing authority / runtime behavior.
+
+### MISSING
+
+V3.1 requires a capability for which no verified current implementation exists.
+
+Classification must be evidence-based.
+
+Do not classify from filenames alone.
+
+---
+
+## 7. Selection Rule
+
+After classification, select exactly one next implementation target.
+
+The selected target must have the highest practical value based on:
+
+- output quality
+- runtime stability
+- production completion
+- release speed
+- monetization impact
+- blocker removal
+- implementation risk
+- implementation cost
+
+Prefer the smallest controlled change that closes the highest-value verified gap.
+
+Do not optimize components that are not currently blocking meaningful production progress.
+
+---
+
+## 8. Allowed Actions Now
+
+Allowed:
+
+- inspect already verified runtime evidence
+
+- inspect specific repo files required to classify a V3.1 responsibility
+
+- compare current implementation with V3.1
+
+- reuse completed AS-IS walkthrough evidence
+
+- classify relevant components as:
+  KEEP / MODIFY / REPLACE / REMOVE / MISSING
+
+- identify one highest-value implementation gap
+
+- verify ROI and operational impact
+
+- authorize one implementation target
+
+- after authorization, modify one specific implementation file at a time
+
+- run focused validation relevant to the selected target
+
+- preserve the current canonical dispatcher and state authority unless evidence proves a required controlled change
+
+Default execution remains:
+
+ONE STEP = ONE SPECIFIC FILE
+
+unless explicitly authorized otherwise.
+
+---
+
+## 9. Forbidden Actions Now
+
+Do not:
+
+- restart the full repository audit without a verified need
+
+- restart the full runtime walkthrough without a verified need
+
+- implement multiple architecture gaps at once
+
+- rewrite the whole pipeline
+
+- create a second dispatcher
+
+- create a second runtime contour
+
+- create duplicate project-state authority
+
+- reactivate FROZEN LEGACY modules automatically
+
+- treat V2.1 as current target architecture
+
+- treat V3.1 documentation as proof of implementation
+
+- add new providers merely because V3.1 allows provider abstraction
+
+- build cloud infrastructure merely because V3.1 is cloud-first
+
+- build Capability Evolution before a verified production need
+
+- expand signal sources before existing production blockers are resolved
+
+- add optional integrations without direct production value
+
+- activate autonomous public upload without separate evidence and authorization
+
+- modify learning policies before production evidence justifies the change
+
+- optimize cost before the relevant production path actually works unless cost itself is the blocking risk
+
+---
+
+## 10. Runtime Truth Rule
+
+Runtime truth comes only from current verified repo and runtime evidence.
+
+A capability is not operational merely because:
+
+- V3.1 describes it
+- a file exists
+- a function exists
+- a test fixture exists
+- an artifact name exists
+- a historical document says it worked
+
+Operational capability requires relevant evidence such as:
+
+- valid implementation
+- valid input
+- successful execution
+- expected output
+- downstream consumption
+- validation
+- observable failure behavior where applicable
+
+If documentation and runtime evidence conflict:
+
+STOP.
+
+Runtime evidence wins for implementation status.
+
+---
+
+## 11. Production Contour Rule
+
+FlowMind must maintain one production contour.
+
+Do not introduce:
+
+- parallel orchestration
+- alternative project-state ownership
+- alternative dispatcher authority
+- uncontrolled direct state writers
+- legacy bypass paths
+
+The current verified runtime should evolve toward V3.1 through controlled KEEP / MODIFY / REPLACE / REMOVE / MISSING decisions.
+
+Prefer evolution over rewrite.
+
+---
+
+## 12. Architecture Rule
+
+V3.1 defines the destination.
+
+It does not dictate implementation order.
+
+Implementation order is determined by:
+
+current evidence
+→ current blocker
+→ business impact
+→ implementation risk
+→ ROI
+
+Do not build later-stage architecture merely because it is architecturally attractive.
+
+Minimalism remains the default.
+
+---
+
+## 13. Git Safety Rule
+
+Known runtime baseline directories may exist as untracked evidence:
+
+- projects/FM_RUNTIME_BASELINE_20260923/
+- projects/FM_RUNTIME_BASELINE_20260923_R2/
+- projects/FM_RUNTIME_BASELINE_20260923_R3/
+
+Do not stage them accidentally.
+
+Do not use broad staging such as:
+
+git add .
+
+when unrelated or evidence files are present.
+
+Stage only explicitly intended files.
+
+---
+
+## 14. Exit Condition
+
+PRODUCTION REENTRY MODE completes when:
+
+1. relevant existing runtime components are compared against V3.1
+
+2. evidence-based KEEP / MODIFY / REPLACE / REMOVE / MISSING classification exists for the current decision scope
+
+3. exactly one highest-value real implementation gap is identified
+
+4. its ROI / impact is verified
+
+5. one implementation target is explicitly authorized
+
+At that point:
+
+move from re-entry analysis to focused implementation.
+
+Do not open multiple implementation targets simultaneously.
+
+---
+
+## 15. Current Next Action
 
 Current next action:
 
-Continue reconciling remaining TRUSTED authority references from the superseded V2.1 target to the V3.1 target, one verified authority file at a time.
+Use the already completed AS-IS runtime walkthrough and current repo evidence to compare the existing production contour against V3.1.
 
-No production implementation work is authorized during this transition.
+Produce the minimum evidence-backed KEEP / MODIFY / REPLACE / REMOVE / MISSING classification required to identify exactly one highest-value implementation gap.
+
+Do not implement yet.
 
 End.
