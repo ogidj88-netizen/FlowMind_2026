@@ -3,7 +3,7 @@
 Status: ACTIVE OPERATIONAL MAP
 Project: FlowMind / Imagine What If
 Updated: 2026-09-30
-Mode: AUTHORITY RECONCILIATION FINALIZATION
+Mode: PRODUCTION REENTRY MODE
 
 ## 1. Purpose
 
@@ -23,11 +23,12 @@ It does NOT define:
 
 - permanent operating discipline
 - high-level product intent
-- detailed architecture content
+- detailed target architecture
 - authority classification
 - control-plane semantics
 - runtime truth
 - historical architecture
+- completed authority-migration history
 
 Those belong to their canonical owners.
 
@@ -46,7 +47,8 @@ Detailed-target identity and classification:
 
 Current trusted detailed target:
 `CURRENT_TRUSTED_DETAILED_TARGET`
-resolved by the Registry as:
+
+Resolved by the Registry as:
 `FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
 
 Execution discipline / MAP CHECK / anti-loop:
@@ -75,115 +77,86 @@ FROZEN LEGACY
 
 ## 3. Current Verified State
 
-The architecture-consolidation phase is complete.
+Authority System V2 publication is complete.
 
-The V3.2 architecture review is complete.
+The V3.2 architecture promotion is complete.
 
-The following checks are treated as completed evidence unless their relevant input changes or new material evidence reveals a specific defect:
+The following are closed and must not be reopened without new material evidence:
 
-- file integrity
-- cross-module ownership
+- V3.2 architecture review
+- cross-module ownership review
 - contradiction review
 - duplication review
 - internal architecture validation
 - deferred-scope review
-- authority-state cleanup
+- authority reconciliation
+- authority migration
+- authority publication
+- Project Sources synchronization for the completed authority block
 
-Do not reopen those checks merely because:
+Completed checks remain completed.
 
-- a new chat starts
-- a later file still contains an expected migration mismatch
-- Project Sources are not yet synchronized
-- a historical file still exists in Git
+A new chat does not reset them.
 
-The current remaining work is authority publication finalization.
+A historical file remaining in Git does not reset them.
 
-Runtime implementation remains frozen until this authority transaction is published and verified.
+A Project Source filename suffix does not reset them.
+
+Governance work is not the current blocker.
 
 ---
 
-## 4. Authority Reconciliation Transaction
+## 4. Current Mode
 
-Transaction:
-AUTHORITY SYSTEM V2 / V3.2 AUTHORITY FINALIZATION
+Current mode:
+
+PRODUCTION REENTRY MODE
 
 Purpose:
 
-- remove governance deadlock
-- remove duplicated governance ownership
-- make Registry the only owner of concrete authority pointers/classification
-- make V3.2 the trusted detailed target
-- freeze V3.1 as historical architecture
-- freeze MAP_GUARD as historical governance
-- eliminate version hard-coding from permanent governance files
-- prevent verification/restart loops
+Return from architecture/governance work to evidence-driven product implementation.
 
-Migration set:
+This mode does NOT authorize broad implementation.
 
-1. `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
-2. `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
-3. `docs/FLOWMIND_MAP_GUARD_V1.md`
-4. `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
-5. `CANONICAL_DISPATCHER_SPEC.md`
-6. `FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
-7. `FLOWMIND_ACTIVE_MAP.md`
+It authorizes only:
 
-Current transaction evidence:
-
-1. `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
-   PASS
-   SHA-256:
-   `22418e5e3b9337e93ef926bfecc33b7ed230f64f42acbd2072bed2e87fc798cf`
-
-2. `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
-   PASS
-   SHA-256:
-   `c5719c000729f98038a6ce26e32eab16387307e28acb0108dec6830a06d7285e`
-
-3. `docs/FLOWMIND_MAP_GUARD_V1.md`
-   PASS / FROZEN LEGACY
-   SHA-256:
-   `9abaa806b69be14c3151de0384f33d964ee63e753cc92e8ee169b080c7817ddf`
-
-4. `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
-   PASS
-   SHA-256:
-   `44c16ef483f76276d1984f05ce1684e7c6ab053a2aa3c50cbfbb5153ba2613d4`
-
-5. `CANONICAL_DISPATCHER_SPEC.md`
-   PASS
-   SHA-256:
-   `354fc9d0831114cb63338acd8faf42e47a31a2a9b4c08278cb7708e80070d9b1`
-
-6. `FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
-   PASS / TRUSTED DETAILED TARGET
-   SHA-256:
-   `487f014db65de78edecc1afe4d71e4233edbbde9cc86afcce69f5b35ec34b39c`
-
-7. `FLOWMIND_ACTIVE_MAP.md`
-   CURRENT FILE STEP
-
-Expected temporary mismatches inside this declared migration set are:
-
-EXPECTED_MIGRATION_MISMATCH
-
-They do not restart completed work.
+1. inspect verified current repo/runtime evidence
+2. compare it against `CURRENT_TRUSTED_DETAILED_TARGET`
+3. identify real implementation gaps
+4. rank gaps by blocker value and ROI
+5. select exactly one implementation target
+6. implement only after that target is explicitly authorized
+7. validate with runtime evidence
 
 ---
 
 ## 5. Current Objective
 
-Complete the Authority System V2 publication block and return FlowMind to a clean operational state.
+Current objective:
 
-The objective is NOT:
+Identify the single highest-value verified implementation gap between current runtime and the trusted V3.2 target.
 
-- more architecture R&D
-- another V3.2 audit
-- runtime implementation
-- provider work
-- QA runtime work
-- Production runtime work
-- Learning runtime work
+Priority order:
+
+1. speed
+2. stability
+3. scale
+4. optimization
+
+Selection must prefer the gap that most directly improves at least one of:
+
+- real end-to-end completion
+- output quality
+- runtime stability
+- release speed
+- monetization potential
+- removal of a verified blocker
+
+Do not choose work because an architecture section looks important.
+
+Do not choose the largest gap by size.
+
+Choose the highest-value verified blocker.
 
 ---
 
@@ -191,24 +164,30 @@ The objective is NOT:
 
 Current step:
 
-Finalize the authority transaction after this Active Map replacement.
+RUNTIME GAP IDENTIFICATION
 
-Required sequence after this file itself is verified:
+Required sequence:
 
-1. run one final cross-file authority validation
-2. inspect git diff
-3. inspect git status
-4. run relevant preflight / validation
-5. verify no unrelated files or secrets are included
-6. commit the validated authority block
-7. push to origin
-8. verify clean repo state
-9. synchronize affected active Project Sources
-10. remove / stop using stale active Project Source copies
-11. verify final authority chain
-12. update this Active Map once to PRODUCTION REENTRY MODE
+VERIFIED CURRENT REPO / RUNTIME EVIDENCE
+-> COMPARE AGAINST CURRENT_TRUSTED_DETAILED_TARGET
+-> CLASSIFY EXISTING COMPONENTS
+-> IDENTIFY REAL GAPS
+-> RANK BY ROI / BLOCKER VALUE
+-> SELECT ONE IMPLEMENTATION TARGET
+-> IMPLEMENT
+-> VALIDATE
 
-Do not restart the migration from file 1.
+Existing components may be classified as:
+
+- KEEP
+- MODIFY
+- REPLACE
+- REMOVE
+- MISSING
+
+Do not classify from architecture documents alone.
+
+Use repo/runtime evidence.
 
 ---
 
@@ -216,24 +195,35 @@ Do not restart the migration from file 1.
 
 Allowed:
 
-- replace and verify this Active Map
-- inspect the declared migration-set files for final authority consistency
-- inspect git diff/status
-- run relevant validation/preflight
-- commit the validated authority block
-- push the validated authority block
-- synchronize affected active Project Sources after push
-- verify final authority chain
-- perform the final Active Map transition to Production Reentry after publication evidence passes
+- inspect current repo structure
+- inspect relevant implementation files
+- inspect existing runtime evidence
+- inspect known baseline artifacts
+- inspect current contracts and schemas
+- compare verified runtime against trusted V3.2
+- classify existing components
+- identify implementation gaps
+- rank gaps by ROI / blocker value
+- select one specific next implementation target
 
-Default execution discipline:
+After one target is selected and explicitly authorized:
+
+- modify one controlled contour
+- validate with runtime evidence
+- commit one meaningful validated work block
+
+Default execution:
 
 ONE STEP
 -> EVIDENCE
 -> VERIFY
 -> NEXT STEP
 
-Completed file PASS results carry forward.
+When files are modified:
+
+ONE STEP = ONE SPECIFIC FILE
+
+unless the active Work Protocol explicitly allows a bounded multi-file transaction.
 
 ---
 
@@ -241,120 +231,125 @@ Completed file PASS results carry forward.
 
 Do not:
 
-- modify runtime implementation
-- modify executors
-- change dispatcher runtime behavior
-- implement Production changes
-- implement QA changes
-- implement Learning changes
-- change providers/models
-- start capability benchmarking
-- create a new architecture version
-- reopen V3.2 R&D without new material evidence
+- reopen authority reconciliation
+- reopen V3.2 architecture review
+- recreate V3.2
+- create V3.3
 - reactivate V3.1
 - reactivate MAP_GUARD
-- create another authority document
-- create a second current operational map
-- synchronize Project Sources before the validated authority block is committed and pushed
-- commit unrelated changes
-- include secrets
-- repeat completed checks without a material reason
+- modify governance files without a new verified governance defect
+- change runtime merely to make documentation appear correct
+- create a second dispatcher
+- create a second runtime contour
+- activate legacy code without audit
+- implement several gaps at once
+- start provider migration without evidence
+- start capability benchmarking without a verified need
+- add infrastructure for future scale without evidence
+- build deferred V3.2 capabilities merely because they exist in the target
+- infer implementation from file presence
+- infer implementation from class/function presence
+- infer implementation from historical status documents
+- use placeholders or stubs in production
+- claim runtime success without runtime evidence
 
 ---
 
-## 9. Runtime Boundary
+## 9. Runtime Evidence Rule
 
-Architecture authority and runtime truth remain separate.
+Architecture describes target intent.
 
-Trusted V3.2 means:
+Runtime truth comes only from verified current repo/runtime evidence.
 
-the target architecture is authoritative.
+A capability is operational only when relevant evidence supports it.
 
-It does NOT mean:
+Relevant evidence may include:
 
-the current runtime already implements V3.2.
+- current implementation
+- valid input
+- successful execution
+- expected output
+- downstream consumption
+- validation
+- generated artifact
+- runtime log
+- reproducible behavior
+- observable failure behavior
 
-After authority publication completes, the next operational phase must compare:
+Historical runtime baselines may be used as evidence if their scope and freshness are understood.
 
-verified current repo/runtime
-against
-CURRENT_TRUSTED_DETAILED_TARGET
-
-before selecting implementation work.
-
-Do not infer implementation from documentation.
-
----
-
-## 10. Exit Condition
-
-AUTHORITY RECONCILIATION FINALIZATION completes only when:
-
-1. all seven migration-set files are verified
-2. final cross-file authority validation passes
-3. there is one active operational authority
-4. there is one trusted detailed-target authority
-5. V3.1 is FROZEN LEGACY
-6. MAP_GUARD is FROZEN LEGACY
-7. no permanent governance file hard-codes a detailed-target version
-8. no unexpected material authority conflict remains
-9. git diff contains only intended authority changes
-10. required validation/preflight passes
-11. authority block is committed
-12. authority block is pushed
-13. affected active Project Sources are synchronized
-14. final authority chain is verified
-15. this Active Map is then updated to PRODUCTION REENTRY MODE
-
-Until all applicable conditions pass:
-
-runtime implementation remains frozen.
+Do not modify baseline artifacts to make runtime appear compliant with V3.2.
 
 ---
 
-## 11. Next Phase
+## 10. Gap Selection Rule
 
-After successful publication and final authority verification:
+A gap is eligible for implementation only when:
 
-Mode:
-PRODUCTION REENTRY MODE
+1. the current runtime state is verified enough to establish the gap
+2. the target requirement is clear in `CURRENT_TRUSTED_DETAILED_TARGET`
+3. the change does not create a second active contour
+4. the change does not rely on FROZEN LEGACY or UNVERIFIED material as authority
+5. expected benefit is concrete
+6. runtime risk is understood
+7. validation path is explicit
 
-Objective:
+Prefer the smallest change that closes the highest-value real gap.
 
-Compare verified current runtime against:
-
-CURRENT_TRUSTED_DETAILED_TARGET
-
-Then:
-
-1. identify real implementation gaps
-2. rank by ROI / blocker value
-3. select exactly one implementation target
-4. implement
-5. validate with runtime evidence
-
-Do not automatically choose the largest architectural gap.
-
-Choose the highest-value verified blocker.
+Do not expand scope beyond the selected target.
 
 ---
 
-## 12. Current Next Action
+## 11. Current Known Runtime Evidence Boundary
+
+Known historical baseline directories include:
+
+- `projects/FM_RUNTIME_BASELINE_20260923/`
+- `projects/FM_RUNTIME_BASELINE_20260923_R2/`
+- `projects/FM_RUNTIME_BASELINE_20260923_R3/`
+
+These are evidence candidates.
+
+Their presence alone does not prove current runtime state.
+
+Before relying on them for a decision:
+
+verify only the specific evidence needed for the current gap question.
+
+Do not re-run a complete project-wide walkthrough unless new evidence makes it necessary.
+
+---
+
+## 12. Exit Condition
+
+PRODUCTION REENTRY MODE completes when:
+
+1. verified runtime evidence is sufficient to identify real gaps
+2. existing relevant components are classified
+3. exactly one highest-value implementation target is selected
+4. that target is explicitly authorized
+5. the next mode/step is updated to the specific implementation target
+
+This mode does NOT complete merely because a list of possible gaps exists.
+
+It completes when one concrete implementation target is chosen.
+
+---
+
+## 13. Current Next Action
 
 Current next action:
 
-Replace this exact file:
+Inspect the minimum verified current repo/runtime evidence required to identify the highest-value implementation gap against:
 
-`FLOWMIND_ACTIVE_MAP.md`
+`CURRENT_TRUSTED_DETAILED_TARGET`
 
-with this Authority System V2 version.
+Do not reopen governance.
 
-Then verify its SHA-256.
+Do not reopen architecture R&D.
 
-After that:
+Do not modify runtime yet.
 
-run exactly one final cross-file authority validation step.
-
-No runtime work yet.
+First identify and justify exactly one implementation target.
 
 End.
