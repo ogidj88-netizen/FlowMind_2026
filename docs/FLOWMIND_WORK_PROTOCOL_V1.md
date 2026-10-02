@@ -4,7 +4,11 @@ Status: ACTIVE WORK PROTOCOL
 
 Project: FlowMind / Imagine What If
 
-Scope: cooperation and execution discipline between Evgen and ChatGPT
+Updated: 2026-09-30
+
+Governance model: AUTHORITY SYSTEM V2
+
+Scope: cooperation and execution discipline between Evgen and ChatGPT; no current operational state
 
 ## 1. Purpose
 
@@ -25,6 +29,12 @@ Its purpose is to:
 - keep changes reviewable
 
 - preserve a single current operational authority
+
+- prevent authority-migration deadlocks
+
+- prevent repeated verification of already-settled facts
+
+- preserve completed evidence across chat boundaries
 
 This protocol does not define:
 
@@ -140,7 +150,7 @@ Valid evidence includes:
 
 ## 5. MAP CHECK rule
 
-Before technical or architectural work, ChatGPT must align with the current verified operational map.
+Before normal technical or architectural work, ChatGPT must align with the current verified operational map.
 
 Required fields:
 
@@ -158,11 +168,46 @@ Evidence:
 
 Verdict:
 
-If the current step or authority chain is unclear:
+For normal work:
 
-STOP.
+- Current step
+- Allowed action
+- Forbidden action
+- operational exit condition
+
+must come from FLOWMIND_ACTIVE_MAP.md.
+
+If normal current state or authority is unclear:
+
+STOP normal implementation.
 
 Do not guess.
+
+If the verified blocker is the authority chain itself and Evgen has explicitly authorized authority repair:
+
+use the Authority Reconciliation Procedure defined by:
+
+000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+During that bounded procedure, the MAP CHECK must explicitly say:
+
+Mode:
+AUTHORITY RECONCILIATION
+
+Transaction purpose:
+
+Current file:
+
+Runtime:
+FROZEN
+
+Expected migration mismatch:
+YES / NO
+
+Unexpected blocker:
+NONE / description
+
+Authority reconciliation is not permission for product/runtime implementation.
 
 ---
 
@@ -171,32 +216,112 @@ Do not guess.
 Authority classification uses exactly:
 
 - TRUSTED
-
 - FROZEN LEGACY
-
 - UNVERIFIED
+
+Authority roles are resolved by verified scope, content and classification.
+
+The exact detailed-target architecture filename/version must NOT be hard-coded in this protocol.
+
+The symbolic role:
+
+CURRENT_TRUSTED_DETAILED_TARGET
+
+is resolved through:
+
+FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
 
 A document is not trusted because of:
 
 - filename
-
 - ACTIVE label
-
 - CURRENT label
-
 - FINAL label
-
 - CANONICAL label
-
 - version number
-
 - GitHub presence
-
 - Project Sources presence
-
 - another document referencing it
 
-Actual content and freshness must be verified.
+Actual content, freshness, scope and classification must be verified.
+
+---
+
+## 6A. Authority reconciliation execution rule
+
+This section operationalizes the permanent recovery procedure in:
+
+000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+Authority reconciliation is allowed only to repair a verified authority inconsistency.
+
+Before the first edit, the transaction must state:
+
+- purpose
+- intended end state
+- migration set
+- files outside scope
+- runtime freeze
+- exit condition
+
+Execution remains:
+
+ONE FILE
+-> VERIFY
+-> RECORD RESULT
+-> NEXT FILE
+
+A multi-file authority transaction does NOT permit batch file editing.
+
+It permits sequential completion without restarting when an expected temporary mismatch exists between:
+
+- already-updated migration files
+and
+- not-yet-updated migration files
+
+Such a mismatch is:
+
+EXPECTED_MIGRATION_MISMATCH
+
+when it is inside the declared migration set and matches the intended end state.
+
+EXPECTED_MIGRATION_MISMATCH is not a reason to:
+
+- restart the migration
+- reopen completed architecture review
+- re-run completed gates
+- revert an already verified file
+- synchronize Project Sources prematurely
+
+During authority reconciliation:
+
+- runtime implementation is frozen
+- feature work is frozen
+- provider changes are frozen
+- unrelated cleanup is forbidden
+- files outside the migration set require explicit re-scope
+
+For each file:
+
+1. verify the actual source being replaced
+2. produce one full replacement
+3. Evgen replaces the file
+4. verify resulting evidence
+5. mark that file PASS or STOP
+6. carry PASS forward
+
+After all migration-set files pass:
+
+1. run one cross-file authority validation
+2. inspect intended git diff/status
+3. run required preflight/validation
+4. commit the authority block
+5. push
+6. synchronize required Project Sources
+7. verify final authority chain
+8. close the transaction
+
+Do not perform full cross-file publication validation after every individual file.
 
 ---
 
@@ -248,17 +373,29 @@ High-level product intent must come from:
 
 FLOWMIND_WORKING_TARGET.md
 
+Detailed-target identity and classification must come from:
+
+FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+
 Detailed target architecture must come from:
 
-FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
+CURRENT_TRUSTED_DETAILED_TARGET
+
+as resolved by the Registry.
 
 Runtime truth must come from current repo and runtime evidence.
 
-If these materially conflict:
+For normal implementation, unresolved material conflict means:
 
 STOP.
 
-Resolve the conflict before implementation.
+If the conflict is inside authority itself:
+
+do not deadlock.
+
+Use the bounded Authority Reconciliation Procedure.
+
+An EXPECTED_MIGRATION_MISMATCH inside an authorized migration set does not invalidate already completed file steps.
 
 ---
 
@@ -373,6 +510,18 @@ A third verification pass for the same decision question is allowed only when at
 - Evgen explicitly requests deeper verification
 
 ChatGPT must never create a verification loop by continuously checking already-established facts.
+
+A completed check or gate remains completed across later steps and later chats unless:
+
+- the checked input changed
+
+- the check failed
+
+- new material evidence appeared
+
+- a specific conflict requires that exact check to be revisited
+
+A new chat alone is never a reason to restart completed verification.
 
 User time is a first-class project constraint.
 
@@ -688,27 +837,27 @@ Do not commit after every individual file.
 
 Commit after one meaningful validated work block.
 
+For an Authority Reconciliation transaction:
+
+the declared migration set is normally one authority work block.
+
+Do not commit the half-migrated authority chain merely to make intermediate state durable unless a specific recovery reason requires it.
+
 Before commit:
 
 1. inspect git diff
-
 2. run relevant validations
-
 3. run preflight when appropriate
-
 4. inspect git status
-
 5. verify no unrelated files are included
-
-6. stage only intended changes
-
-7. create one precise commit
+6. verify the declared migration set reached its intended end state
+7. stage only intended changes
+8. create one precise commit
 
 After commit when the block must become durable shared truth:
 
-8. push to origin
-
-9. verify clean status
+9. push to origin
+10. verify clean status
 
 Do not rewrite history merely to make the log look cleaner unless explicitly required.
 
@@ -722,37 +871,83 @@ Project Sources are ChatGPT working context.
 
 Project Sources must not override newer verified repo truth.
 
-When an active authority file changes:
+For a normal isolated authority-file change:
 
 1. validate it
+2. include it in the appropriate validated work block
+3. commit
+4. push
+5. synchronize its Project Source copy
+6. verify actual Project Source content
 
-2. commit it
+For an Authority Reconciliation transaction:
 
-3. push it
+- do NOT synchronize Project Sources after every individual migration file
+- complete the declared migration set first
+- run final authority validation
+- commit and push the validated authority block
+- then synchronize the affected active Project Sources
+- then verify the final authority chain
 
-4. synchronize its Project Source copy
+During an unfinished authorized migration, a known repo/Project Source difference may be:
 
-5. verify actual Project Source content
+EXPECTED_MIGRATION_MISMATCH
+
+It must not force the migration to restart.
+
+After publication completes, any unresolved active-source mismatch becomes a defect.
 
 Internal upload filename suffixes do not define authority.
 
-Actual content does.
+Actual verified content does.
+
+### Durable future context
+
+Any verified decision, constraint, authority change, or work-state handoff that will guide future FlowMind work must be recorded in the appropriate existing canonical repo file and made available in the corresponding Project Source.
+
+Do not rely on chat memory alone.
+
+Keep one owner for each kind of information.
+
+Do not create a second current-state document merely to improve recall.
+
+Carry forward already verified evidence and completed checks.
+
+Repeat a check only when:
+
+- the relevant file changed
+- the check failed
+- new material evidence appeared
+- a specific conflict requires that check
 
 ---
 
 ## 24. New chat rule
 
-A new chat must recover current context from verified authority, not from memory alone.
+A new chat must recover current context from verified authority and verified durable evidence.
 
-Do not maintain multiple competing documents that each define:
+A new chat must NOT:
 
-- current project state
+- restart completed architecture review merely because chat context changed
+- restart a declared authority migration from file 1
+- reclassify a verified PASS without new evidence
+- let a stale Project Source override newer verified repo evidence
+- treat an expected migration mismatch as an unexpected failure
 
-- current next action
+If an Authority Reconciliation transaction is unfinished:
 
-- current allowed work
+1. recover the transaction purpose and intended end state
+2. recover which migration-set files already have verified PASS
+3. verify only the current unresolved file/state needed to continue
+4. continue from the last verified boundary
 
-The current operational state must be resolved through the verified authority chain.
+If the durable transaction state cannot be recovered sufficiently:
+
+classify the missing point as UNVERIFIED
+
+and obtain only the evidence necessary to resume.
+
+Do not recreate the whole project history.
 
 Historical start blocks may remain as history but must not silently become current authority.
 
@@ -866,31 +1061,47 @@ The final section must confirm:
 
 ## 26. Stop conditions
 
-STOP when:
+STOP normal implementation when:
 
 - current authority is unclear
-
-- relevant sources conflict
-
-- source freshness is unknown
-
-- required file content has not been verified
-
+- an UNPLANNED_MATERIAL_CONFLICT exists
+- source freshness required for the current decision is unknown
+- required file content has not been verified sufficiently
 - runtime evidence contradicts documentation
-
 - the action would create a second active contour
-
 - legacy would become active without audit
-
 - secrets may be exposed
-
 - implementation would proceed from an UNVERIFIED source
+- the next normal implementation action cannot be traced to the verified authority chain
 
-- the next action cannot be traced to the verified authority chain
+If authority itself is inconsistent:
+
+normal implementation remains STOPPED
+
+but bounded Authority Reconciliation is allowed when authorized under:
+
+000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+
+Do NOT STOP an authorized authority transaction merely because an:
+
+EXPECTED_MIGRATION_MISMATCH
+
+exists between already-updated and not-yet-updated files inside the declared migration set.
+
+STOP the transaction only for:
+
+- validation failure
+- unexpected material conflict
+- changed intended end state
+- evidence that invalidates the migration basis
+- unintended file changes
+- secret exposure risk
+- runtime modification
+- inability to determine the next safe authority-repair action
 
 Do not guess.
 
-Get evidence.
+Get only the evidence needed for the blocked decision.
 
 ---
 

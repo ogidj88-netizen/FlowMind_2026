@@ -2,7 +2,7 @@
 
 Status: CANONICAL CONTROL SPEC
 Project: FlowMind / Imagine What If
-Updated: 2026-09-18
+Updated: 2026-09-30
 Scope: control-plane contract only
 
 ## 1. Purpose
@@ -39,17 +39,23 @@ It is subordinate to the verified FlowMind authority chain.
 
 It must not override:
 
-- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
-- FLOWMIND_WORKING_TARGET.md
-- FLOWMIND_TARGET_ARCHITECTURE_V3_1.md
-- FLOWMIND_ACTIVE_MAP.md
+- `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
+- `FLOWMIND_WORKING_TARGET.md`
+- `CURRENT_TRUSTED_DETAILED_TARGET` as resolved by `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
+- `FLOWMIND_ACTIVE_MAP.md`
 - newer verified runtime evidence
+
+This specification must not hard-code a particular detailed-target architecture version.
 
 If this specification materially conflicts with current verified runtime evidence:
 
-STOP.
+STOP runtime implementation.
 
 Audit the conflict before changing runtime behavior.
+
+If the conflict is inside authority itself:
+
+use the bounded Authority Reconciliation Procedure defined by the permanent operating discipline.
 
 ---
 
@@ -402,17 +408,25 @@ Where a transition is not naturally idempotent, the implementation must explicit
 
 ---
 
-## 19. Current audit rule
+## 19. Authority-change boundary
 
-During the authority/source reconciliation phase:
+Authority reconciliation and dispatcher redevelopment are separate activities.
+
+During any authority-reconciliation transaction:
 
 - do not rewrite dispatcher runtime
 - do not activate legacy dispatcher paths
-- do not change phase behavior merely to match this document
+- do not change phase behavior merely to match authority-document wording
 - do not assume historical implementation paths are current
-- audit specification and runtime separately
+- inspect specification and runtime as separate evidence domains
 
-The current task is authority alignment, not dispatcher redevelopment.
+An authority-document change does not authorize dispatcher implementation changes.
+
+Runtime changes require a later explicit operational step from:
+
+`FLOWMIND_ACTIVE_MAP.md`
+
+and relevant current repo/runtime evidence.
 
 ---
 

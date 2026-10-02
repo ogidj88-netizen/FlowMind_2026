@@ -2,45 +2,25 @@
 
 Status: ACTIVE AUTHORITY INDEX
 Project: FlowMind / Imagine What If
-Updated: 2026-09-24
-Mode: FAIL-CLOSED AUTHORITY REGISTRY
-Scope: authority classification and routing only; no current operational authority
-
-Publication transition note:
-
-This working-copy update defines the intended authority state after V3.1 promotion.
-
-It does not become published authority merely because this file is edited locally.
-
-Until:
-
-- validation passes
-- publication gates pass
-- intended authority files are committed and pushed
-- required Project Sources are synchronized
-- final authority-chain verification passes
-
-the previously published authority state remains effective.
-
----
+Governance model: AUTHORITY SYSTEM V2
+Updated: 2026-09-30
+Scope: authority classification, role-to-file routing and publication-state rules only; no current operational state
 
 ## 1. Purpose
 
-This file records verified authority classification and routing for FlowMind.
+This file is the single owner of FlowMind authority classification and role-to-file routing.
 
-Its purpose is to prevent:
+It exists to answer:
 
-- stale authority
-- duplicated authority
-- filename-based trust
-- historical documents silently controlling current work
-- legacy documents returning as active guidance
-- architecture documents being mistaken for runtime proof
-- stale Project Source copies overriding newer repo truth
-- overlapping authority roles
-- incomplete architecture migrations creating split authority
+- which file owns each authority role
+- which files are TRUSTED
+- which files are FROZEN LEGACY
+- which files are UNVERIFIED
+- which exact file is CURRENT_TRUSTED_DETAILED_TARGET
+- which files belong to the active authority set
+- how authority publication and Project Source synchronization are completed
 
-This registry does NOT define:
+This file does NOT define:
 
 - current mode
 - current objective
@@ -50,20 +30,21 @@ This registry does NOT define:
 - current allowed work
 - current forbidden work
 - current operational exit condition
+- runtime implementation truth
 
 All current operational state belongs exclusively to:
 
-`FLOWMIND_ACTIVE_MAP.md`
+FLOWMIND_ACTIVE_MAP.md
 
-This registry does not grant authority merely because a file is listed.
+Runtime truth belongs to:
 
-Actual content, freshness, scope, conflicts, and relevant evidence must be verified.
+verified repo and runtime evidence.
 
 ---
 
-## 2. Status Model
+## 2. Status model
 
-Every authority candidate is classified as exactly one of:
+Every authority-shaped file is classified as exactly one of:
 
 - TRUSTED
 - FROZEN LEGACY
@@ -71,404 +52,316 @@ Every authority candidate is classified as exactly one of:
 
 ### TRUSTED
 
-Verified for the explicit scope stated in this registry.
+Verified and authorized for the explicit scope assigned in this Registry.
 
 ### FROZEN LEGACY
 
-Historical, retired, or superseded material that must not control current work.
+Historical, retired, superseded or intentionally deactivated material.
+
+It may be used as evidence.
+
+It must not control current work.
 
 ### UNVERIFIED
 
-Must not control architecture, implementation, or current work until audited.
+Not authorized to control current work.
 
 If evidence is insufficient:
 
 UNVERIFIED.
 
----
+No additional trust label is required.
 
-## 3. Authority Publication Gate
-
-Authority changes must not be committed or pushed while any material risk remains unresolved.
-
-Do not commit or push an authority change if:
-
-- authority documents materially conflict
-- a changed authority file has not been content-verified
-- required validation fails
-- git diff contains unexplained changes
-- preflight fails
-- an intended classification is unsupported by evidence
-- secrets or unrelated changes may be included
-- the active authority chain is internally inconsistent
-- changed Project Source and repo versions cannot be reconciled
-- a superseded authority is still referenced as active by another trusted authority file
-
-A request to commit does not override a failed safety or consistency gate.
-
-Resolve the blocker first.
-
-Then validate again.
-
-A changed authority file remains a candidate working copy until:
-
-1. exact contents are verified
-2. required validation passes
-3. publication gates pass
-4. intended version is committed
-5. intended version is pushed
-6. corresponding active Project Source is synchronized when applicable
-7. final authority chain is verified
+Publication/migration state is separate from classification.
 
 ---
 
-# 4. Authority Roles
+## 3. Canonical authority roles
 
-Authority is role-based.
+### 3.1 Permanent operating discipline
 
-No filename or document may grant itself permanent authority.
+Role:
+PERMANENT_OPERATING_DISCIPLINE
 
----
-
-## 4.1 Permanent Operating Discipline
-
+File:
 `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
 
 Classification:
-
 TRUSTED
 
 Controls:
 
-- highest-priority permanent FlowMind operating discipline
-- anti-drift rules
-- authority verification discipline
-- source verification discipline
-- source synchronization discipline
+- permanent anti-drift rules
+- authority reconciliation rules
+- source-verification discipline
+- authority-migration safety rules
 - fail-closed behavior
-- one-step discipline
+- permanent one-step governance
 
 Does not define current operational state.
 
-Does not define detailed target architecture.
-
-Does not prove runtime implementation.
-
 ---
 
-## 4.2 Product Intent
+### 3.2 Product intent
 
+Role:
+PRODUCT_INTENT
+
+File:
 `FLOWMIND_WORKING_TARGET.md`
 
 Classification:
-
 TRUSTED
 
 Controls:
 
 - high-level product intent
 - optimization principles
-- minimalism / ROI boundaries
 - scope discipline
+- minimalism / ROI boundaries
 
-Does not define detailed target architecture.
+Does not define detailed architecture.
 
-Does not define current operational state.
-
-Does not prove runtime implementation.
-
----
-
-## 4.3 Detailed Target Architecture
-
-`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
-
-Classification:
-
-TRUSTED after publication gate completion.
-
-Until publication gate completion, the local edited version is a candidate working copy and the last published trusted target remains effective.
-
-Controls:
-
-- detailed V3.1 target architecture
-- seven logical system blocks
-- target capability ownership
-- Control Plane boundary
-- Opportunity Intelligence
-- Editorial Brain
-- Production Brain
-- Render / Quality / Compliance
-- Delivery / Learning
-- Capability Evolution
-- persistent state and learning memory
-- provider abstraction
-- Capability Registry
-- Human Decision Gateway
-- cloud-first target
-- cost and latency governance
-- rights/compliance target
-- target migration principles
-- deferred architectural scope
-
-Defines where FlowMind is evolving toward architecturally.
-
-Does NOT define:
-
-- current operational state
-- current implementation sequence
-- current implementation permission
-- runtime truth
-
-Does not prove that any V3.1 capability is implemented.
-
-Architecture destination does not override runtime evidence.
+Does not define runtime truth.
 
 ---
 
-## 4.4 Current Operational Authority
+### 3.3 Detailed target architecture
 
-`FLOWMIND_ACTIVE_MAP.md`
+Role:
+CURRENT_TRUSTED_DETAILED_TARGET
+
+File:
+`FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
 
 Classification:
-
 TRUSTED
 
 Controls:
 
-- where current work is
+- detailed target architecture
+- target capability ownership
+- architectural boundaries
+- target contracts and artifacts
+- architecture destination
+- migration principles
+- deferred architectural scope
+
+This role is the ONLY canonical pointer to the current trusted detailed target.
+
+Permanent governance files must reference:
+
+CURRENT_TRUSTED_DETAILED_TARGET
+
+rather than hard-code an architecture version.
+
+The architecture file does not define current operational state.
+
+The architecture file does not prove runtime implementation.
+
+---
+
+### 3.4 Current operational authority
+
+Role:
+CURRENT_OPERATIONAL_AUTHORITY
+
+File:
+`FLOWMIND_ACTIVE_MAP.md`
+
+Classification:
+TRUSTED
+
+Controls only:
+
 - current mode
 - current objective
 - current step
 - current allowed work
 - current forbidden work
-- current next operational action
-- current operational exit conditions
+- current next action
+- current operational exit condition
 
-This is the single current operational authority.
-
-Historical maps, start blocks, sequences, architecture files, registries, and work anchors must not compete with it.
-
-Target architecture defines destination.
-
-Active Map defines where work happens now.
-
-Runtime evidence defines what actually exists.
+No other active authority file may independently own those fields.
 
 ---
 
-## 4.5 Execution Discipline
+### 3.5 Execution discipline
 
+Role:
+EXECUTION_DISCIPLINE
+
+File:
 `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
 
 Classification:
-
 TRUSTED
 
 Controls:
 
 - one-step execution
-- evidence requirements
-- file-edit discipline
+- MAP CHECK procedure
+- evidence sufficiency
+- anti-loop verification
+- full-file replacement discipline
 - validation discipline
-- failure handling
-- idempotency
-- secrets
-- architecture discipline
 - Git discipline
-- Project Sources synchronization discipline
+- Project Sources synchronization procedure
 - response discipline
-- stop conditions
+- authority-reconciliation execution procedure
 
-Does not define current project state.
+Does not define current operational state.
 
-Does not define target architecture.
-
----
-
-## 4.6 Map Guard
-
-`docs/FLOWMIND_MAP_GUARD_V1.md`
-
-Classification:
-
-TRUSTED
-
-Controls:
-
-- mandatory MAP CHECK
-- authority alignment before technical work
-- anti-drift stop conditions
-
-Does not define:
-
-- current operational state
-- detailed target architecture
-- runtime truth
+Does not define detailed-target identity.
 
 ---
 
-## 4.7 Control-Plane Semantics
+### 3.6 Control-plane semantics
 
+Role:
+CONTROL_PLANE_SEMANTICS
+
+File:
 `CANONICAL_DISPATCHER_SPEC.md`
 
 Classification:
-
 TRUSTED
 
-Scope:
+Controls only:
 
-control-plane semantics only.
-
-Controls:
-
+- dispatcher/control-plane semantic contract
 - state-transition discipline
 - guarded transitions
-- HALT / resume behavior
-- state mutation rules
+- HALT / resume semantics
+- state mutation discipline
 - approval/control semantics
-- fail-closed dispatcher behavior
 
 Does not define:
 
 - product strategy
 - current operational state
-- detailed target architecture
-- runtime truth
-
-The V3.1 Control Plane must evolve from verified control-plane semantics.
-
-V3.1 does not authorize a second dispatcher or second execution authority.
+- detailed-target identity
+- runtime proof
 
 ---
 
-## 4.8 Authority Index
+### 3.7 Authority registry
 
+Role:
+AUTHORITY_REGISTRY
+
+File:
 `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
 
 Classification:
-
 TRUSTED
-
-Scope:
-
-authority classification and routing only.
 
 Controls:
 
+- role-to-file routing
 - TRUSTED / FROZEN LEGACY / UNVERIFIED classification
-- authority-role routing
-- publication safety rules
-- Project Sources synchronization rules
+- CURRENT_TRUSTED_DETAILED_TARGET pointer
+- active authority set
+- authority publication rules
+- Project Sources authority synchronization rules
 
 Does not define current operational state.
 
-Does not prove runtime implementation.
-
 ---
 
-## 4.9 Runtime Truth
+### 3.8 Runtime truth
 
-Runtime truth comes from verified current repo and runtime evidence.
+Role:
+RUNTIME_TRUTH
+
+Source:
+verified current repo and runtime evidence
 
 Relevant evidence may include:
 
-- implementation
-- valid inputs
-- valid outputs
+- current code
+- valid input/output
 - validation output
-- generated artifacts
+- generated artifact
 - downstream consumption
-- runtime logs
+- runtime log
 - reproducible execution
 - failure behavior
 
 Documents are not runtime proof.
 
-Architecture is not runtime proof.
+---
 
-A V3.1 capability is not considered operational merely because it appears in the target architecture.
+## 4. Active authority set
+
+The active authority set is:
+
+1. `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
+2. `FLOWMIND_WORKING_TARGET.md`
+3. `FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
+4. `FLOWMIND_ACTIVE_MAP.md`
+5. `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
+6. `CANONICAL_DISPATCHER_SPEC.md`
+7. `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
+
+Only these files hold active authority roles defined by this Registry.
+
+A file not listed here does not gain active authority merely because it exists in repo or Project Sources.
 
 ---
 
-# 5. TRUSTED Authority Files
+## 5. FROZEN LEGACY set
 
-After successful V3.1 publication, the intended TRUSTED authority set is:
+The following files are explicitly FROZEN LEGACY:
 
-| Path | Verified scope |
-|---|---|
-| `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md` | Highest-priority permanent operating discipline |
-| `FLOWMIND_WORKING_TARGET.md` | High-level product intent |
-| `FLOWMIND_TARGET_ARCHITECTURE_V3_1.md` | Detailed target architecture |
-| `FLOWMIND_ACTIVE_MAP.md` | Single current operational authority |
-| `docs/FLOWMIND_WORK_PROTOCOL_V1.md` | Execution and cooperation discipline |
-| `docs/FLOWMIND_MAP_GUARD_V1.md` | MAP CHECK and anti-drift guard |
-| `CANONICAL_DISPATCHER_SPEC.md` | Control-plane semantics only |
-| `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md` | Authority classification and routing |
+- `FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
+- `FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
+- `docs/FLOWMIND_MAP_GUARD_V1.md`
+- `CHAT_START_BLOCK_FLOWMIND_CURRENT.md`
+- `FLOWMIND_CURRENT_WORK_ANCHOR.md`
+- `FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md`
+- `FLOWMIND_REPO_TRUST_BOUNDARY_V1.md`
+- `FLOWMIND_SYSTEM_MAP_V1.md`
+- `FLOWMIND_ACTION_SEQUENCE_V1.md`
+- `FLOWMIND_CANONICAL_STRUCTURE.md`
+- `docs/FLOWMIND_HARD_RULESET_V1.md`
+- `CHAT_START_BLOCK.txt`
+- `MASTER_PROMPTS_v2_FULL.txt`
 
-A changed authority file remains a candidate working copy until publication gates complete.
+Also FROZEN LEGACY by category unless explicitly re-audited and reclassified:
 
----
+- old IronCore authority-shaped material
+- old horror-specific authority-shaped material
+- old migration-era architecture
+- retired runtime contour documents
+- historical start blocks and work anchors
 
-# 6. FROZEN LEGACY Authority-Shaped Files
+FROZEN LEGACY material may:
 
-| Path | Historical scope |
-|---|---|
-| `FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md` | Superseded V2.1 detailed target architecture |
-| `CHAT_START_BLOCK_FLOWMIND_CURRENT.md` | Historical operational checkpoint |
-| `FLOWMIND_CURRENT_WORK_ANCHOR.md` | Historical Director Brain preparation checkpoint |
-| `FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md` | Historical recovery trust-boundary checkpoint |
-| `FLOWMIND_REPO_TRUST_BOUNDARY_V1.md` | Historical repository trust-boundary checkpoint |
-| `FLOWMIND_SYSTEM_MAP_V1.md` | Historical recovery system map |
-| `FLOWMIND_ACTION_SEQUENCE_V1.md` | Historical recovery execution sequence |
-| `FLOWMIND_CANONICAL_STRUCTURE.md` | Historical architecture checkpoint |
-| `docs/FLOWMIND_HARD_RULESET_V1.md` | Historical R01-R16 work-discipline checkpoint |
-| `MASTER_PROMPTS_v2_FULL.txt` | Historical IronCore / horror prompt artifact; source-only |
-| `CHAT_START_BLOCK.txt` | Historical start block; source-only |
-| old IronCore v3.5 references | Historical context only |
-| old horror rules | Historical or niche-specific material only |
-| old migration-era architecture | Historical context only |
-| retired runtime contours | Historical or retired runtime structures |
+- be read
+- be compared
+- provide historical evidence
+- provide donor ideas after audit
 
-`FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md` is retained for architecture history and migration evidence.
-
-It must not control new target decisions after V3.1 publication.
-
-FROZEN LEGACY material:
-
-- may be read
-- may be compared
-- may provide historical evidence
-- may provide donor ideas after review
-
-It must not:
+It must NOT:
 
 - define current state
 - define current next action
 - define current architecture
-- define current implementation permission
+- define implementation permission
 - regain runtime authority
-- silently influence active decisions
+- override the active authority set
+- silently influence current decisions
 
-Promotion from FROZEN LEGACY requires explicit re-audit and verified reclassification.
+Promotion from FROZEN LEGACY requires explicit re-audit and Registry reclassification.
 
 ---
 
-# 7. UNVERIFIED Default
+## 6. UNVERIFIED default
 
-Anything not explicitly classified as TRUSTED or FROZEN LEGACY in this registry is:
+Anything authority-shaped that is not explicitly classified as TRUSTED or FROZEN LEGACY here is:
 
 UNVERIFIED.
-
-This includes:
-
-- authority-shaped documents not yet classified
-- runtime components without sufficient evidence
-- stale Project Source copies
-- ambiguous repo files
-- undocumented control paths
-- historical classifications not re-verified
-- architecture candidates before publication completion
 
 Do not infer trust from:
 
@@ -482,8 +375,8 @@ Do not infer trust from:
 - version number
 - age
 - Git history
-- existence in GitHub
-- existence in Project Sources
+- GitHub presence
+- Project Sources presence
 - another document referencing it
 
 Review first.
@@ -492,86 +385,137 @@ Then classify.
 
 ---
 
-# 8. Runtime Classification Rule
+## 7. Architecture-version rule
 
-Historical runtime classifications do not automatically survive into the current registry.
+Only this Registry may bind:
 
-Runtime components require scope-specific evidence.
+CURRENT_TRUSTED_DETAILED_TARGET
 
-Potential evidence includes:
+to a concrete architecture file.
 
-- code inspection
-- input contract
-- output contract
-- validation
-- artifact production
-- downstream consumer
-- reproducible runtime execution
-- failure behavior
+Permanent governance files must not hard-code the current detailed-target architecture version.
 
-No runtime component becomes trusted implementation merely because:
+When a future architecture replaces the current target:
 
-- V2.1 described it
-- V3.1 describes it
-- an older registry described it
-- a Project Source contains it
-- a test fixture produced something similarly named
+1. candidate architecture is created and validated
+2. authority reconciliation / publication transaction is declared
+3. affected authority files are reconciled
+4. this Registry updates CURRENT_TRUSTED_DETAILED_TARGET
+5. superseded target becomes FROZEN LEGACY
+6. final authority validation passes
+7. validated authority block is committed and pushed
+8. Project Sources are synchronized
+9. final authority chain is verified
 
-Target architecture is not runtime proof.
+A future version change should not require architecture-version edits in unrelated permanent governance rules.
 
 ---
 
-# 9. Validation Tools Rule
+## 8. Authority reconciliation and expected mismatch
 
-A validation tool does not become architecture authority merely because it executes successfully.
+Authority reconciliation is defined by:
 
-`tools/preflight.sh` may be used as a validation helper only after its contents have been inspected sufficiently to establish that running it is safe and relevant.
+`000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
 
-A successful preflight proves only the checks that the script actually performs.
+and executed under:
 
-It does not automatically:
+`docs/FLOWMIND_WORK_PROTOCOL_V1.md`
 
-- make scanned files TRUSTED
-- prove runtime behavior outside its checks
-- prove V3.1 is implemented
-- authorize production work
-- validate unknown external providers
-- validate business outcomes
+During an authorized multi-file authority transaction:
+
+EXPECTED_MIGRATION_MISMATCH
+
+may temporarily exist between:
+
+- already-updated migration files
+and
+- not-yet-updated migration files
+
+This expected mismatch:
+
+- does not create a second authority
+- does not authorize runtime work
+- does not invalidate completed file PASS results
+- does not require migration restart
+- does not require premature Project Source synchronization
+
+An unexpected conflict outside the declared migration set is not protected by this rule.
+
+That is:
+
+UNPLANNED_MATERIAL_CONFLICT
+
+and must be resolved before transaction completion.
 
 ---
 
-# 10. Project Sources Synchronization Rule
+## 9. Publication gate
+
+Authority publication is evaluated at the validated work-block / transaction level.
+
+Do not commit or push an authority block if:
+
+- a migration-set file failed validation
+- an UNPLANNED_MATERIAL_CONFLICT remains
+- the active authority set would contain duplicate role owners
+- CURRENT_TRUSTED_DETAILED_TARGET is ambiguous
+- current operational authority is duplicated
+- control-plane authority is duplicated
+- git diff contains unexplained changes
+- preflight or required validation fails
+- secrets or unrelated changes may be included
+- intended classifications are unsupported
+
+Do not block publication merely because an EXPECTED_MIGRATION_MISMATCH existed during intermediate sequential edits.
+
+Before commit/push, that expected mismatch must be resolved across the completed migration set.
+
+Publication sequence:
+
+1. complete migration-set file replacements
+2. verify each file
+3. run one final cross-file authority validation
+4. inspect git diff/status
+5. run required validation / preflight
+6. stage only intended changes
+7. commit the validated authority block
+8. push
+9. synchronize affected active Project Sources
+10. verify synchronized contents
+11. verify final authority chain
+
+---
+
+## 10. Project Sources rule
 
 GitHub repository is the durable project master.
 
 Project Sources are ChatGPT working context.
 
-Project Sources do not become source of truth merely because they are uploaded.
-
 An active Project Source must:
 
-1. have verified content
-2. have a defined authority role
-3. have a current classification
-4. not conflict with newer verified repo evidence
-5. match the intended committed repo version when a repo version exists
+- correspond to an active authority role or be clearly non-authoritative context
+- match the intended committed repo version when the repo version exists
+- not override newer verified repo evidence
+- not silently reactivate FROZEN LEGACY material
 
-A stale Project Source copy is UNVERIFIED as a working copy until synchronized.
+During an unfinished authorized authority transaction:
 
-When an active authority file changes:
+repo/Project Source mismatch may temporarily be:
 
-1. verify changed repo content
-2. pass required validation
-3. commit intended version
-4. push intended version
-5. synchronize corresponding Project Source
-6. verify Project Source reflects the intended committed authority
+EXPECTED_MIGRATION_MISMATCH
 
-For the V3.1 transition:
+when it is a known consequence of the declared transaction.
 
-- the old V2.1 Project Source must not remain the active detailed target source after V3.1 publication
-- the V3.1 Project Source must match the committed V3.1 repo file
-- Project Source synchronization occurs after commit/push, not before
+Project Sources synchronization occurs:
+
+after the validated authority block is committed and pushed.
+
+Do not synchronize each authority file independently in the middle of the transaction unless a specific recovery reason requires it.
+
+After synchronization:
+
+any unresolved mismatch in an active authority source is a defect.
 
 Internal upload suffixes such as:
 
@@ -579,300 +523,169 @@ Internal upload suffixes such as:
 - `(2)`
 - `(3)`
 
-do not create new logical authority when canonical identity and verified content show they are copies of the same file.
+do not create a new logical authority when verified content identifies the same canonical file.
 
 ---
 
-# 11. Active Project Source Authority Set
+## 11. Current-state rule
 
-After successful V3.1 publication and synchronization, the intended active authority context is:
-
-- `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
-- `FLOWMIND_WORKING_TARGET.md`
-- `FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
-- `FLOWMIND_ACTIVE_MAP.md`
-- `docs/FLOWMIND_MAP_GUARD_V1.md`
-- `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
-- `CANONICAL_DISPATCHER_SPEC.md`
-- `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
-
-`FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md` becomes FROZEN LEGACY and must remain outside active target decision context.
-
-Legacy Project Sources must remain outside active decision context.
-
-Historical repository copies may remain where required for evidence.
-
-Removing a legacy Project Source does not require deleting historical Git evidence.
-
----
-
-# 12. Verified Classification Record
-
-After successful V3.1 publication:
-
-1. `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
-   - TRUSTED
-   - highest-priority permanent operating discipline
-
-2. `FLOWMIND_WORKING_TARGET.md`
-   - TRUSTED
-   - high-level product intent only
-
-3. `FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
-   - TRUSTED
-   - detailed target architecture only
-
-4. `FLOWMIND_ACTIVE_MAP.md`
-   - TRUSTED
-   - single current operational authority
-
-5. `docs/FLOWMIND_MAP_GUARD_V1.md`
-   - TRUSTED
-   - MAP CHECK and anti-drift enforcement only
-
-6. `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
-   - TRUSTED
-   - execution discipline only
-
-7. `CANONICAL_DISPATCHER_SPEC.md`
-   - TRUSTED
-   - control-plane semantics only
-
-8. `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
-   - TRUSTED
-   - authority classification and routing only
-
-9. `FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
-   - FROZEN LEGACY
-   - superseded detailed target architecture
-
-10. `CHAT_START_BLOCK_FLOWMIND_CURRENT.md`
-    - FROZEN LEGACY
-
-11. `FLOWMIND_CURRENT_WORK_ANCHOR.md`
-    - FROZEN LEGACY
-
-12. `FLOWMIND_TRUSTED_BOUNDARY_LIST_V1.md`
-    - FROZEN LEGACY
-
-13. `FLOWMIND_REPO_TRUST_BOUNDARY_V1.md`
-    - FROZEN LEGACY
-
-14. `FLOWMIND_SYSTEM_MAP_V1.md`
-    - FROZEN LEGACY
-
-15. `FLOWMIND_ACTION_SEQUENCE_V1.md`
-    - FROZEN LEGACY
-
-16. `FLOWMIND_CANONICAL_STRUCTURE.md`
-    - FROZEN LEGACY
-
-17. `docs/FLOWMIND_HARD_RULESET_V1.md`
-    - FROZEN LEGACY
-
-18. `CHAT_START_BLOCK.txt`
-    - FROZEN LEGACY
-    - source-only historical artifact
-
-19. `MASTER_PROMPTS_v2_FULL.txt`
-    - FROZEN LEGACY
-    - source-only historical artifact
-
-This record describes classification.
-
-It does not define current work.
-
----
-
-# 13. V2.1 -> V3.1 Authority Transition
-
-The V3.1 transition is a target-architecture authority replacement.
-
-It is NOT:
-
-- a runtime rewrite
-- an automatic migration of code
-- permission to create a second contour
-- permission to reactivate legacy code
-- permission to rewrite the dispatcher
-- proof that V3.1 capabilities exist
-
-Transition intent:
-
-`FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
-
-changes from:
-
-TRUSTED detailed target architecture
-
-to:
-
-FROZEN LEGACY historical architecture.
-
-`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
-
-changes from:
-
-UNVERIFIED candidate working copy
-
-to:
-
-TRUSTED detailed target architecture
-
-only when publication gates complete.
-
-If publication fails:
-
-STOP.
-
-The last verified published authority remains effective.
-
----
-
-# 14. Permanent Prohibitions
-
-Do not:
-
-- trust a file because another file calls it TRUSTED
-- use FROZEN LEGACY as active guidance
-- use UNVERIFIED material to drive implementation
-- treat architecture documentation as runtime evidence
-- treat validation success as proof beyond validation scope
-- treat test artifacts as production permission
-- reactivate legacy modules without explicit audit
-- allow historical next-action instructions to override `FLOWMIND_ACTIVE_MAP.md`
-- maintain a second operational authority
-- maintain a second production dispatcher
-- commit or push an authority change while material risk remains unresolved
-- print or commit secrets
-- use `.env` as architecture or product truth
-- store current operational state in this registry
-- silently switch target architecture
-- silently promote a provider/model into production
-- let a stale Project Source override committed repo authority
-
----
-
-# 15. Classification Change Rule
-
-A classification or authority-role change requires:
-
-1. exact file identification
-2. actual content verification
-3. freshness check
-4. conflict check
-5. scope verification
-6. relevant repo/runtime evidence when applicable
-7. explicit TRUSTED / FROZEN LEGACY / UNVERIFIED classification
-8. validation of changed authority files
-9. publication-gate verification before commit or push
-10. Project Source synchronization when applicable
-11. final authority-chain verification
-
-Do not silently promote authority.
-
-Do not silently demote authority.
-
-Do not infer classification from a filename.
-
----
-
-# 16. Relationship to Current Operational State
-
-This registry must not store a phase-specific:
+This Registry must not store:
 
 - current mode
 - current objective
 - current step
 - current next action
 - current implementation priority
-- current forbidden-work list
+- current allowed work
+- current forbidden work
 - current operational exit condition
 
-Those belong exclusively to:
+Those belong only to:
 
-`FLOWMIND_ACTIVE_MAP.md`
+FLOWMIND_ACTIVE_MAP.md
 
-When FlowMind changes phase, this registry does not need modification unless:
+This Registry may define stable authority roles and classifications.
 
-- an authority classification changes
-- an authority role changes
-- the active authority set changes
-- a synchronization/trust rule changes
-
-The V2.1 -> V3.1 target transition qualifies because:
-
-- detailed target authority changes
-- active authority set changes
-- active Project Source set changes
+It must not become a second Active Map.
 
 ---
 
-# 17. Registry Validity Rule
+## 12. Runtime classification rule
 
-This registry remains valid only while:
+Authority classification and runtime/component state are separate systems.
 
-- classifications are evidence-based
-- roles do not overlap ambiguously
-- `FLOWMIND_ACTIVE_MAP.md` remains the single current operational authority
+Runtime components may have operational labels such as:
+
+- ACTIVE
+- DONOR
+- ARCHIVE
+- BROKEN
+- IDEA
+- UNKNOWN
+
+Those labels do not grant document authority.
+
+No runtime component becomes implemented merely because:
+
+- target architecture describes it
+- a historical architecture described it
+- an authority file references it
+- a Project Source contains it
+- a test fixture resembles it
+
+Runtime capability requires relevant runtime evidence.
+
+---
+
+## 13. Validation-tools rule
+
+A validation tool proves only what it actually checks.
+
+For example:
+
+`tools/preflight.sh`
+
+may be used only after its relevant behavior is understood sufficiently for the current purpose.
+
+A passing validation does not automatically:
+
+- make every scanned file TRUSTED
+- prove end-to-end runtime behavior
+- prove business outcomes
+- validate unknown providers
+- authorize unrelated implementation
+
+Use validation evidence within its actual scope.
+
+---
+
+## 14. Classification-change rule
+
+A classification or authority-role change requires enough evidence to establish:
+
+1. exact file identity
+2. actual current content
+3. intended role
+4. material conflicts
+5. intended classification
+6. required validation
+7. publication state
+8. Project Source synchronization state where applicable
+
+Do not silently promote authority.
+
+Do not silently demote authority.
+
+Do not infer classification from filename.
+
+Do not repeat already-completed verification without a material reason.
+
+---
+
+## 15. Registry validity
+
+This Registry is valid only while:
+
+- each active authority role has one owner
+- CURRENT_TRUSTED_DETAILED_TARGET resolves to one file
+- FLOWMIND_ACTIVE_MAP.md remains the single current operational authority
 - FROZEN LEGACY remains outside active guidance
 - UNVERIFIED material cannot drive implementation
 - runtime truth remains evidence-based
-- Project Source mismatches fail closed
-- publication gates block unresolved authority risk
-- one detailed target architecture is active
-- one control-plane authority is active
-- V3.1 architecture does not become runtime truth merely through documentation
+- permanent governance files do not hard-code detailed-target versions
+- authority reconciliation distinguishes EXPECTED_MIGRATION_MISMATCH from UNPLANNED_MATERIAL_CONFLICT
+- Project Source mismatches are resolved at publication completion
+- one control-plane authority remains active
 
-If any of these conditions are violated:
+If those conditions are violated:
 
-STOP.
+STOP normal implementation.
 
-Reconcile authority before relying on the registry.
+Use authority reconciliation when the conflict is inside authority itself.
 
 ---
 
-# 18. Final Authority Model After V3.1 Promotion
+## 16. Current canonical authority model
 
-Permanent discipline:
-
+Permanent operating discipline:
 `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
 
 Product intent:
-
 `FLOWMIND_WORKING_TARGET.md`
 
-Detailed target architecture:
+Detailed-target identity:
+`FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
+role:
+CURRENT_TRUSTED_DETAILED_TARGET
 
-`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
+Current trusted detailed target:
+`FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
 
 Current operational authority:
-
 `FLOWMIND_ACTIVE_MAP.md`
 
 Execution discipline:
-
 `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
 
-MAP CHECK / anti-drift:
-
-`docs/FLOWMIND_MAP_GUARD_V1.md`
-
 Control-plane semantics:
-
 `CANONICAL_DISPATCHER_SPEC.md`
 
 Authority classification:
-
 `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
 
 Runtime truth:
-
 verified repo and runtime evidence
 
-Historical V2.1 target:
+Historical V3.1 target:
+`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
+-> FROZEN LEGACY
 
+Historical V2.1 target:
 `FLOWMIND_TARGET_ARCHITECTURE_V2_12_MODULES.md`
+-> FROZEN LEGACY
+
+Historical Map Guard:
+`docs/FLOWMIND_MAP_GUARD_V1.md`
 -> FROZEN LEGACY
 
 End.
