@@ -471,7 +471,60 @@ A technical change is not complete merely because code was written.
 
 ---
 
-## 10A. Verification sufficiency and anti-loop rule
+## 10A. API dependency preflight rule
+
+Before launching, testing, or diagnosing any runtime module, determine whether that module depends on an external API or provider.
+
+If no external API/provider is required:
+
+- continue with the normal module validation path
+
+If an external API/provider is required:
+
+1. identify the exact provider and capability used by the module
+2. identify the exact required credentials and configuration
+3. verify required credentials/configuration are present
+4. verify credentials are valid for the intended provider/account
+5. verify required permissions, scopes, or API restrictions where applicable
+6. verify quota, rate-limit state, account access, and provider availability when relevant to the planned test
+7. only after sufficient API preflight evidence exists, run or diagnose the module itself
+
+An API/provider preflight failure must not be silently classified as a module implementation defect.
+
+Where evidence allows, distinguish failures such as:
+
+- CONFIG_ERROR
+- AUTH_ERROR
+- PERMISSION_ERROR
+- QUOTA_ERROR
+- PROVIDER_ERROR
+- RUNTIME_ERROR
+
+If required API/provider preflight fails:
+
+- STOP that module test path
+- surface the provider/configuration failure clearly
+- correct or reconcile that dependency before attributing the failure to module code
+
+Secrets must never be printed, logged, committed, or uploaded to Project Sources during preflight.
+
+Use `.env`, environment variables, or approved secret storage.
+
+A previously verified credential/provider check remains valid and must not be repeated before every run merely for reassurance.
+
+Repeat the relevant preflight only when at least one of these applies:
+
+- the credential or related configuration changed
+- the provider/account/permission scope changed
+- the previous preflight failed
+- runtime evidence indicates an authentication, authorization, quota, rate-limit, or provider-availability problem
+- new material evidence makes the previous PASS insufficient for the current decision
+
+This rule supplements the verification sufficiency and anti-loop rule below.
+
+---
+
+## 10B. Verification sufficiency and anti-loop rule
 
 Verification exists to support a decision, not to become the work itself.
 
