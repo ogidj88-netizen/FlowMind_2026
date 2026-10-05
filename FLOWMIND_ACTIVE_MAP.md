@@ -2,8 +2,8 @@
 
 Status: ACTIVE OPERATIONAL MAP
 Project: FlowMind / Imagine What If
-Updated: 2026-09-30
-Mode: PRODUCTION REENTRY MODE
+Updated: 2026-10-05
+Mode: PRODUCTION EXECUTION ORDER IMPLEMENTATION MODE
 
 ## 1. Purpose
 
@@ -11,57 +11,51 @@ This file is the single current operational authority for FlowMind.
 
 It defines only:
 
-- current mode
-- current objective
-- current step
-- current allowed work
-- current forbidden work
-- current exit condition
-- current next action
+-   current mode
+-   current objective
+-   current step
+-   current allowed work
+-   current forbidden work
+-   current exit condition
+-   current next action
 
 It does NOT define:
 
-- permanent operating discipline
-- high-level product intent
-- detailed target architecture
-- authority classification
-- control-plane semantics
-- runtime truth
-- historical architecture
-- completed authority-migration history
+-   permanent operating discipline
+-   high-level product intent
+-   detailed target architecture
+-   authority classification
+-   control-plane semantics
+-   runtime truth
+-   historical architecture
+-   completed authority-migration history
 
 Those belong to their canonical owners.
 
----
+------------------------------------------------------------------------
 
 ## 2. Current Authority Routing
 
 Permanent operating discipline:
 `000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
 
-Product intent:
-`FLOWMIND_WORKING_TARGET.md`
+Product intent: `FLOWMIND_WORKING_TARGET.md`
 
 Detailed-target identity and classification:
 `FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
 
-Current trusted detailed target:
-`CURRENT_TRUSTED_DETAILED_TARGET`
+Current trusted detailed target: `CURRENT_TRUSTED_DETAILED_TARGET`
 
-Resolved by the Registry as:
-`FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
+Resolved by the Registry as: `FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
 
 Execution discipline / MAP CHECK / anti-loop:
 `docs/FLOWMIND_WORK_PROTOCOL_V1.md`
 
-Control-plane semantics:
-`CANONICAL_DISPATCHER_SPEC.md`
+Control-plane semantics: `CANONICAL_DISPATCHER_SPEC.md`
 
-Current operational authority:
-`FLOWMIND_ACTIVE_MAP.md`
+Current operational authority: `FLOWMIND_ACTIVE_MAP.md`
 
-Runtime truth:
-verified current repo and runtime evidence
+Runtime truth: verified current repo and runtime evidence
 
 Historical guard:
 `docs/FLOWMIND_MAP_GUARD_V1.md`
@@ -73,7 +67,7 @@ Historical target:
 classification:
 FROZEN LEGACY
 
----
+------------------------------------------------------------------------
 
 ## 3. Current Verified State
 
@@ -81,18 +75,19 @@ Authority System V2 publication is complete.
 
 The V3.2 architecture promotion is complete.
 
-The following are closed and must not be reopened without new material evidence:
+The following remain closed and must not be reopened without new
+material evidence:
 
-- V3.2 architecture review
-- cross-module ownership review
-- contradiction review
-- duplication review
-- internal architecture validation
-- deferred-scope review
-- authority reconciliation
-- authority migration
-- authority publication
-- Project Sources synchronization for the completed authority block
+-   V3.2 architecture review
+-   cross-module ownership review
+-   contradiction review
+-   duplication review
+-   internal architecture validation
+-   deferred-scope review
+-   authority reconciliation
+-   authority migration
+-   authority publication
+-   Project Sources synchronization for the completed authority block
 
 Completed checks remain completed.
 
@@ -104,252 +99,471 @@ A Project Source filename suffix does not reset them.
 
 Governance work is not the current blocker.
 
----
+Production reentry gap identification is complete.
+
+Exactly one highest-value implementation target is selected and
+authorized:
+
+`PRODUCTION EXECUTION ORDER REPAIR`
+
+Verified runtime evidence established the following implementation gap:
+
+-   the current runtime introduced `AUDIO` as a canonical phase
+-   the canonical control contract does not define `AUDIO` as a
+    canonical phase
+-   canonical audio is required as downstream timing truth
+-   exact timed visual execution must derive from actual canonical audio
+-   current visual pacing is positioned after final render and depends
+    on already-resolved media
+-   current asset planning/resolution occurs before
+    canonical-audio-driven exact timing
+-   current final render is guarded under `QA` even though it creates
+    the final video
+-   current QA consumes the final video and therefore must remain
+    downstream of final render
+-   the existing asset resolver/provider layer is reusable and is not
+    the current blocker
+
+This is the selected blocker because it prevents a correct real
+end-to-end production contour.
+
+The separate QA verdict defect is verified but is NOT part of the
+current implementation target.
+
+------------------------------------------------------------------------
 
 ## 4. Current Mode
 
 Current mode:
 
-PRODUCTION REENTRY MODE
+PRODUCTION EXECUTION ORDER IMPLEMENTATION MODE
 
 Purpose:
 
-Return from architecture/governance work to evidence-driven product implementation.
+Repair the verified production execution-order gap using the existing
+active contour.
 
-This mode does NOT authorize broad implementation.
+This mode authorizes exactly one implementation target:
 
-It authorizes only:
+`PRODUCTION EXECUTION ORDER REPAIR`
 
-1. inspect verified current repo/runtime evidence
-2. compare it against `CURRENT_TRUSTED_DETAILED_TARGET`
-3. identify real implementation gaps
-4. rank gaps by blocker value and ROI
-5. select exactly one implementation target
-6. implement only after that target is explicitly authorized
-7. validate with runtime evidence
+This is not authorization for broad refactoring.
 
----
+The implementation must preserve:
+
+-   one canonical dispatcher
+-   one canonical project state
+-   one active production contour
+-   existing reusable provider/resolver capabilities
+-   explicit artifact contracts
+-   evidence-driven validation
+-   one-file-at-a-time execution
+
+Intermediate runtime execution is frozen while a changed file is
+temporarily incompatible with not-yet-updated files inside this selected
+contour.
+
+Do not claim the contour operational until the required cross-file
+dependencies are coherent and validated.
+
+------------------------------------------------------------------------
 
 ## 5. Current Objective
 
 Current objective:
 
-Identify the single highest-value verified implementation gap between current runtime and the trusted V3.2 target.
+Restore the production execution order so that the active runtime
+follows the trusted production dependency chain without creating a new
+canonical phase or a second orchestration contour.
 
-Priority order:
+Required canonical lifecycle remains:
 
-1. speed
-2. stability
-3. scale
-4. optimization
+TOPIC -\> SCRIPT -\> SCENES -\> ASSETS -\> ASSEMBLY -\> QA -\>
+READY_FOR_UPLOAD -\> UPLOADED -\> ARCHIVED
 
-Selection must prefer the gap that most directly improves at least one of:
+with HALT as the controlled stop state.
 
-- real end-to-end completion
-- output quality
-- runtime stability
-- release speed
-- monetization potential
-- removal of a verified blocker
+`AUDIO` is not a canonical lifecycle phase.
 
-Do not choose work because an architecture section looks important.
+Required production dependency order inside the canonical lifecycle:
 
-Do not choose the largest gap by size.
+SCRIPT -\> Visual Intent / Pass 1 -\> Canonical Audio -\> actual audio
+timing -\> Pass 2 / timed execution -\> Media Requirements -\> Media
+Resolution -\> Assembly / deterministic final render -\> QA of the
+completed final artifact
 
-Choose the highest-value verified blocker.
+Operational ownership target:
 
----
+SCENES -\> Visual Intent / Pass 1 -\> canonical audio
+planning/rendering/validation -\> Pass 2 exact timed execution
+
+ASSETS -\> media requirements derived from the timed execution contract
+-\> media resolution -\> rights evidence required by the active resolver
+contract
+
+ASSEMBLY -\> assembly/readiness -\> deterministic final render -\> final
+render readiness
+
+QA -\> evaluate the already-created final artifact
+
+The dispatcher remains the only canonical phase-transition authority.
+
+Internal executors must not silently advance canonical phase.
+
+------------------------------------------------------------------------
 
 ## 6. Current Step
 
 Current step:
 
-RUNTIME GAP IDENTIFICATION
+IMPLEMENT `PRODUCTION EXECUTION ORDER REPAIR`
 
-Required sequence:
+Execution rule:
 
-VERIFIED CURRENT REPO / RUNTIME EVIDENCE
--> COMPARE AGAINST CURRENT_TRUSTED_DETAILED_TARGET
--> CLASSIFY EXISTING COMPONENTS
--> IDENTIFY REAL GAPS
--> RANK BY ROI / BLOCKER VALUE
--> SELECT ONE IMPLEMENTATION TARGET
--> IMPLEMENT
--> VALIDATE
+ONE FILE -\> VERIFY -\> RECORD RESULT -\> NEXT FILE
 
-Existing components may be classified as:
+The first implementation substep is:
 
-- KEEP
-- MODIFY
-- REPLACE
-- REMOVE
-- MISSING
+`engine/executors/audio_executor.py`
 
-Do not classify from architecture documents alone.
+Required result of the first substep:
 
-Use repo/runtime evidence.
+-   audio planning becomes an internal `SCENES` production substep
+-   it consumes the verified upstream scene/script artifacts required by
+    its contract
+-   it does not require a canonical `AUDIO` phase
+-   it does not require downstream assembly output
+-   segment count remains derived dynamically from actual input
+-   it writes the canonical audio-plan artifact expected by downstream
+    audio rendering
+-   it does not advance canonical phase
 
----
+Before modifying this file, use a fresh copy from the current repo.
 
-## 7. Allowed Actions Now
+After replacement:
+
+-   syntax must pass
+-   phase/input contract must pass targeted verification
+-   no production runtime chain is executed until the currently edited
+    dependency boundary is safe to test
+
+Then proceed to the next file inside the same selected implementation
+target based on verified dependency order.
+
+The Active Map does not need to be rewritten between substeps unless:
+
+-   the selected target changes
+-   scope materially changes
+-   new evidence invalidates the target
+-   an authority conflict appears
+-   the implementation must STOP
+
+------------------------------------------------------------------------
+
+## 7. Authorized Implementation Contour
+
+The selected target may modify only files directly required to repair
+the verified production-order gap.
+
+In-scope runtime components include, when their verified contract
+requires modification:
+
+-   `engine/executors/audio_executor.py`
+-   `engine/executors/audio_renderer.py`
+-   `engine/executors/visual_pacing_executor.py`
+-   `engine/executors/assets_executor.py`
+-   `engine/executors/assembly_executor.py`
+-   `engine/executors/final_render_executor.py`
+-   `tools/audio_loudness_report.py`
+-   `tools/apply_audio_loudness_report.py`
+-   `tools/apply_assembly_readiness.py`
+-   `tools/apply_final_render_readiness.py`
+-   `tools/flowmind_run_phase.py`
+-   `engine/canonical_dispatcher.py`
+-   targeted active tests/checks that directly encode the superseded
+    `AUDIO` lifecycle or the repaired production-order contract
+
+A file being listed here does not mean it must be changed.
+
+Use:
+
+KEEP MODIFY REMOVE
+
+based on verified current implementation evidence.
+
+Do not modify a component merely because it is in the authorized
+contour.
+
+No new production module is authorized unless current evidence proves
+the existing contour cannot satisfy the required contract.
+
+------------------------------------------------------------------------
+
+## 8. Current Component Classification
+
+Current evidence supports:
+
+KEEP:
+
+-   existing canonical state mechanism
+-   existing dispatcher as the single canonical transition authority
+-   existing asset resolver capability
+-   existing Pexels provider capability
+-   existing deterministic visual provider capability
+-   existing audio rendering capability
+-   existing loudness validation capability
+-   existing final render capability
+-   existing QA capability as the downstream consumer of the final
+    artifact
+
+MODIFY:
+
+-   audio executor phase/ownership boundary
+-   audio renderer phase/ownership boundary
+-   visual pacing dependency boundary and timing ownership
+-   assets executor upstream contract
+-   assembly/final-render execution boundary where required
+-   readiness tools whose phase guards encode the old ordering
+-   active phase runner orchestration
+-   canonical dispatcher runtime implementation that currently contains
+    the non-canonical `AUDIO` phase
+-   targeted tests/checks that encode the old runtime ordering
+
+REMOVE:
+
+-   `AUDIO` as a canonical runtime phase
+-   required production dependence on a manually configured
+    scene/segment render count
+-   post-final-render ownership of exact visual timing
+
+DEFER:
+
+-   QA hardcoded final verdict defect
+-   editorial/script quality tuning
+-   provider migration
+-   capability benchmarking
+-   delivery/upload hardening
+-   performance optimization unrelated to this blocker
+
+------------------------------------------------------------------------
+
+## 9. Allowed Actions Now
 
 Allowed:
 
-- inspect current repo structure
-- inspect relevant implementation files
-- inspect existing runtime evidence
-- inspect known baseline artifacts
-- inspect current contracts and schemas
-- compare verified runtime against trusted V3.2
-- classify existing components
-- identify implementation gaps
-- rank gaps by ROI / blocker value
-- select one specific next implementation target
-
-After one target is selected and explicitly authorized:
-
-- modify one controlled contour
-- validate with runtime evidence
-- commit one meaningful validated work block
+-   modify only the selected production-order contour
+-   work one specific file at a time
+-   require a fresh current-repo copy before modifying an existing file
+-   perform full-file replacement only
+-   run targeted syntax checks after each replacement
+-   run the smallest contract check needed to validate the current
+    substep
+-   inspect an immediately dependent file only when required to avoid an
+    unsafe edit
+-   preserve already-verified provider/API preflight PASS unless recheck
+    conditions are triggered
+-   keep runtime execution frozen across temporarily incomplete
+    cross-file implementation states
+-   run a bounded integration validation after the required dependencies
+    become coherent
+-   run a clean control replay after the production-order contour is
+    coherent
+-   commit only after the selected implementation block is validated
 
 Default execution:
 
-ONE STEP
--> EVIDENCE
--> VERIFY
--> NEXT STEP
+ONE STEP -\> EVIDENCE -\> VERIFY -\> NEXT STEP
 
 When files are modified:
 
 ONE STEP = ONE SPECIFIC FILE
 
-unless the active Work Protocol explicitly allows a bounded multi-file transaction.
+No batch file editing.
 
----
+------------------------------------------------------------------------
 
-## 8. Forbidden Actions Now
+## 10. Forbidden Actions Now
 
 Do not:
 
-- reopen authority reconciliation
-- reopen V3.2 architecture review
-- recreate V3.2
-- create V3.3
-- reactivate V3.1
-- reactivate MAP_GUARD
-- modify governance files without a new verified governance defect
-- change runtime merely to make documentation appear correct
-- create a second dispatcher
-- create a second runtime contour
-- activate legacy code without audit
-- implement several gaps at once
-- start provider migration without evidence
-- start capability benchmarking without a verified need
-- add infrastructure for future scale without evidence
-- build deferred V3.2 capabilities merely because they exist in the target
-- infer implementation from file presence
-- infer implementation from class/function presence
-- infer implementation from historical status documents
-- use placeholders or stubs in production
-- claim runtime success without runtime evidence
+-   reopen authority reconciliation
+-   reopen V3.2 architecture review
+-   recreate V3.2
+-   create V3.3
+-   reactivate V3.1
+-   reactivate MAP_GUARD
+-   modify unrelated governance files
+-   create a second dispatcher
+-   create a second production contour
+-   add `AUDIO` or any other new canonical phase
+-   preserve `AUDIO` as canonical lifecycle authority for convenience
+-   create a second canonical state
+-   add hard-coded scene counts
+-   add hard-coded segment counts
+-   require `FLOWMIND_AUDIO_RENDER_LIMIT` as a production
+    scene/segment-count control
+-   derive exact shot timing from estimated scene duration when actual
+    canonical audio exists
+-   resolve final media before the timed execution/media-requirement
+    contract is ready
+-   run final render as a QA-owned creative/production operation
+-   make QA create the artifact it is supposed to evaluate
+-   modify providers merely to solve orchestration
+-   start provider migration
+-   start capability benchmarking
+-   tune script quality or creative quality inside this implementation
+    target
+-   fix the separate QA hardcoded verdict defect inside this target
+-   add infrastructure for future scale
+-   activate legacy code without audit
+-   use placeholders or stubs in production
+-   claim runtime success without runtime evidence
+-   run full E2E while the production-order contour is knowingly
+    cross-file incomplete
 
----
+------------------------------------------------------------------------
 
-## 9. Runtime Evidence Rule
+## 11. Implementation Invariants
 
-Architecture describes target intent.
+The implementation must preserve all of the following:
 
-Runtime truth comes only from verified current repo/runtime evidence.
+1.  Canonical lifecycle authority remains owned by the dispatcher.
 
-A capability is operational only when relevant evidence supports it.
+2.  `AUDIO` is an internal production capability, not a canonical phase.
 
-Relevant evidence may include:
+3.  Pass 1 visual intent exists before canonical audio exact timing is
+    required.
 
-- current implementation
-- valid input
-- successful execution
-- expected output
-- downstream consumption
-- validation
-- generated artifact
-- runtime log
-- reproducible behavior
-- observable failure behavior
+4.  Actual canonical audio exists before exact timed Pass 2 execution
+    planning.
 
-Historical runtime baselines may be used as evidence if their scope and freshness are understood.
+5.  Exact timing derives from actual canonical audio.
 
-Do not modify baseline artifacts to make runtime appear compliant with V3.2.
+6.  Media requirements are downstream of the timed execution contract.
 
----
+7.  Media resolution is downstream of media requirements.
 
-## 10. Gap Selection Rule
+8.  Final render consumes ready production artifacts and occurs before
+    QA.
 
-A gap is eligible for implementation only when:
+9.  QA consumes the completed final artifact.
 
-1. the current runtime state is verified enough to establish the gap
-2. the target requirement is clear in `CURRENT_TRUSTED_DETAILED_TARGET`
-3. the change does not create a second active contour
-4. the change does not rely on FROZEN LEGACY or UNVERIFIED material as authority
-5. expected benefit is concrete
-6. runtime risk is understood
-7. validation path is explicit
+10. Scene/segment counts are derived from actual project artifacts, not
+    manual production constants.
 
-Prefer the smallest change that closes the highest-value real gap.
+11. Provider/API secrets remain outside code.
 
-Do not expand scope beyond the selected target.
+12. Existing reusable provider/resolver capability is preserved unless
+    runtime evidence proves a specific incompatibility.
 
----
+13. No executor silently changes canonical phase.
 
-## 11. Current Known Runtime Evidence Boundary
+14. Errors are explicit and logged/returned; no empty exception
+    handling.
 
-Known historical baseline directories include:
+15. Repeated execution must not silently create conflicting canonical
+    state.
 
-- `projects/FM_RUNTIME_BASELINE_20260923/`
-- `projects/FM_RUNTIME_BASELINE_20260923_R2/`
-- `projects/FM_RUNTIME_BASELINE_20260923_R3/`
+------------------------------------------------------------------------
 
-These are evidence candidates.
+## 12. Validation Strategy
 
-Their presence alone does not prove current runtime state.
+Per-file validation:
 
-Before relying on them for a decision:
+-   syntax
+-   direct phase/input/output contract
+-   absence of forbidden hard-coded production counts where relevant
+-   no unauthorized canonical phase mutation
 
-verify only the specific evidence needed for the current gap question.
+Cross-file validation is deferred until the dependencies required for
+the repaired contour are coherent.
 
-Do not re-run a complete project-wide walkthrough unless new evidence makes it necessary.
+Then validate:
 
----
+SCENES -\> canonical audio -\> timed execution -\> ASSETS -\> resolved
+media -\> ASSEMBLY -\> final video -\> QA boundary
 
-## 12. Exit Condition
+The first successful integration target is:
 
-PRODUCTION REENTRY MODE completes when:
+a real final video artifact reaches QA through the corrected canonical
+lifecycle.
 
-1. verified runtime evidence is sufficient to identify real gaps
-2. existing relevant components are classified
-3. exactly one highest-value implementation target is selected
-4. that target is explicitly authorized
-5. the next mode/step is updated to the specific implementation target
+A QA PASS is not required to close this target if the already-verified
+separate QA verdict defect is the only remaining blocker.
 
-This mode does NOT complete merely because a list of possible gaps exists.
+If that happens:
 
-It completes when one concrete implementation target is chosen.
+-   record the production-order target as PASS
+-   select the QA verdict defect as the next separate implementation
+    target
+-   do not mix both fixes into one block
 
----
+External API preflight follows the active Work Protocol.
 
-## 13. Current Next Action
+Previously verified provider checks remain valid unless their
+configuration, account, scope, prior result, or runtime evidence
+materially changes.
+
+------------------------------------------------------------------------
+
+## 13. Exit Condition
+
+PRODUCTION EXECUTION ORDER IMPLEMENTATION MODE completes when all of the
+following are true:
+
+1.  `AUDIO` is no longer a canonical runtime phase.
+
+2.  canonical audio is produced as an internal production substep before
+    exact timed execution.
+
+3.  exact timed execution is produced before media resolution.
+
+4.  media resolution produces the required resolved/licensed media for
+    assembly.
+
+5.  final render occurs inside the production/assembly side of the QA
+    boundary.
+
+6.  QA receives an already-created final video.
+
+7.  active runner orchestration matches the repaired contour.
+
+8.  dispatcher runtime implementation matches the canonical lifecycle
+    contract.
+
+9.  targeted old-order tests/checks are updated or retired based on
+    verified active ownership.
+
+10. one clean control replay provides runtime evidence through the QA
+    boundary.
+
+11. no second active contour or second canonical state exists.
+
+12. the validated implementation block is committed.
+
+The separate QA verdict defect may remain as the next blocker if it is
+the only reason the control replay cannot produce QA PASS.
+
+------------------------------------------------------------------------
+
+## 14. Current Next Action
 
 Current next action:
 
-Inspect the minimum verified current repo/runtime evidence required to identify the highest-value implementation gap against:
+Start the selected implementation target with exactly one file:
 
-`CURRENT_TRUSTED_DETAILED_TARGET`
+`engine/executors/audio_executor.py`
 
-Do not reopen governance.
+Before editing:
 
-Do not reopen architecture R&D.
+use a fresh copy directly from the current repo.
 
-Do not modify runtime yet.
+Required first-file decision question:
 
-First identify and justify exactly one implementation target.
+Can the existing audio executor be fully adapted into an internal
+`SCENES` substep while preserving dynamic segment generation and the
+downstream audio-plan contract?
+
+Do not edit any other runtime file on this step.
 
 End.
