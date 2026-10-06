@@ -350,9 +350,10 @@ def run_scenes_executor(state_path: Path) -> dict[str, Any]:
         "manifest.target_duration_sec",
     )
 
-    if content_language.lower() != "en":
+    language_code = content_language.strip().lower().replace("_", "-").split("-", 1)[0]
+    if language_code != "en":
         raise ScenesExecutorError(
-            "deterministic SCENES executor v1 currently supports only content_language='en'"
+            "deterministic SCENES executor v1 currently supports only English content_language"
         )
 
     script_path = Path(

@@ -13,12 +13,17 @@ REPO_ROOT = CURRENT_FILE.parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from engine.deterministic_visual_provider import (
+    DeterministicVisualProviderError,
+    resolve_visual_asset,
+)
+from engine.pexels_stock_provider import PexelsProviderError, resolve_stock_asset
 from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 RESOLVER_NAME = "asset_resolver"
-RESOLVER_VERSION = "1.1.0"
-PROVIDER_MODE = "local_existing_only"
+RESOLVER_VERSION = "1.2.0"
+PROVIDER_MODE = "local_then_provider"
 
 APPROVED_ASSET_DIRS = (
     "assets_library",
@@ -489,11 +494,13 @@ def validate_resolved_asset(resolved_asset: dict[str, Any], index: int) -> None:
 def resolve_assets(
     assets: list[dict[str, Any]],
     candidate_files: list[Path],
+    provider_output_dir: Path,
 ) -> tuple[list[dict[str, Any]], list[str], list[str]]:
     resolved_assets: list[dict[str, Any]] = []
     blockers: list[str] = []
     warnings: list[str] = []
     used_paths: set[str] = set()
+    used_provider_ids: set[str] = set()
 
     if not candidate_files:
         warnings.append("no approved local media files found")
@@ -501,30 +508,117 @@ def resolve_assets(
     for asset in assets:
         candidate_path = choose_candidate(asset, candidate_files, used_paths)
 
-        if candidate_path is None:
-            blocker_reason = "no matching approved local media file found"
+        if candidate_path is not None:
+            local_path = normalize_path(candidate_path)
+            license_cleared, license_note, source_provider = license_is_cleared(candidate_path)
+
+            if license_cleared and source_provider is not None:
+                resolved_asset = build_resolved_asset(
+                    asset,
+                    candidate_path,
+                    source_provider,
+                    license_note,
+                )
+                used_paths.add(local_path)
+                resolved_assets.append(resolved_asset)
+                continue
+
+            warnings.append(
+                f"{require_non_empty_string(asset.get('asset_id'), 'asset.asset_id')}: "
+                f"local candidate rejected: {license_note}"
+            )
+
+        asset_id = require_non_empty_string(asset.get("asset_id"), "asset.asset_id")
+        asset_type = require_non_empty_string(asset.get("asset_type"), "asset.asset_type")
+        asset_query = require_non_empty_string(asset.get("asset_query"), "asset.asset_query")
+
+        try:
+            if asset_type in {"stock_image", "stock_video"}:
+                provider_result = resolve_stock_asset(
+                    asset_id=asset_id,
+                    asset_type=asset_type,
+                    asset_query=asset_query,
+                    output_dir=provider_output_dir,
+                    used_provider_ids=used_provider_ids,
+                )
+            elif asset_type in {
+                "simple_motion_text",
+                "chart_or_bill_visual",
+                "screen_style_visual",
+            }:
+                provider_result = resolve_visual_asset(
+                    asset_id=asset_id,
+                    asset_type=asset_type,
+                    asset_query=asset_query,
+                    output_dir=provider_output_dir,
+                )
+            else:
+                provider_result = None
+        except (PexelsProviderError, DeterministicVisualProviderError, OSError) as exc:
+            blocker_reason = f"provider resolution failed: {exc}"
             resolved_asset = build_blocked_asset(asset, blocker_reason)
-            blockers.append(f"{resolved_asset['asset_id']}: {blocker_reason}")
+            blockers.append(f"{asset_id}: {blocker_reason}")
             resolved_assets.append(resolved_asset)
             continue
 
-        local_path = normalize_path(candidate_path)
-        license_cleared, license_note, source_provider = license_is_cleared(candidate_path)
-
-        if not license_cleared or source_provider is None:
-            blocker_reason = license_note
-            resolved_asset = build_blocked_asset(asset, blocker_reason, local_path=local_path)
-            blockers.append(f"{resolved_asset['asset_id']}: {blocker_reason}")
+        if provider_result is None:
+            blocker_reason = "no matching approved local media or provider result found"
+            resolved_asset = build_blocked_asset(asset, blocker_reason)
+            blockers.append(f"{asset_id}: {blocker_reason}")
             resolved_assets.append(resolved_asset)
             continue
+
+        media_path = Path(provider_result["local_path"])
+        source_provider = require_non_empty_string(
+            provider_result.get("source_provider"),
+            "provider_result.source_provider",
+        )
+        license_note = require_non_empty_string(
+            provider_result.get("license_note"),
+            "provider_result.license_note",
+        )
+
+        if not media_path.is_file() or media_path.stat().st_size <= 0:
+            blocker_reason = "provider returned missing or empty media file"
+            resolved_asset = build_blocked_asset(asset, blocker_reason)
+            blockers.append(f"{asset_id}: {blocker_reason}")
+            resolved_assets.append(resolved_asset)
+            continue
+
+        license_cleared, sidecar_note, sidecar_provider = license_is_cleared(media_path)
+        if not license_cleared or sidecar_provider is None:
+            blocker_reason = sidecar_note
+            resolved_asset = build_blocked_asset(
+                asset,
+                blocker_reason,
+                local_path=normalize_path(media_path),
+            )
+            blockers.append(f"{asset_id}: {blocker_reason}")
+            resolved_assets.append(resolved_asset)
+            continue
+
+        if sidecar_provider != source_provider:
+            blocker_reason = "provider result source_provider does not match license sidecar"
+            resolved_asset = build_blocked_asset(
+                asset,
+                blocker_reason,
+                local_path=normalize_path(media_path),
+            )
+            blockers.append(f"{asset_id}: {blocker_reason}")
+            resolved_assets.append(resolved_asset)
+            continue
+
+        provider_key = provider_result.get("provider_asset_key")
+        if isinstance(provider_key, str) and provider_key.strip():
+            used_provider_ids.add(provider_key.strip())
 
         resolved_asset = build_resolved_asset(
             asset,
-            candidate_path,
+            media_path,
             source_provider,
             license_note,
         )
-        used_paths.add(local_path)
+        used_paths.add(normalize_path(media_path))
         resolved_assets.append(resolved_asset)
 
     for index, resolved_asset in enumerate(resolved_assets, start=1):
@@ -574,7 +668,12 @@ def run_asset_resolver(state_path: Path) -> dict[str, Any]:
     search_dirs = approved_search_dirs(project_id)
     candidate_files = list_candidate_media_files(search_dirs)
 
-    resolved_assets, blockers, warnings = resolve_assets(assets, candidate_files)
+    provider_output_dir = state_path.parent / "assets" / "resolved_media"
+    resolved_assets, blockers, warnings = resolve_assets(
+        assets,
+        candidate_files,
+        provider_output_dir,
+    )
 
     resolved_count = sum(1 for asset in resolved_assets if asset["provider_status"] == "resolved")
     blocked_count = sum(1 for asset in resolved_assets if asset["provider_status"] == "blocked")

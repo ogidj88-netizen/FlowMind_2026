@@ -416,6 +416,12 @@ def check_curiosity_gap(script_text: str) -> bool:
 def classify_paragraph(paragraph: str) -> str:
     normalized = normalize_text(paragraph)
 
+    if any(term in normalized for term in ("your bill", "hidden", "quietly", "before", "mistake")):
+        return "hook"
+
+    if any(term in normalized for term in ("problem", "blame", "mystery", "confusion", "rises", "trap", "instinct")):
+        return "problem"
+
     if any(term in normalized for term in ("check", "compare", "write down", "list", "diagnose", "seven-day", "better question", "which layer moved", "pattern interrupt")):
         return "diagnostic"
 
@@ -427,12 +433,6 @@ def classify_paragraph(paragraph: str) -> str:
 
     if any(term in normalized for term in ("refrigerator", "water heater", "dishwasher", "dryer", "computer", "dehumidifier", "appliance", "fridge", "freezer", "pool pump")):
         return "example"
-
-    if any(term in normalized for term in ("your bill", "hidden", "quietly", "before", "mistake")):
-        return "hook"
-
-    if any(term in normalized for term in ("problem", "blame", "mystery", "confusion", "rises", "trap", "instinct")):
-        return "problem"
 
     return "explanation"
 
@@ -581,8 +581,11 @@ def evaluate_script(
         "manifest.target_duration_sec",
     )
 
-    if content_language.lower() != "en":
-        raise ScriptQAError("deterministic SCRIPT QA v1 currently supports only content_language='en'")
+    language_code = content_language.strip().lower().replace("_", "-").split("-", 1)[0]
+    if language_code != "en":
+        raise ScriptQAError(
+            "deterministic SCRIPT QA v1 currently supports only English content_language"
+        )
 
     forbidden_hits = has_forbidden_marker(script_text)
     duration_ok, word_count, min_words, max_words, estimated_duration_minutes = check_duration(

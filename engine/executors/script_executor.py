@@ -102,49 +102,38 @@ def build_script(
     content_language: str,
     target_duration_sec: int,
 ) -> str:
-    if content_language.lower() != "en":
+    language_code = content_language.strip().lower().replace("_", "-").split("-", 1)[0]
+    if language_code != "en":
         raise ScriptExecutorError(
-            "deterministic script executor v1 currently supports only content_language='en'"
+            "deterministic script executor v1 currently supports only English content_language"
         )
 
     sections = [
         hook,
         "",
-        "Your power bill can rise even when your usage looks normal, but the usage line is not always the real clue. The hidden risk is that you can blame the wrong problem before you see what quietly changed. If you only look at the final amount due, you may miss the cost that moved underneath it.",
+        "Your power bill can rise even when usage looks normal, but the usage line is not always the real clue. The hidden risk is blaming the wrong problem before you see what quietly changed. If you only look at the final amount due, you can miss the layer that actually moved.",
         "",
-        f"The working title is {working_title}, but the real question is sharper: what changed before your habits changed? For {audience}, that question matters because a bill can feel personal. It can make someone think they wasted energy, used too much heat, or made a bad household decision. Sometimes that is true. Sometimes the bill changed because the rules around the bill changed.",
+        f"For {audience}, the useful question behind {working_title} is simple: what changed before your habits changed? A higher bill can come from usage, rate, timing, fixed charges, or an always-on device. Those are different problems, and treating them as one problem can waste time and money.",
         "",
-        f"This is why {topic.lower()} is not just a usage story. It is a structure story. A higher bill can come from usage, rate, timing, fixed charges, or a device that runs in the background. Those are different problems. If you treat them like one problem, you can waste time fixing the wrong thing.",
+        f"That is why {topic.lower()} is a structure story, not just a usage story. Picture the bill arriving: the total is higher, the usage chart looks close to normal, and the first instinct is to blame the air conditioner, dryer, or someone leaving something on. But the obvious explanation can send you in the wrong direction.",
         "",
-        "Here is the tension to hold while watching: the most obvious explanation is not always the useful one. A rising bill can look like an appliance problem when it is really a pricing problem. It can look like a pricing problem when it is really a timing problem. It can look like a timing problem when the quiet leak is an always-on device nobody checks.",
+        "A power bill is a stack. There is usage, usually measured in kilowatt-hours. There is the rate charged for that usage. There may also be delivery charges, fixed service charges, taxes, time-of-use pricing, or plan changes. When one layer moves, the final number can rise while another layer stays stable.",
         "",
-        "Picture the moment the bill arrives. The number is higher. The usage chart looks close to normal. The first instinct is blame. Maybe the air conditioner ran too much. Maybe the dryer was used too often. Maybe someone forgot to turn something off. That instinct feels useful because it gives the problem a face. But it can also send the investigation in the wrong direction.",
+        "So here is the pattern interrupt: stop asking only why the total is higher. Ask which layer moved. Start with usage. Compare kilowatt-hours with the same month last year, not just last month. If usage rose, check weather, guests, heating, cooling, new routines, or an always-on device. That is probably a behavior or device problem.",
         "",
-        "The mechanism is simple: a power bill is not one number. It is a stack. There is usage, usually measured in kilowatt-hours. There is the rate charged for that usage. There may be delivery charges, fixed service charges, taxes, time-of-use pricing, or plan changes. When one layer moves, the final number can rise even if another layer looks stable.",
+        "If kilowatt-hours are nearly the same but the total is higher, change the angle. Check the rate, the plan, and fixed charges. The usage graph can look reassuring while the price structure changes underneath it. In that case, using less energy may help a little, but it does not diagnose the real problem.",
         "",
-        "That is the pattern interrupt. Stop asking, why is the total higher? Ask a better question: which layer moved? The total is only the symptom. The layer that moved is the diagnosis.",
+        "Then check timing. A dishwasher, dryer, heater, air conditioner, or water heater can cost more depending on when it runs. With peak pricing, the same appliance can become more expensive without running longer. The device did not change; the clock did. Before replacing equipment, compare when the biggest loads are running.",
         "",
-        "That one shift matters because it changes the next action. A usage problem needs a household check. A pricing problem needs a plan check. A structure problem needs a bill check.",
+        "Now check quiet background loads. A second fridge, old freezer, gaming computer, dehumidifier, pool pump, or water heater can create a steady leak. These devices rarely create one dramatic moment of waste. They simply keep running until the bill turns them into a mystery.",
         "",
-        "Start with usage. Look at kilowatt-hours, not dollars. Compare the latest bill with the same month last year, not just last month. If usage rose, the home probably changed in some way. Weather, guests, new routines, heating, cooling, or an always-on device may explain the rise. That is a behavior or device problem.",
+        "The practical diagnostic is to write down three numbers from the latest bill: total cost, kilowatt-hours, and fixed charges. Then compare the same three numbers with the same month last year. Split the problem into usage, pricing, and structure. If usage changed, inspect the home. If the rate changed, question the plan. If fixed charges changed, your habits are not the main cause.",
         "",
-        "Now change the angle. If kilowatt-hours are nearly the same but the total is higher, the story changes. The problem is probably not behavior. It may be the rate, the plan, the time window, or fixed charges. This is the part many people miss because the usage graph gives them comfort while the price structure is doing the damage.",
+        "Do not treat one unusual month as a permanent pattern. Weather, guests, repairs, or a temporary schedule change can create a short spike. But if several bills rise in a row, that is a signal worth diagnosing. Compare first, then change behavior or equipment.",
         "",
-        "Then check timing. A dishwasher, dryer, heater, air conditioner, or water heater can cost more depending on when it runs. If the plan uses peak pricing, the same appliance can become more expensive without being used more often. The device did not change. The clock did.",
+        "So when your power bill rises while usage looks normal, do not start with guilt. Start with structure. Check usage, compare the rate, look at fixed charges, question timing, and diagnose always-on devices. The payoff is simple: you cannot fix the right problem until you stop chasing the wrong one.",
         "",
-        "Now check the quiet devices. A second fridge in the garage, an old freezer, a gaming computer, a dehumidifier, a pool pump, or a water heater can create a background cost. These do not feel dramatic. They do not create one obvious moment of waste. They just keep running until the bill turns them into a mystery.",
-        "",
-        "The diagnostic is practical. Take the latest bill and write down three numbers: total cost, kilowatt-hours, and fixed charges. Then take the same month from last year and write down the same three numbers. Do not start by judging the total. Split the bill into usage, rate, and structure.",
-        "",
-        "If usage changed, list what changed inside the home. If the rate changed, question the plan. If fixed charges changed, the issue is not your habits. If peak pricing applies, adjust timing before replacing devices. If always-on loads look suspicious, run a seven-day reset and reduce the biggest invisible loads.",
-        "",
-        "This is where the earlier question resolves. The bill is not asking whether you are careless. It is asking whether you can separate behavior, pricing, and bill structure before reacting. Once you separate those three, the confusion starts to shrink.",
-        "",
-        "There is also a trap in treating one bad month like a pattern. If the bill jumps once, it may be weather, guests, repairs, or a temporary schedule change. If it rises for several bills in a row, that is not a random bad month. That is a signal. A signal deserves a diagnosis.",
-        "",
-        "So the next time your power bill rises while usage looks normal, do not start with guilt. Start with the structure. Check usage. Compare the rate. Look at fixed charges. Question timing. Diagnose always-on devices. The payoff is simple: you cannot fix the right problem until you stop chasing the wrong one.",
-        "",
-        "A higher electricity bill is not one question. It is three questions: did you use more, did pricing change, or did the bill structure change? Answer those in order, and the bill stops being a mystery. It becomes a map.",
+        "A higher electricity bill is not one question. It is three: did you use more, did pricing change, or did the bill structure change? Answer those in order, and the bill stops being a mystery. It becomes a map.",
     ]
 
     return "\n".join(sections).strip() + "\n"

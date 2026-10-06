@@ -44,7 +44,7 @@ class FlowMindRunPhaseError(RuntimeError):
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="FlowMind minimal active phase runner v1.1"
+        description="FlowMind minimal active phase runner v1.2"
     )
     parser.add_argument(
         "--state",
@@ -68,7 +68,7 @@ def resolve_python_bin() -> str:
 
 def supported_phases_message() -> str:
     supported = ", ".join(sorted(PHASE_TO_EXECUTOR))
-    return f"This runner v1.1 supports only {supported}."
+    return f"This runner v1.2 supports only {supported}."
 
 
 def resolve_executor_for_phase(phase: str) -> Path:
@@ -117,23 +117,36 @@ def run_phase(state_path: Path, dry_run: bool = False) -> int:
 
     if phase in REFUSED_PHASES:
         raise FlowMindRunPhaseError(
-            f"Runner v1.1 refuses phase '{phase}'. "
+            f"Runner v1.2 refuses phase '{phase}'. "
             "Upload/archive phases require explicit approval commands."
         )
 
     executor_path = resolve_executor_for_phase(phase)
-    command = build_executor_command(state_path, executor_path)
+    executor_paths = [executor_path]
+
+    if phase == "AUDIO":
+        renderer_path = REPO_ROOT / "engine/executors/audio_renderer.py"
+        if not renderer_path.is_file():
+            raise FlowMindRunPhaseError(f"Executor file not found: {renderer_path}")
+        executor_paths.append(renderer_path)
+
+    commands = [build_executor_command(state_path, path) for path in executor_paths]
 
     print("[FLOWMIND_RUN_PHASE] phase=", phase)
-    print("[FLOWMIND_RUN_PHASE] executor=", executor_path.relative_to(REPO_ROOT))
-    print("[FLOWMIND_RUN_PHASE] command=", " ".join(command))
+    for path, command in zip(executor_paths, commands):
+        print("[FLOWMIND_RUN_PHASE] executor=", path.relative_to(REPO_ROOT))
+        print("[FLOWMIND_RUN_PHASE] command=", " ".join(command))
 
     if dry_run:
         print("[FLOWMIND_RUN_PHASE] dry_run=true")
         return 0
 
-    result = subprocess.run(command, cwd=REPO_ROOT)
-    return int(result.returncode)
+    for command in commands:
+        result = subprocess.run(command, cwd=REPO_ROOT)
+        if result.returncode != 0:
+            return int(result.returncode)
+
+    return 0
 
 
 def main() -> None:
