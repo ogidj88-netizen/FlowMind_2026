@@ -130,6 +130,34 @@ end-to-end production contour.
 The separate QA verdict defect is verified but is NOT part of the
 current implementation target.
 
+Durable implementation recovery boundary:
+
+-   selected target status: `IN PROGRESS`
+-   last verified implementation boundary:
+    `engine/executors/audio_executor.py` v1.2.0
+-   verification evidence:
+    `AUDIO_EXECUTOR_SCENES_MIGRATION=PASS`, exit=0
+-   verified file SHA-256:
+    `d7535ac57d4cabfcf9a5cf58768cc04d3fc0c2f53040eb9d15e76423b59307e6`
+-   verified result: audio planning is an internal `SCENES` substep; the
+    canonical `AUDIO` phase dependency is removed from this executor;
+    segment count remains dynamic; the downstream `audio_plan` contract
+    is preserved; the executor does not advance canonical phase
+-   material NOT DONE state:
+    `engine/executors/audio_renderer.py` has NOT been modified for this
+    target
+-   next unresolved implementation action:
+    inspect a fresh current-repo copy of
+    `engine/executors/audio_renderer.py` and decide its required boundary
+    repair
+-   runtime freeze: `YES` while the selected production-order contour is
+    cross-file incomplete
+
+This recovery boundary is durable handoff state.
+
+A new chat must recover from this boundary through the active Work
+Protocol RECOVERY CHECK and must not restart from `audio_executor.py`.
+
 ------------------------------------------------------------------------
 
 ## 4. Current Mode
@@ -218,45 +246,75 @@ Current step:
 
 IMPLEMENT `PRODUCTION EXECUTION ORDER REPAIR`
 
+Target status:
+
+IN PROGRESS
+
 Execution rule:
 
 ONE FILE -\> VERIFY -\> RECORD RESULT -\> NEXT FILE
 
-The first implementation substep is:
+Last verified implementation substep:
 
 `engine/executors/audio_executor.py`
 
-Required result of the first substep:
+Result:
 
--   audio planning becomes an internal `SCENES` production substep
--   it consumes the verified upstream scene/script artifacts required by
-    its contract
+PASS
+
+Evidence:
+
+`AUDIO_EXECUTOR_SCENES_MIGRATION=PASS`, exit=0
+
+Current unresolved implementation substep:
+
+`engine/executors/audio_renderer.py`
+
+Material NOT DONE state:
+
+`engine/executors/audio_renderer.py` has not been modified for this
+target.
+
+Before modifying this file, use a fresh copy directly from the current
+repo.
+
+Required decision question:
+
+Can the existing audio renderer be fully adapted into an internal
+`SCENES` substep so that it consumes the dynamic `audio_plan`, renders
+the actual planned segment set without a manually configured production
+segment-count limit, preserves the downstream `audio_render` contract,
+and does not advance canonical phase?
+
+Required result if modification is justified by the fresh file:
+
+-   audio rendering remains an internal `SCENES` production substep
 -   it does not require a canonical `AUDIO` phase
--   it does not require downstream assembly output
--   segment count remains derived dynamically from actual input
--   it writes the canonical audio-plan artifact expected by downstream
-    audio rendering
--   it does not advance canonical phase
+-   the render set derives from the actual `audio_plan` segment set
+-   production does not depend on `FLOWMIND_AUDIO_RENDER_LIMIT` as a
+    scene/segment-count control
+-   existing idempotent reuse of valid rendered audio is preserved where
+    supported by the verified implementation
+-   the downstream `audio_render` artifact contract is preserved
+-   the executor does not advance canonical phase
 
-Before modifying this file, use a fresh copy from the current repo.
-
-After replacement:
+After replacement, if modification is required:
 
 -   syntax must pass
--   phase/input contract must pass targeted verification
+-   phase/input/output contract must pass targeted verification
+-   absence of manual production segment-count control must pass targeted
+    verification
 -   no production runtime chain is executed until the currently edited
     dependency boundary is safe to test
 
 Then proceed to the next file inside the same selected implementation
 target based on verified dependency order.
 
-The Active Map does not need to be rewritten between substeps unless:
-
--   the selected target changes
--   scope materially changes
--   new evidence invalidates the target
--   an authority conflict appears
--   the implementation must STOP
+The Active Map does not need to be rewritten between ordinary substeps.
+However, before a required new-chat handoff or when chat/context
+degradation makes continuation unsafe, create a context recovery
+checkpoint according to the active Work Protocol so the last verified
+boundary and next unresolved action are durable.
 
 ------------------------------------------------------------------------
 
@@ -368,7 +426,9 @@ Allowed:
     become coherent
 -   run a clean control replay after the production-order contour is
     coherent
--   commit only after the selected implementation block is validated
+-   commit after the selected implementation block is validated
+-   create a bounded context recovery checkpoint before block completion
+    only when the active Work Protocol exception is triggered
 
 Default execution:
 
@@ -550,20 +610,34 @@ the only reason the control replay cannot produce QA PASS.
 
 Current next action:
 
-Start the selected implementation target with exactly one file:
+Continue the selected implementation target from the last verified
+boundary with exactly one unresolved runtime file:
 
-`engine/executors/audio_executor.py`
+`engine/executors/audio_renderer.py`
+
+Current status of that file for this target:
+
+NOT DONE
 
 Before editing:
 
 use a fresh copy directly from the current repo.
 
-Required first-file decision question:
+Required decision question:
 
-Can the existing audio executor be fully adapted into an internal
-`SCENES` substep while preserving dynamic segment generation and the
-downstream audio-plan contract?
+Can the existing audio renderer be fully adapted into an internal
+`SCENES` substep so that the render set derives from the actual
+`audio_plan`, production does not depend on a manually configured
+scene/segment render count, the downstream `audio_render` contract is
+preserved, and no canonical phase is advanced?
+
+Do not restart `audio_executor.py` without new material evidence.
 
 Do not edit any other runtime file on this step.
+
+Before a new chat is used for implementation, the context recovery
+checkpoint containing the verified `audio_executor.py` boundary and this
+Active Map handoff must be committed, pushed, synchronized to Project
+Sources where required by the Work Protocol, and recovery-verified.
 
 End.

@@ -17,7 +17,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "audio_executor"
-EXECUTOR_VERSION = "1.0.0"
+EXECUTOR_VERSION = "1.2.0"
 WORDS_PER_MINUTE = 145.0
 ALLOWED_DURATION_DRIFT = 0.20
 
@@ -139,71 +139,53 @@ def validate_duration(estimated_duration_sec: int, target_duration_sec: int) -> 
 
 def validate_script_qa(script_qa: dict[str, Any]) -> None:
     if script_qa.get("verdict") != "PASS":
-        raise AudioExecutorError("AUDIO executor requires script_qa.verdict=PASS")
+        raise AudioExecutorError("audio executor requires script_qa.verdict=PASS")
 
 
-def validate_assembly_plan(assembly_plan: dict[str, Any]) -> list[dict[str, Any]]:
-    timeline = assembly_plan.get("timeline")
-    if not isinstance(timeline, list):
-        raise AudioExecutorError("assembly_plan.timeline must be a list")
+def validate_scenes_payload(scenes_payload: dict[str, Any]) -> list[dict[str, Any]]:
+    scenes = scenes_payload.get("scenes")
+    if not isinstance(scenes, list):
+        raise AudioExecutorError("scenes.scenes must be a list")
 
-    if not timeline:
-        raise AudioExecutorError("assembly_plan.timeline must not be empty")
+    if not scenes:
+        raise AudioExecutorError("scenes.scenes must not be empty")
 
     scene_count = require_positive_int(
-        assembly_plan.get("scene_count"),
-        "assembly_plan.scene_count",
+        scenes_payload.get("scene_count"),
+        "scenes.scene_count",
     )
 
-    if scene_count != len(timeline):
+    if scene_count != len(scenes):
         raise AudioExecutorError(
-            f"assembly scene_count mismatch: scene_count={scene_count}, timeline={len(timeline)}"
+            f"scenes scene_count mismatch: scene_count={scene_count}, scenes={len(scenes)}"
         )
 
     required_fields = {
-        "timeline_id",
         "scene_id",
         "order",
         "voiceover_text",
-        "estimated_duration_sec",
-        "asset_id",
-        "asset_type",
-        "asset_query",
-        "usage_role",
-        "provider_status",
-        "local_path",
-        "source_url",
-        "visual_intent",
-        "on_screen_text",
-        "production_notes",
     }
 
-    for index, item in enumerate(timeline, start=1):
-        if not isinstance(item, dict):
-            raise AudioExecutorError(f"timeline index {index} must be an object")
+    for index, scene in enumerate(scenes, start=1):
+        if not isinstance(scene, dict):
+            raise AudioExecutorError(f"scene index {index} must be an object")
 
-        missing = sorted(required_fields - set(item.keys()))
+        missing = sorted(required_fields - set(scene.keys()))
         if missing:
             raise AudioExecutorError(
-                f"timeline index {index} missing fields: {', '.join(missing)}"
+                f"scene index {index} missing fields: {', '.join(missing)}"
             )
 
-        require_non_empty_string(item["timeline_id"], f"timeline[{index}].timeline_id")
-        require_non_empty_string(item["scene_id"], f"timeline[{index}].scene_id")
-        require_positive_int(item["order"], f"timeline[{index}].order")
-        require_non_empty_string(item["voiceover_text"], f"timeline[{index}].voiceover_text")
-        require_positive_int(
-            item["estimated_duration_sec"],
-            f"timeline[{index}].estimated_duration_sec",
-        )
+        require_non_empty_string(scene["scene_id"], f"scenes[{index}].scene_id")
+        require_positive_int(scene["order"], f"scenes[{index}].order")
+        require_non_empty_string(scene["voiceover_text"], f"scenes[{index}].voiceover_text")
 
         fail_if_forbidden_markers(
-            json.dumps(item, ensure_ascii=False),
-            f"timeline[{index}]",
+            json.dumps(scene, ensure_ascii=False),
+            f"scenes[{index}]",
         )
 
-    return timeline
-
+    return scenes
 
 def validate_script_text(script_text: str) -> None:
     if not script_text.strip():
@@ -212,12 +194,12 @@ def validate_script_text(script_text: str) -> None:
     fail_if_forbidden_markers(script_text, "script.txt")
 
 
-def build_audio_segment(timeline_item: dict[str, Any]) -> dict[str, Any]:
-    order = require_positive_int(timeline_item["order"], "timeline.order")
-    scene_id = require_non_empty_string(timeline_item["scene_id"], "timeline.scene_id")
+def build_audio_segment(scene: dict[str, Any]) -> dict[str, Any]:
+    order = require_positive_int(scene["order"], "scene.order")
+    scene_id = require_non_empty_string(scene["scene_id"], "scene.scene_id")
     voiceover_text = require_non_empty_string(
-        timeline_item["voiceover_text"],
-        "timeline.voiceover_text",
+        scene["voiceover_text"],
+        "scene.voiceover_text",
     )
 
     word_count = count_words(voiceover_text)
@@ -279,13 +261,13 @@ def validate_audio_segment(segment: dict[str, Any], index: int) -> None:
     require_non_empty_string(segment["production_notes"], f"segment[{index}].production_notes")
 
     if segment["tts_status"] != "planned":
-        raise AudioExecutorError(f"segment[{index}].tts_status must be planned in AUDIO v1")
+        raise AudioExecutorError(f"segment[{index}].tts_status must be planned in audio planning")
 
     if segment["audio_path"] is not None:
-        raise AudioExecutorError(f"segment[{index}].audio_path must be null in AUDIO v1")
+        raise AudioExecutorError(f"segment[{index}].audio_path must be null in audio planning")
 
     if segment["provider_job_id"] is not None:
-        raise AudioExecutorError(f"segment[{index}].provider_job_id must be null in AUDIO v1")
+        raise AudioExecutorError(f"segment[{index}].provider_job_id must be null in audio planning")
 
     fail_if_forbidden_markers(
         json.dumps(segment, ensure_ascii=False),
@@ -293,8 +275,8 @@ def validate_audio_segment(segment: dict[str, Any], index: int) -> None:
     )
 
 
-def build_audio_segments(timeline: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    segments = [build_audio_segment(item) for item in timeline]
+def build_audio_segments(scenes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    segments = [build_audio_segment(scene) for scene in scenes]
 
     for index, segment in enumerate(segments, start=1):
         validate_audio_segment(segment, index)
@@ -305,8 +287,8 @@ def build_audio_segments(timeline: list[dict[str, Any]]) -> list[dict[str, Any]]
 def run_audio_executor(state_path: Path) -> dict[str, Any]:
     state = load_state(state_path)
 
-    if state["phase"] != "AUDIO":
-        raise AudioExecutorError("AUDIO executor may run only when phase is AUDIO")
+    if state["phase"] != "SCENES":
+        raise AudioExecutorError("audio executor may run only when phase is SCENES")
 
     project_id = require_non_empty_string(state["project_id"], "project_id")
     manifest = state["manifest"]
@@ -340,23 +322,20 @@ def run_audio_executor(state_path: Path) -> dict[str, Any]:
     script_qa_path = Path(
         require_non_empty_string(artifacts.get("script_qa_path"), "artifacts.script_qa_path")
     )
-    assembly_plan_path = Path(
-        require_non_empty_string(
-            artifacts.get("assembly_plan_path"),
-            "artifacts.assembly_plan_path",
-        )
+    scenes_path = Path(
+        require_non_empty_string(artifacts.get("scenes_path"), "artifacts.scenes_path")
     )
 
     script_text = read_text_file(script_path)
     script_meta = read_json_file(script_meta_path)
     script_qa = read_json_file(script_qa_path)
-    assembly_plan = read_json_file(assembly_plan_path)
+    scenes_payload = read_json_file(scenes_path)
 
     validate_script_text(script_text)
     validate_script_qa(script_qa)
-    timeline = validate_assembly_plan(assembly_plan)
+    scenes = validate_scenes_payload(scenes_payload)
 
-    audio_segments = build_audio_segments(timeline)
+    audio_segments = build_audio_segments(scenes)
 
     estimated_word_count = sum(
         int(segment["estimated_word_count"])
@@ -386,7 +365,7 @@ def run_audio_executor(state_path: Path) -> dict[str, Any]:
         "source_phase": state["phase"],
         "source_script_path": str(script_path),
         "source_script_qa_path": str(script_qa_path),
-        "source_assembly_plan_path": str(assembly_plan_path),
+        "source_scenes_path": str(scenes_path),
         "topic": topic,
         "working_title": working_title,
         "niche": niche,
@@ -433,7 +412,7 @@ def run_audio_executor(state_path: Path) -> dict[str, Any]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="FlowMind canonical AUDIO executor v1")
+    parser = argparse.ArgumentParser(description="FlowMind SCENES internal audio planning executor")
     parser.add_argument(
         "--state",
         required=True,

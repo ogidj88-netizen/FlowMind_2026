@@ -4,7 +4,7 @@ Status: ACTIVE WORK PROTOCOL
 
 Project: FlowMind / Imagine What If
 
-Updated: 2026-09-30
+Updated: 2026-10-05
 
 Governance model: AUTHORITY SYSTEM V2
 
@@ -896,14 +896,56 @@ the declared migration set is normally one authority work block.
 
 Do not commit the half-migrated authority chain merely to make intermediate state durable unless a specific recovery reason requires it.
 
-Before commit:
+### Context recovery checkpoint exception
+
+A context recovery checkpoint is allowed before the full implementation block is complete only when there is a concrete recovery reason, such as:
+
+- chat/context degradation makes continued execution unsafe
+- a new-chat handoff is required
+- work must pause at an intermediate verified boundary and that boundary would otherwise exist only in chat memory
+
+A context recovery checkpoint is an exception, not the normal per-file commit policy.
+
+It must never be used merely because one file passed validation.
+
+A context recovery checkpoint may contain only:
+
+- implementation changes that already have explicit PASS evidence
+- the minimum `FLOWMIND_ACTIVE_MAP.md` update required to record the verified handoff boundary
+- authority files that are themselves part of an explicitly declared authority-repair transaction
+
+Before a context recovery checkpoint:
+
+1. verify every implementation change included in the checkpoint already has explicit PASS evidence
+2. update `FLOWMIND_ACTIVE_MAP.md` so it records the last verified boundary, the next unresolved action, and any material NOT DONE state needed to prevent ambiguity
+3. keep the selected implementation target explicitly IN PROGRESS unless its real exit condition has passed
+4. preserve any required runtime freeze
+5. inspect git diff
+6. inspect git status
+7. verify no unvalidated, unrelated, secret, or generated runtime artifacts are included
+8. stage only the intended verified checkpoint files
+9. create one precise recovery-checkpoint commit
+10. push to origin
+11. verify the pushed checkpoint is the intended durable recovery boundary
+
+A recovery checkpoint does NOT:
+
+- close the implementation target
+- convert partial work into a completed block
+- authorize E2E execution while the active contour is intentionally incomplete
+- permit unvalidated code to be committed
+- create a second operational authority
+
+Outside a context recovery checkpoint, use the normal block-level commit rule.
+
+Before a normal block commit:
 
 1. inspect git diff
 2. run relevant validations
 3. run preflight when appropriate
 4. inspect git status
 5. verify no unrelated files are included
-6. verify the declared migration set reached its intended end state
+6. verify the declared work block reached its intended end state
 7. stage only intended changes
 8. create one precise commit
 
@@ -964,6 +1006,24 @@ Keep one owner for each kind of information.
 
 Do not create a second current-state document merely to improve recall.
 
+For current operational handoff state, the owner remains:
+
+`FLOWMIND_ACTIVE_MAP.md`
+
+When a context recovery checkpoint is created:
+
+1. commit and push the verified checkpoint first
+2. synchronize the updated `FLOWMIND_ACTIVE_MAP.md` Project Source
+3. synchronize any other authority Project Source changed by the same declared authority-repair transaction
+4. verify the actual Project Source content needed for recovery
+5. only then treat the checkpoint as ready for a new-chat handoff
+
+Runtime implementation files do not become Project Sources merely to preserve chat context.
+
+Their durable truth remains the verified repository commit.
+
+If the updated Active Map Project Source has not been synchronized and verified, the new-chat handoff is incomplete.
+
 Carry forward already verified evidence and completed checks.
 
 Repeat a check only when:
@@ -979,6 +1039,36 @@ Repeat a check only when:
 
 A new chat must recover current context from verified authority and verified durable evidence.
 
+Chat memory, a pasted conversational summary, or a manually written continuation prompt must never be the sole authority for resuming FlowMind work.
+
+Before proposing or executing a technical change in a new chat, ChatGPT must perform a compact RECOVERY CHECK from the current verified authority chain.
+
+Required RECOVERY CHECK fields:
+
+RECOVERY CHECK
+
+Active map:
+
+Selected target:
+
+Target status:
+
+Last verified boundary:
+
+Material NOT DONE state:
+
+Next unresolved action:
+
+Runtime freeze:
+
+Evidence:
+
+Verdict:
+
+For a normal implementation handoff, these fields must come from the synchronized current `FLOWMIND_ACTIVE_MAP.md` plus verified durable repo evidence referenced by that handoff.
+
+The new chat must continue from the recorded next unresolved action, not from an older generic start action in chat history.
+
 A new chat must NOT:
 
 - restart completed architecture review merely because chat context changed
@@ -986,6 +1076,8 @@ A new chat must NOT:
 - reclassify a verified PASS without new evidence
 - let a stale Project Source override newer verified repo evidence
 - treat an expected migration mismatch as an unexpected failure
+- infer a completed implementation substep from chat memory alone
+- edit the next runtime file when the durable handoff boundary is ambiguous
 
 If an Authority Reconciliation transaction is unfinished:
 
@@ -994,13 +1086,22 @@ If an Authority Reconciliation transaction is unfinished:
 3. verify only the current unresolved file/state needed to continue
 4. continue from the last verified boundary
 
-If the durable transaction state cannot be recovered sufficiently:
+If the durable Authority Reconciliation transaction state cannot be recovered sufficiently:
 
 classify the missing point as UNVERIFIED
 
-and obtain only the evidence necessary to resume.
+and obtain only the evidence necessary to resume that transaction.
+
+If a normal implementation handoff is unfinished or the Active Map does not contain enough durable state to identify the last verified boundary and next unresolved action:
+
+1. STOP implementation
+2. classify the missing handoff point as UNVERIFIED
+3. obtain only the repo/runtime evidence necessary to reconstruct that boundary
+4. create or complete a context recovery checkpoint before continuing across chats
 
 Do not recreate the whole project history.
+
+Do not create a second handoff/current-state document.
 
 Historical start blocks may remain as history but must not silently become current authority.
 
