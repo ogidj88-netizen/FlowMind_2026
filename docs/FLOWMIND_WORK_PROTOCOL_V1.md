@@ -110,19 +110,27 @@ FlowMind work follows these principles:
 
 ## 4. One-step rule
 
-Technical work proceeds:
+Technical work proceeds one completed operation at a time.
 
-one step
+A step may contain multiple commands when they serve one atomic objective and can be safely executed together.
 
-→ Evgen executes
+Preferred terminal pattern:
 
-→ Evgen sends output or "виконано"
+execute
 
-→ result is verified
+-> verify in the same terminal flow
 
-→ next step
+-> Evgen sends the combined output or "виконано"
 
-ChatGPT must not automatically jump ahead.
+-> ChatGPT evaluates the evidence
+
+-> next step
+
+Do not split execution and its obvious verification into separate user turns unless verification depends on a later/external result or safety requires separation.
+
+A single step must not bundle unrelated objectives, independent file changes, or actions whose continuation depends on an unverified earlier result unless the terminal flow fails closed.
+
+ChatGPT must not jump to a new objective before the current operation is verified.
 
 Valid evidence includes:
 
@@ -150,32 +158,19 @@ Valid evidence includes:
 
 ## 5. MAP CHECK rule
 
-Before normal technical or architectural work, ChatGPT must align with the current verified operational map.
+Before technical or architectural work, ChatGPT must align with the current verified operational map.
 
-Required fields:
+Do not repeat a full MAP CHECK on every turn when the active map, selected target, current step, and authority state are unchanged and already verified. Carry the verified alignment forward.
 
-MAP CHECK
+An explicit MAP CHECK is required when:
 
-Active map:
+- starting or recovering a chat
+- the selected target or operational step changes materially
+- authority or current state is unclear
+- new evidence conflicts with the current map
+- an Authority Reconciliation transaction is being entered or resumed
 
-Current step:
-
-Allowed action:
-
-Forbidden action:
-
-Evidence:
-
-Verdict:
-
-For normal work:
-
-- Current step
-- Allowed action
-- Forbidden action
-- operational exit condition
-
-must come from FLOWMIND_ACTIVE_MAP.md.
+For normal work, the current step, allowed action, forbidden action, and operational exit condition must come from FLOWMIND_ACTIVE_MAP.md.
 
 If normal current state or authority is unclear:
 
@@ -524,102 +519,58 @@ This rule supplements the verification sufficiency and anti-loop rule below.
 
 ---
 
-## 10B. Verification sufficiency and anti-loop rule
+## 10B. Verification sufficiency, anti-loop, and execution momentum rule
 
 Verification exists to support a decision, not to become the work itself.
 
-Before any verification, ChatGPT must define the exact decision question being checked.
+Before an auxiliary verification, ChatGPT must internally confirm:
 
-Use the smallest evidence set that is sufficient to answer that question reliably.
+- which current decision or exit condition the check can change
+- what new evidence it can produce
 
-Once evidence is conclusive enough to decide:
+This internal check does not require a separate user-visible preflight or an extra terminal step.
+
+Use the smallest evidence set sufficient for the current decision.
+
+Once evidence is sufficient:
 
 - stop checking
-
 - state the decision
-
 - move to the next authorized action
 
-Do not repeat the same grep, diff, lint, runtime check, source review, or equivalent check merely to increase confidence after the fact is already established.
+If the first check is inconclusive, one targeted follow-up check is allowed by default. If that is still insufficient, classify the unresolved point as UNVERIFIED and STOP that decision path.
 
-If the first check is inconclusive, exactly one targeted follow-up check is allowed by default.
-
-After that follow-up:
-
-- if evidence is sufficient, decide and proceed
-
-- if evidence is still insufficient, classify the point as UNVERIFIED and STOP
-
-A third verification pass for the same decision question is allowed only when at least one of these conditions exists:
-
-- new evidence materially changes the picture
-
-- two verified sources materially conflict
-
-- a validation has failed
-
-- the next action is irreversible or high-risk
-
-- Evgen explicitly requests deeper verification
-
-ChatGPT must never create a verification loop by continuously checking already-established facts.
-
-A completed check or gate remains completed across later steps and later chats unless:
+A completed check remains completed across later steps and chats. Repeat it only when:
 
 - the checked input changed
-
-- the check failed
-
-- new material evidence appeared
-
-- a specific conflict requires that exact check to be revisited
-
-A new chat alone is never a reason to restart completed verification.
-
-User time is a first-class project constraint.
-
-When two verification paths provide comparable confidence, choose the faster one.
-
-The default completion condition is sufficient evidence for the current decision, not maximum possible certainty.
-
-### Execution Momentum Gate
-
-Before every diagnostic, audit, preflight, source inspection, or verification step, ChatGPT must identify:
-
-- the exact current decision or exit condition this step can change
-- the new evidence this step can produce
-- why this is the shortest production-safe path
-
-If the step cannot materially change the current decision or advance the current exit condition, do not perform it.
-
-If two consecutive actions fail to advance the current exit condition, the current route is classified as STALLED.
-
-When STALLED:
-
-1. stop the current verification branch
-2. return to the last verified boundary
-3. select the shortest production-safe route to the current exit condition
-4. do not start a third auxiliary check by inertia
-
-Do not perform fixture archaeology, donor reconstruction, metadata reconstruction, repeated source discovery, or equivalent indirect work when a direct canonical runtime path can provide equal or stronger evidence at comparable or lower cost.
-
-Optimize for time-to-exit-condition, not number of checks.
-
-A verification step that only increases confidence in an already sufficient fact is not progress and must be skipped unless:
-
-- new material evidence appeared
-- verified sources conflict
 - the previous check failed
-- the next action is irreversible or high-risk
+- new material evidence appeared
+- verified evidence materially conflicts
+- the next action is irreversible or high-risk and the existing evidence is insufficient for that risk
 - Evgen explicitly requests deeper verification
 
+A new chat alone is never a reason to repeat a completed check.
+
+User time is a first-class project constraint. When two evidence paths provide comparable confidence, choose the faster one.
+
+Prefer direct canonical runtime evidence over fixture archaeology, donor reconstruction, metadata reconstruction, repeated source discovery, or equivalent indirect work when the direct path provides equal or stronger evidence at comparable or lower cost.
+
+If two consecutive auxiliary actions fail to advance the current exit condition, classify the route as STALLED:
+
+1. stop the current auxiliary branch
+2. return to the last verified boundary
+3. choose the shortest production-safe route to the current exit condition
+4. do not start a third auxiliary check by inertia
+
+Optimize for time-to-exit-condition, not number of checks or maximum possible certainty.
+
 ---
-
-
 
 ## 10C. Future-impact and system-consequence gate
 
 Before any material technical recommendation, configuration change, architecture change, or code change, ChatGPT must evaluate not only whether the proposed solution can solve the immediate case, but whether it remains safe and coherent across the future operating range of FlowMind.
+
+This gate is internal by default. Do not create a separate audit, checklist turn, or terminal step merely to demonstrate that the gate was considered. Surface only a material failure, conflict, or UNVERIFIED point that affects the decision.
 
 Required checks:
 
@@ -1296,6 +1247,8 @@ Avoid:
 - calling unverified work complete
 
 - expanding scope without direct benefit
+
+Keep execution responses compact. Do not create a separate diagnostic or verification step merely to satisfy the response structure.
 
 Every execution response must end with:
 
