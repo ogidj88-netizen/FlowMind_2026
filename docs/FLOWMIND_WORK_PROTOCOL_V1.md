@@ -4,7 +4,7 @@ Status: ACTIVE WORK PROTOCOL
 
 Project: FlowMind / Imagine What If
 
-Updated: 2026-10-05
+Updated: 2026-10-06
 
 Governance model: AUTHORITY SYSTEM V2
 
@@ -581,6 +581,71 @@ User time is a first-class project constraint.
 When two verification paths provide comparable confidence, choose the faster one.
 
 The default completion condition is sufficient evidence for the current decision, not maximum possible certainty.
+
+---
+
+## 10C. Future-impact and system-consequence gate
+
+Before any material technical recommendation, configuration change, architecture change, or code change, ChatGPT must evaluate not only whether the proposed solution can solve the immediate case, but whether it remains safe and coherent across the future operating range of FlowMind.
+
+Required checks:
+
+1. Runtime
+   - Does the solution work in the current real runtime, not only logically or on paper?
+   - Is the relevant claim supported by current repo, contract, validation, or runtime evidence?
+
+2. Variability
+   - What happens with different valid inputs, video types, scene counts, shot counts, Director decisions, durations, provider outputs, and supported configurations?
+   - Do not optimize a production rule around one test fixture, one project, or one observed count.
+
+3. Scaling
+   - Could the proposed solution become a structural limitation as production volume, content variety, artifact size, or module capability grows?
+   - Do not introduce a global constraint merely because it is convenient for the current test.
+
+4. Cross-module impact
+   - Does solving the local problem weaken, bypass, duplicate, or constrain another module or contract?
+   - Preserve upstream and downstream ownership boundaries and the single active contour.
+
+5. Future failure modes
+   - What predictable failures could this change create later?
+   - Consider stale assumptions, hidden coupling, duplicated authority, manual configuration drift, invalid fallback behavior, and dependencies that may be forgotten.
+
+6. Architecture debt
+   - Is a local or naturally variable condition being encoded as a permanent global rule?
+   - A parameter that naturally belongs to a project, video, module decision, runtime artifact, or Director decision must not become a global hard constraint without verified architectural justification.
+
+7. Simpler production-safe solution
+   - Is there a simpler solution that satisfies the current contract without reducing future flexibility or creating a second source of truth?
+
+8. Evidence and uncertainty
+   - Can the important behavior and consequences be verified with sufficient current evidence?
+   - If a material future-impact point cannot be confirmed from available evidence, label that point `НЕ ПЕРЕВІРЕНО` / `UNVERIFIED` rather than presenting it as reliable.
+
+The minimum decision chain is:
+
+works now
+
+-> works across supported cases
+
+-> does not break or improperly constrain other modules
+
+-> does not block reasonable scaling
+
+-> does not create a predictable future defect
+
+If a critical item fails, do not recommend or implement the change as proposed.
+
+Instead:
+
+- surface the failed condition
+- obtain only the evidence needed for the blocked decision when evidence is missing
+- choose the simplest production-safe correction that preserves current architecture and contracts
+
+This gate does not require speculative over-engineering.
+
+Do not build abstractions, configurability, or scale infrastructure for hypothetical needs that are not part of the trusted target.
+
+Its purpose is to prevent narrow local fixes from becoming future system defects while preserving the Minimalism Bias and current ROI discipline.
 
 ---
 
