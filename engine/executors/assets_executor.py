@@ -18,7 +18,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "assets_executor"
-EXECUTOR_VERSION = "1.1.0"
+EXECUTOR_VERSION = "2.0.1"
 
 ALLOWED_ASSET_TYPES = {
     "stock_video",
@@ -327,6 +327,137 @@ def validate_scenes_payload(scenes_payload: dict[str, Any]) -> list[dict[str, An
     return scenes
 
 
+def validate_visual_pacing_payload(
+    visual_pacing_payload: dict[str, Any],
+    scenes: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    if visual_pacing_payload.get("status") != "VISUAL_PACING_PLAN_OK":
+        raise AssetsExecutorError("visual_pacing.status must be VISUAL_PACING_PLAN_OK")
+
+    if visual_pacing_payload.get("timing_source") != "actual_canonical_audio":
+        raise AssetsExecutorError("visual_pacing.timing_source must be actual_canonical_audio")
+
+    if visual_pacing_payload.get("audio_master_clock") is not True:
+        raise AssetsExecutorError("visual_pacing.audio_master_clock must be true")
+
+    if visual_pacing_payload.get("timed_execution_ready") is not True:
+        raise AssetsExecutorError("visual_pacing.timed_execution_ready must be true")
+
+    beats = visual_pacing_payload.get("beats")
+    if not isinstance(beats, list) or not beats:
+        raise AssetsExecutorError("visual_pacing.beats must be a non-empty list")
+
+    scene_ids = {
+        require_non_empty_string(scene.get("scene_id"), "scene.scene_id")
+        for scene in scenes
+    }
+
+    for index, beat in enumerate(beats, start=1):
+        if not isinstance(beat, dict):
+            raise AssetsExecutorError(f"visual_pacing beat index {index} must be an object")
+
+        scene_id = require_non_empty_string(
+            beat.get("scene_id"),
+            f"visual_pacing.beat[{index}].scene_id",
+        )
+        if scene_id not in scene_ids:
+            raise AssetsExecutorError(
+                f"visual_pacing beat index {index} references unknown scene_id={scene_id}"
+            )
+
+        require_positive_int(beat.get("beat_order"), f"visual_pacing.beat[{index}].beat_order")
+        require_non_empty_string(
+            beat.get("requested_asset_type"),
+            f"visual_pacing.beat[{index}].requested_asset_type",
+        )
+        require_non_empty_string(
+            beat.get("visual_intent"),
+            f"visual_pacing.beat[{index}].visual_intent",
+        )
+        require_non_empty_string(
+            beat.get("production_notes"),
+            f"visual_pacing.beat[{index}].production_notes",
+        )
+
+        start_sec = beat.get("global_start_sec")
+        end_sec = beat.get("global_end_sec")
+        duration_sec = beat.get("beat_duration_sec")
+        for field_name, value in (
+            ("global_start_sec", start_sec),
+            ("global_end_sec", end_sec),
+            ("beat_duration_sec", duration_sec),
+        ):
+            if not isinstance(value, (int, float)):
+                raise AssetsExecutorError(
+                    f"visual_pacing.beat[{index}].{field_name} must be numeric"
+                )
+
+        if float(start_sec) < 0:
+            raise AssetsExecutorError(
+                f"visual_pacing.beat[{index}].global_start_sec must be >= 0"
+            )
+        if float(end_sec) <= float(start_sec):
+            raise AssetsExecutorError(
+                f"visual_pacing.beat[{index}] global_end_sec must be > global_start_sec"
+            )
+        if float(duration_sec) <= 0:
+            raise AssetsExecutorError(
+                f"visual_pacing.beat[{index}].beat_duration_sec must be > 0"
+            )
+
+    return beats
+
+
+def build_asset_entry_from_beat(
+    beat: dict[str, Any],
+    topic: str,
+) -> dict[str, Any]:
+    order = require_positive_int(beat["beat_order"], "beat.beat_order")
+    scene_id = require_non_empty_string(beat["scene_id"], "beat.scene_id")
+    asset_type = require_non_empty_string(
+        beat["requested_asset_type"],
+        f"beat[{order}].requested_asset_type",
+    )
+    visual_intent = require_non_empty_string(
+        beat["visual_intent"],
+        f"beat[{order}].visual_intent",
+    )
+    production_notes = require_non_empty_string(
+        beat["production_notes"],
+        f"beat[{order}].production_notes",
+    )
+
+    if asset_type not in ALLOWED_ASSET_TYPES:
+        raise AssetsExecutorError(
+            f"beat[{order}].requested_asset_type unsupported: {asset_type}"
+        )
+
+    duration_sec = beat.get("beat_duration_sec")
+    if not isinstance(duration_sec, (int, float)) or float(duration_sec) <= 0:
+        raise AssetsExecutorError(f"beat[{order}].beat_duration_sec must be > 0")
+
+    # Resolver v1 still validates this legacy field as a positive integer.
+    # It is now derived from actual canonical-audio timing, never scene estimates.
+    resolver_duration_sec = max(1, int(round(float(duration_sec))))
+
+    return {
+        "asset_id": f"ASSET_{order:03d}",
+        "scene_id": scene_id,
+        "order": order,
+        "asset_type": asset_type,
+        "asset_query": build_asset_query(asset_type, visual_intent, topic),
+        "visual_intent": visual_intent,
+        "usage_role": choose_usage_role(asset_type),
+        "estimated_duration_sec": resolver_duration_sec,
+        "required": True,
+        "provider_status": "planned",
+        "local_path": None,
+        "source_url": None,
+        "license_status": "pending",
+        "production_notes": production_notes,
+    }
+
+
 def run_assets_executor(state_path: Path) -> dict[str, Any]:
     state = load_state(state_path)
 
@@ -369,7 +500,16 @@ def run_assets_executor(state_path: Path) -> dict[str, Any]:
         require_non_empty_string(artifacts.get("scenes_path"), "artifacts.scenes_path")
     )
     script_qa_path = Path(
-        require_non_empty_string(artifacts.get("script_qa_path"), "artifacts.script_qa_path")
+        require_non_empty_string(
+            artifacts.get("script_qa_path"),
+            "artifacts.script_qa_path",
+        )
+    )
+    visual_pacing_plan_path = Path(
+        require_non_empty_string(
+            artifacts.get("visual_pacing_plan_path"),
+            "artifacts.visual_pacing_plan_path",
+        )
     )
 
     script_qa = read_json_file(script_qa_path)
@@ -379,18 +519,21 @@ def run_assets_executor(state_path: Path) -> dict[str, Any]:
     scenes_payload = read_json_file(scenes_path)
     scenes = validate_scenes_payload(scenes_payload)
 
-    assets = [build_asset_entry(scene, topic) for scene in scenes]
+    visual_pacing_payload = read_json_file(visual_pacing_plan_path)
+    beats = validate_visual_pacing_payload(visual_pacing_payload, scenes)
 
-    if len(assets) < len(scenes):
-        raise AssetsExecutorError("asset_count below scene_count")
+    assets = [build_asset_entry_from_beat(beat, topic) for beat in beats]
+
+    if len(assets) != len(beats):
+        raise AssetsExecutorError("asset_count must equal timed beat_count")
 
     for index, asset in enumerate(assets, start=1):
         validate_asset_entry(asset, index)
 
-    scene_ids = [scene["scene_id"] for scene in scenes]
-    asset_scene_ids = [asset["scene_id"] for asset in assets]
-    if scene_ids != asset_scene_ids:
-        raise AssetsExecutorError("asset scene_id mapping does not preserve scene order")
+    beat_orders = [require_positive_int(beat["beat_order"], "beat.beat_order") for beat in beats]
+    asset_orders = [asset["order"] for asset in assets]
+    if beat_orders != asset_orders:
+        raise AssetsExecutorError("asset order does not preserve timed beat order")
 
     now = utc_now_iso()
     assets_path = state_path.parent / "assets" / "assets.json"
@@ -401,6 +544,9 @@ def run_assets_executor(state_path: Path) -> dict[str, Any]:
         "executor_version": EXECUTOR_VERSION,
         "source_phase": state["phase"],
         "source_scenes_path": str(scenes_path),
+        "source_visual_pacing_plan_path": str(visual_pacing_plan_path),
+        "timing_source": "actual_canonical_audio",
+        "media_requirements_source": "timed_visual_pacing_beats",
         "topic": topic,
         "working_title": working_title,
         "hook": hook,
@@ -450,6 +596,8 @@ def run_assets_executor(state_path: Path) -> dict[str, Any]:
         "phase": saved_state["phase"],
         "assets_path": str(assets_path),
         "asset_count": len(assets),
+        "timing_source": "actual_canonical_audio",
+        "media_requirements_source": "timed_visual_pacing_beats",
         "provider_status": "resolved",
         "resolved_assets_path": resolved_assets_path,
         "resolved_count": int(resolver_result.get("resolved_count", 0)),

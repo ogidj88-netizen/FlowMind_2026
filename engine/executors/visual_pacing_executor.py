@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import argparse
 import json
 import math
@@ -17,7 +15,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "visual_pacing_executor"
-EXECUTOR_VERSION = "1.0.1"
+EXECUTOR_VERSION = "2.0.0"
 
 TARGET_BEAT_DURATION_SEC = 5.0
 MIN_BEAT_DURATION_SEC = 3.0
@@ -118,6 +116,16 @@ def require_positive_int(value: Any, field_name: str) -> int:
     return value
 
 
+def require_non_negative_int(value: Any, field_name: str) -> int:
+    if not isinstance(value, int):
+        raise VisualPacingExecutorError(f"{field_name} must be an integer")
+
+    if value < 0:
+        raise VisualPacingExecutorError(f"{field_name} must be >= 0")
+
+    return value
+
+
 def require_positive_number(value: Any, field_name: str) -> float:
     if isinstance(value, bool):
         raise VisualPacingExecutorError(f"{field_name} must be a number")
@@ -155,20 +163,21 @@ def fail_if_forbidden_markers(value: str, source_name: str) -> None:
         )
 
 
-def ensure_existing_file(path_value: Any, field_name: str) -> str:
+def resolve_existing_file(path_value: Any, field_name: str) -> tuple[str, Path]:
     path_string = require_non_empty_string(path_value, field_name)
-    path = Path(path_string)
+    supplied_path = Path(path_string)
+    resolved_path = supplied_path if supplied_path.is_absolute() else REPO_ROOT / supplied_path
 
-    if not path.exists():
+    if not resolved_path.exists():
         raise VisualPacingExecutorError(f"{field_name} does not exist: {path_string}")
 
-    if not path.is_file():
+    if not resolved_path.is_file():
         raise VisualPacingExecutorError(f"{field_name} must be a file: {path_string}")
 
-    if path.stat().st_size <= 0:
+    if resolved_path.stat().st_size <= 0:
         raise VisualPacingExecutorError(f"{field_name} must be non-empty: {path_string}")
 
-    return path_string
+    return path_string, resolved_path
 
 
 def validate_project_ids(project_id: str, payloads: list[tuple[str, dict[str, Any]]]) -> None:
@@ -180,50 +189,88 @@ def validate_project_ids(project_id: str, payloads: list[tuple[str, dict[str, An
             )
 
 
-def validate_preconditions(
-    state: dict[str, Any],
-    assembly_plan: dict[str, Any],
-    audio_render: dict[str, Any],
-    final_render_report: dict[str, Any],
-    artifacts: dict[str, Any],
-) -> None:
-    phase = require_non_empty_string(state.get("phase"), "PROJECT_STATE.phase")
-    if phase != "QA":
-        raise VisualPacingExecutorError(f"PROJECT_STATE.phase must be QA, got {phase}")
+def validate_scene(scene: dict[str, Any], index: int) -> None:
+    required_fields = {
+        "scene_id",
+        "order",
+        "voiceover_text",
+        "visual_intent",
+        "on_screen_text",
+        "asset_type",
+        "estimated_duration_sec",
+        "production_notes",
+    }
 
-    if require_bool(assembly_plan.get("assets_ready"), "assembly_plan.assets_ready") is not True:
-        raise VisualPacingExecutorError("assembly_plan.assets_ready must be true")
+    missing = sorted(required_fields - set(scene.keys()))
+    if missing:
+        raise VisualPacingExecutorError(
+            f"scene index {index} missing fields: {', '.join(missing)}"
+        )
 
-    if require_bool(assembly_plan.get("audio_ready"), "assembly_plan.audio_ready") is not True:
-        raise VisualPacingExecutorError("assembly_plan.audio_ready must be true")
+    require_non_empty_string(scene["scene_id"], f"scene[{index}].scene_id")
+    require_positive_int(scene["order"], f"scene[{index}].order")
+    require_non_empty_string(scene["voiceover_text"], f"scene[{index}].voiceover_text")
+    require_non_empty_string(scene["visual_intent"], f"scene[{index}].visual_intent")
+    require_non_empty_string(scene["on_screen_text"], f"scene[{index}].on_screen_text")
+    require_non_empty_string(scene["asset_type"], f"scene[{index}].asset_type")
+    require_positive_int(scene["estimated_duration_sec"], f"scene[{index}].estimated_duration_sec")
+    require_non_empty_string(scene["production_notes"], f"scene[{index}].production_notes")
 
-    if require_bool(assembly_plan.get("render_ready"), "assembly_plan.render_ready") is not True:
-        raise VisualPacingExecutorError("assembly_plan.render_ready must be true")
+    fail_if_forbidden_markers(json.dumps(scene, ensure_ascii=False), f"scene[{index}]")
 
-    audio_status = require_non_empty_string(audio_render.get("audio_status"), "audio_render.audio_status")
-    if audio_status != "ready":
-        raise VisualPacingExecutorError(f"audio_render.audio_status must be ready, got {audio_status}")
 
-    if require_bool(audio_render.get("audio_ready"), "audio_render.audio_ready") is not True:
-        raise VisualPacingExecutorError("audio_render.audio_ready must be true")
+def validate_audio_segment(segment: dict[str, Any], index: int) -> None:
+    required_fields = {
+        "segment_id",
+        "source_scene_id",
+        "order",
+        "tts_status",
+        "audio_path",
+        "duration_sec",
+        "duration_validated",
+        "provider_status",
+    }
 
-    if require_bool(audio_render.get("duration_validated"), "audio_render.duration_validated") is not True:
-        raise VisualPacingExecutorError("audio_render.duration_validated must be true")
+    missing = sorted(required_fields - set(segment.keys()))
+    if missing:
+        raise VisualPacingExecutorError(
+            f"audio segment index {index} missing fields: {', '.join(missing)}"
+        )
 
-    if require_bool(audio_render.get("loudness_validated"), "audio_render.loudness_validated") is not True:
-        raise VisualPacingExecutorError("audio_render.loudness_validated must be true")
+    require_non_empty_string(segment["segment_id"], f"audio[{index}].segment_id")
+    require_non_empty_string(segment["source_scene_id"], f"audio[{index}].source_scene_id")
+    require_positive_int(segment["order"], f"audio[{index}].order")
 
-    verdict = require_non_empty_string(
-        final_render_report.get("verdict"),
-        "final_render_report.verdict",
+    tts_status = require_non_empty_string(segment["tts_status"], f"audio[{index}].tts_status")
+    if tts_status != "rendered":
+        raise VisualPacingExecutorError(
+            f"audio[{index}].tts_status must be rendered, got {tts_status}"
+        )
+
+    provider_status = require_non_empty_string(
+        segment["provider_status"],
+        f"audio[{index}].provider_status",
     )
-    if verdict != "PASS":
-        raise VisualPacingExecutorError(f"final_render_report.verdict must be PASS, got {verdict}")
+    if provider_status != "rendered":
+        raise VisualPacingExecutorError(
+            f"audio[{index}].provider_status must be rendered, got {provider_status}"
+        )
 
-    ensure_existing_file(artifacts.get("final_video_path"), "PROJECT_STATE.artifacts.final_video_path")
+    if require_bool(segment["duration_validated"], f"audio[{index}].duration_validated") is not True:
+        raise VisualPacingExecutorError(
+            f"audio[{index}].duration_validated must be true"
+        )
+
+    require_positive_number(segment["duration_sec"], f"audio[{index}].duration_sec")
+    resolve_existing_file(segment["audio_path"], f"audio[{index}].audio_path")
+    fail_if_forbidden_markers(json.dumps(segment, ensure_ascii=False), f"audio[{index}]")
 
 
-def build_by_key(items: list[Any], key_name: str, source_name: str) -> dict[str, dict[str, Any]]:
+def build_by_key(
+    items: list[Any],
+    key_name: str,
+    source_name: str,
+) -> dict[str, dict[str, Any]]:
     result: dict[str, dict[str, Any]] = {}
 
     for index, item in enumerate(items, start=1):
@@ -246,7 +293,7 @@ def choose_visual_action(beat_order: int, asset_type: str, text_mode: str) -> st
     if "chart" in asset_type.lower():
         return "chart_focus"
 
-    if "checklist" in asset_type.lower():
+    if "checklist" in asset_type.lower() or "screen" in asset_type.lower():
         return "checklist_focus"
 
     sequence = (
@@ -297,14 +344,6 @@ def split_sentences(value: str) -> list[str]:
     return sentences
 
 
-def first_sentence(value: str) -> str:
-    sentences = split_sentences(value)
-    if not sentences:
-        return ""
-
-    return sentences[0]
-
-
 def shorten_to_words(value: str, max_words: int) -> str:
     words = value.strip().split()
     if len(words) <= max_words:
@@ -326,9 +365,8 @@ def select_display_text(scene: dict[str, Any], beat_order: int) -> tuple[str, st
     if beat_order % 2 == 0:
         return "", "none"
 
-    sentence_index = max(0, min(len(sentences) - 1, beat_order // 2))
-
     if sentences:
+        sentence_index = max(0, min(len(sentences) - 1, beat_order // 2))
         text = shorten_to_words(sentences[sentence_index], 10)
         if text:
             return text, "short_label"
@@ -363,56 +401,47 @@ def split_duration(duration_sec: float) -> list[float]:
 
 
 def build_beats(
-    timeline: list[Any],
-    scenes_by_id: dict[str, dict[str, Any]],
-    assets_by_scene_id: dict[str, dict[str, Any]],
+    scenes: list[dict[str, Any]],
     audio_by_scene_id: dict[str, dict[str, Any]],
 ) -> list[dict[str, Any]]:
     beats: list[dict[str, Any]] = []
     global_cursor = 0.0
 
-    for timeline_index, timeline_item in enumerate(timeline, start=1):
-        if not isinstance(timeline_item, dict):
-            raise VisualPacingExecutorError(f"timeline[{timeline_index}] must be an object")
+    for scene_index, scene in enumerate(scenes, start=1):
+        validate_scene(scene, scene_index)
 
-        scene_id = require_non_empty_string(
-            timeline_item.get("scene_id"),
-            f"timeline[{timeline_index}].scene_id",
-        )
-        timeline_id = require_non_empty_string(
-            timeline_item.get("timeline_id"),
-            f"timeline[{timeline_index}].timeline_id",
-        )
-        asset_id = require_non_empty_string(
-            timeline_item.get("asset_id"),
-            f"timeline[{timeline_index}].asset_id",
-        )
-        order = require_positive_int(timeline_item.get("order"), f"timeline[{timeline_index}].order")
-
-        if scene_id not in scenes_by_id:
-            raise VisualPacingExecutorError(f"missing scene for timeline scene_id={scene_id}")
-
-        if scene_id not in assets_by_scene_id:
-            raise VisualPacingExecutorError(f"missing resolved asset for scene_id={scene_id}")
+        scene_id = require_non_empty_string(scene["scene_id"], f"scene[{scene_index}].scene_id")
+        scene_order = require_positive_int(scene["order"], f"scene[{scene_index}].order")
 
         if scene_id not in audio_by_scene_id:
             raise VisualPacingExecutorError(f"missing audio render segment for scene_id={scene_id}")
 
-        scene = scenes_by_id[scene_id]
-        asset = assets_by_scene_id[scene_id]
         audio = audio_by_scene_id[scene_id]
+        audio_segment_id = require_non_empty_string(
+            audio.get("segment_id"),
+            f"audio[{scene_id}].segment_id",
+        )
+        source_audio_path, _ = resolve_existing_file(
+            audio.get("audio_path"),
+            f"audio[{scene_id}].audio_path",
+        )
+        duration_sec = require_positive_number(
+            audio.get("duration_sec"),
+            f"audio[{scene_id}].duration_sec",
+        )
 
-        resolved_asset_id = require_non_empty_string(asset.get("asset_id"), f"asset[{scene_id}].asset_id")
-        if resolved_asset_id != asset_id:
-            raise VisualPacingExecutorError(
-                f"asset mismatch for {scene_id}: timeline={asset_id}, resolved={resolved_asset_id}"
-            )
-
-        audio_segment_id = require_non_empty_string(audio.get("segment_id"), f"audio[{scene_id}].segment_id")
-        source_visual_path = ensure_existing_file(asset.get("local_path"), f"asset[{scene_id}].local_path")
-        source_audio_path = ensure_existing_file(audio.get("audio_path"), f"audio[{scene_id}].audio_path")
-        duration_sec = require_positive_number(audio.get("duration_sec"), f"audio[{scene_id}].duration_sec")
-        asset_type = require_non_empty_string(asset.get("asset_type"), f"asset[{scene_id}].asset_type")
+        asset_type = require_non_empty_string(
+            scene.get("asset_type"),
+            f"scene[{scene_index}].asset_type",
+        )
+        visual_intent = require_non_empty_string(
+            scene.get("visual_intent"),
+            f"scene[{scene_index}].visual_intent",
+        )
+        production_notes = require_non_empty_string(
+            scene.get("production_notes"),
+            f"scene[{scene_index}].production_notes",
+        )
 
         scene_cursor = 0.0
         beat_durations = split_duration(duration_sec)
@@ -432,7 +461,6 @@ def build_beats(
             motion_profile = choose_motion_profile(visual_action)
 
             beat = {
-                "asset_id": asset_id,
                 "audio_segment_id": audio_segment_id,
                 "beat_duration_sec": round(scene_end - scene_start, 3),
                 "beat_id": f"{scene_id}_BEAT_{beat_index:03d}",
@@ -441,22 +469,23 @@ def build_beats(
                 "global_end_sec": global_end,
                 "global_start_sec": global_start,
                 "motion_profile": motion_profile,
-                "order": order,
+                "requested_asset_type": asset_type,
+                "scene_end_sec": scene_end,
+                "scene_id": scene_id,
+                "scene_order": scene_order,
+                "scene_start_sec": scene_start,
+                "source_audio_path": source_audio_path,
+                "text_mode": text_mode,
+                "visual_action": visual_action,
+                "visual_intent": visual_intent,
+                "production_notes": production_notes,
                 "render_instruction": {
                     "ffmpeg_safe": True,
                     "requires_ai_generation": False,
                     "requires_external_provider": False,
-                    "requires_new_asset": False,
+                    "requires_new_asset": True,
                     "safe_margin_percent": 10,
                 },
-                "scene_end_sec": scene_end,
-                "scene_id": scene_id,
-                "scene_start_sec": scene_start,
-                "source_audio_path": source_audio_path,
-                "source_visual_path": source_visual_path,
-                "text_mode": text_mode,
-                "timeline_id": timeline_id,
-                "visual_action": visual_action,
             }
 
             fail_if_forbidden_markers(json.dumps(beat, ensure_ascii=False), beat["beat_id"])
@@ -474,116 +503,210 @@ def build_beats(
     return beats
 
 
-def validate_beats(beats: list[dict[str, Any]], expected_scene_count: int) -> None:
-    if len(beats) <= expected_scene_count:
+def validate_beats(
+    beats: list[dict[str, Any]],
+    scenes: list[dict[str, Any]],
+) -> None:
+    if not beats:
+        raise VisualPacingExecutorError("beats must not be empty")
+
+    scene_ids = [
+        require_non_empty_string(scene.get("scene_id"), f"scenes[{index}].scene_id")
+        for index, scene in enumerate(scenes, start=1)
+    ]
+    beat_scene_ids = {
+        require_non_empty_string(beat.get("scene_id"), f"beats[{index}].scene_id")
+        for index, beat in enumerate(beats, start=1)
+    }
+
+    missing_scene_ids = [scene_id for scene_id in scene_ids if scene_id not in beat_scene_ids]
+    if missing_scene_ids:
         raise VisualPacingExecutorError(
-            f"beat_count must be greater than scene_count: beats={len(beats)}, scenes={expected_scene_count}"
+            f"scenes without timed beats: {', '.join(missing_scene_ids)}"
         )
 
     previous_end = 0.0
+
     for index, beat in enumerate(beats, start=1):
         raw_global_start = beat.get("global_start_sec")
         if raw_global_start == 0:
             global_start = 0.0
         else:
-            global_start = require_positive_number(raw_global_start, f"beats[{index}].global_start_sec")
+            global_start = require_positive_number(
+                raw_global_start,
+                f"beats[{index}].global_start_sec",
+            )
 
-        global_end = require_positive_number(beat.get("global_end_sec"), f"beats[{index}].global_end_sec")
+        global_end = require_positive_number(
+            beat.get("global_end_sec"),
+            f"beats[{index}].global_end_sec",
+        )
 
         if abs(global_start - previous_end) > DURATION_TOLERANCE_SEC:
             raise VisualPacingExecutorError(
-                f"global timing gap or overlap at beat {index}: start={global_start}, previous_end={previous_end}"
+                f"global timing gap or overlap at beat {index}: "
+                f"start={global_start}, previous_end={previous_end}"
             )
 
         if global_end <= global_start:
-            raise VisualPacingExecutorError(f"beat {index} global_end_sec must be > global_start_sec")
+            raise VisualPacingExecutorError(
+                f"beat {index} global_end_sec must be > global_start_sec"
+            )
 
         previous_end = global_end
+
+
+def validate_audio_render(
+    audio_render: dict[str, Any],
+    scenes: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    segment_count = require_positive_int(
+        audio_render.get("segment_count"),
+        "audio_render.segment_count",
+    )
+    rendered_segment_count = require_non_negative_int(
+        audio_render.get("rendered_segment_count"),
+        "audio_render.rendered_segment_count",
+    )
+    failed_segment_count = require_non_negative_int(
+        audio_render.get("failed_segment_count"),
+        "audio_render.failed_segment_count",
+    )
+
+    if rendered_segment_count != segment_count:
+        raise VisualPacingExecutorError(
+            "audio_render must contain all rendered segments before exact timed execution"
+        )
+
+    if failed_segment_count != 0:
+        raise VisualPacingExecutorError(
+            f"audio_render.failed_segment_count must be 0, got {failed_segment_count}"
+        )
+
+    if require_bool(
+        audio_render.get("duration_validated"),
+        "audio_render.duration_validated",
+    ) is not True:
+        raise VisualPacingExecutorError("audio_render.duration_validated must be true")
+
+    audio_segments = require_list(audio_render.get("segments"), "audio_render.segments")
+    if len(audio_segments) != segment_count:
+        raise VisualPacingExecutorError(
+            f"audio segment count mismatch: declared={segment_count}, actual={len(audio_segments)}"
+        )
+
+    for index, segment in enumerate(audio_segments, start=1):
+        if not isinstance(segment, dict):
+            raise VisualPacingExecutorError(f"audio_render.segments[{index}] must be an object")
+        validate_audio_segment(segment, index)
+
+    scene_ids = [
+        require_non_empty_string(scene.get("scene_id"), f"scenes[{index}].scene_id")
+        for index, scene in enumerate(scenes, start=1)
+    ]
+    audio_scene_ids = [
+        require_non_empty_string(
+            segment.get("source_scene_id"),
+            f"audio_render.segments[{index}].source_scene_id",
+        )
+        for index, segment in enumerate(audio_segments, start=1)
+    ]
+
+    if scene_ids != audio_scene_ids:
+        raise VisualPacingExecutorError(
+            "audio_render segment mapping must exactly preserve scene order"
+        )
+
+    return audio_segments
 
 
 def run_visual_pacing_executor(state_path: Path) -> dict[str, Any]:
     state = load_state(state_path)
 
-    project_id = require_non_empty_string(state.get("project_id"), "PROJECT_STATE.project_id")
+    phase = require_non_empty_string(state.get("phase"), "PROJECT_STATE.phase")
+    if phase != "SCENES":
+        raise VisualPacingExecutorError(
+            f"visual_pacing_executor may run only when phase is SCENES, got {phase}"
+        )
+
+    project_id = require_non_empty_string(
+        state.get("project_id"),
+        "PROJECT_STATE.project_id",
+    )
     artifacts = state.get("artifacts", {})
     if not isinstance(artifacts, dict):
         raise VisualPacingExecutorError("PROJECT_STATE.artifacts must be an object")
 
-    assembly_plan_path = Path(
-        require_non_empty_string(artifacts.get("assembly_plan_path"), "artifacts.assembly_plan_path")
-    )
-    resolved_assets_path = Path(
-        require_non_empty_string(artifacts.get("resolved_assets_path"), "artifacts.resolved_assets_path")
+    scenes_path = Path(
+        require_non_empty_string(
+            artifacts.get("scenes_path"),
+            "artifacts.scenes_path",
+        )
     )
     audio_render_path = Path(
-        require_non_empty_string(artifacts.get("audio_render_path"), "artifacts.audio_render_path")
-    )
-    scenes_path = Path(
-        require_non_empty_string(artifacts.get("scenes_path"), "artifacts.scenes_path")
-    )
-    final_render_report_path = Path(
         require_non_empty_string(
-            artifacts.get("final_render_report_path"),
-            "artifacts.final_render_report_path",
+            artifacts.get("audio_render_path"),
+            "artifacts.audio_render_path",
         )
     )
 
-    assembly_plan = read_json_file(assembly_plan_path)
-    resolved_assets = read_json_file(resolved_assets_path)
-    audio_render = read_json_file(audio_render_path)
     scenes_payload = read_json_file(scenes_path)
-    final_render_report = read_json_file(final_render_report_path)
+    audio_render = read_json_file(audio_render_path)
 
     validate_project_ids(
         project_id,
         [
-            ("assembly_plan", assembly_plan),
-            ("resolved_assets", resolved_assets),
-            ("audio_render", audio_render),
             ("scenes", scenes_payload),
-            ("final_render_report", final_render_report),
+            ("audio_render", audio_render),
         ],
     )
 
-    validate_preconditions(
-        state=state,
-        assembly_plan=assembly_plan,
-        audio_render=audio_render,
-        final_render_report=final_render_report,
-        artifacts=artifacts,
+    scene_count = require_positive_int(
+        scenes_payload.get("scene_count"),
+        "scenes.scene_count",
     )
-
-    timeline = require_list(assembly_plan.get("timeline"), "assembly_plan.timeline")
     scenes = require_list(scenes_payload.get("scenes"), "scenes.scenes")
-    assets = require_list(resolved_assets.get("assets"), "resolved_assets.assets")
-    audio_segments = require_list(audio_render.get("segments"), "audio_render.segments")
 
-    scene_count = require_positive_int(assembly_plan.get("scene_count"), "assembly_plan.scene_count")
-    if scene_count != len(timeline):
-        raise VisualPacingExecutorError("assembly_plan.scene_count must match timeline length")
+    if scene_count != len(scenes):
+        raise VisualPacingExecutorError(
+            f"scene_count mismatch: declared={scene_count}, actual={len(scenes)}"
+        )
 
-    scenes_by_id = build_by_key(scenes, "scene_id", "scenes")
-    assets_by_scene_id = build_by_key(assets, "scene_id", "resolved_assets")
-    audio_by_scene_id = build_by_key(audio_segments, "source_scene_id", "audio_render.segments")
+    for index, scene in enumerate(scenes, start=1):
+        if not isinstance(scene, dict):
+            raise VisualPacingExecutorError(f"scenes[{index}] must be an object")
+        validate_scene(scene, index)
+
+    audio_segments = validate_audio_render(audio_render, scenes)
+    audio_by_scene_id = build_by_key(
+        audio_segments,
+        "source_scene_id",
+        "audio_render.segments",
+    )
 
     beats = build_beats(
-        timeline=timeline,
-        scenes_by_id=scenes_by_id,
-        assets_by_scene_id=assets_by_scene_id,
+        scenes=scenes,
         audio_by_scene_id=audio_by_scene_id,
     )
-    validate_beats(beats, scene_count)
+    validate_beats(beats, scenes)
 
-    total_duration_sec = round(sum(beat["beat_duration_sec"] for beat in beats), 3)
+    total_duration_sec = round(
+        sum(beat["beat_duration_sec"] for beat in beats),
+        3,
+    )
     source_audio_duration_sec = require_positive_number(
         audio_render.get("total_duration_sec"),
         "audio_render.total_duration_sec",
     )
-    duration_delta_sec = round(total_duration_sec - source_audio_duration_sec, 3)
+    duration_delta_sec = round(
+        total_duration_sec - source_audio_duration_sec,
+        3,
+    )
 
     if abs(duration_delta_sec) > DURATION_TOLERANCE_SEC:
         raise VisualPacingExecutorError(
-            f"total duration mismatch: beats={total_duration_sec}, audio={source_audio_duration_sec}"
+            f"total duration mismatch: beats={total_duration_sec}, "
+            f"audio={source_audio_duration_sec}"
         )
 
     now = utc_now_iso()
@@ -591,31 +714,30 @@ def run_visual_pacing_executor(state_path: Path) -> dict[str, Any]:
     visual_pacing_plan_path = visual_pacing_dir / "visual_pacing_plan.json"
 
     visual_pacing_plan = {
-        "audio_master_clock": True,
-        "beat_count": len(beats),
-        "beats": beats,
-        "blockers": [],
-        "created_at": now,
-        "duration_delta_sec": duration_delta_sec,
+        "project_id": project_id,
         "executor": EXECUTOR_NAME,
         "executor_version": EXECUTOR_VERSION,
-        "layer": "visual_pacing",
+        "layer": "timed_visual_execution",
         "layer_version": EXECUTOR_VERSION,
-        "max_beat_duration_sec": MAX_BEAT_DURATION_SEC,
-        "min_beat_duration_sec": MIN_BEAT_DURATION_SEC,
-        "project_id": project_id,
-        "scene_count": scene_count,
-        "source_assembly_plan_path": str(assembly_plan_path),
-        "source_audio_render_path": str(audio_render_path),
-        "source_audio_duration_sec": source_audio_duration_sec,
-        "source_final_render_report_path": str(final_render_report_path),
-        "source_phase": state["phase"],
-        "source_resolved_assets_path": str(resolved_assets_path),
-        "source_scenes_path": str(scenes_path),
         "status": "VISUAL_PACING_PLAN_OK",
+        "source_phase": state["phase"],
+        "source_scenes_path": str(scenes_path),
+        "source_audio_render_path": str(audio_render_path),
+        "timing_source": "actual_canonical_audio",
+        "audio_master_clock": True,
+        "timed_execution_ready": True,
+        "scene_count": scene_count,
+        "beat_count": len(beats),
         "target_beat_duration_sec": TARGET_BEAT_DURATION_SEC,
+        "min_beat_duration_sec": MIN_BEAT_DURATION_SEC,
+        "max_beat_duration_sec": MAX_BEAT_DURATION_SEC,
+        "source_audio_duration_sec": source_audio_duration_sec,
         "total_duration_sec": total_duration_sec,
+        "duration_delta_sec": duration_delta_sec,
+        "beats": beats,
+        "created_at": now,
         "warnings": [],
+        "blockers": [],
     }
 
     serialized = json.dumps(visual_pacing_plan, ensure_ascii=False)
@@ -632,19 +754,21 @@ def run_visual_pacing_executor(state_path: Path) -> dict[str, Any]:
     saved_state = save_state_with_disk_guard(state_path, candidate_state)
 
     return {
-        "beat_count": len(beats),
-        "duration_delta_sec": duration_delta_sec,
-        "phase": saved_state["phase"],
-        "project_id": project_id,
-        "scene_count": scene_count,
         "status": "VISUAL_PACING_EXECUTOR_OK",
+        "project_id": project_id,
+        "phase": saved_state["phase"],
+        "scene_count": scene_count,
+        "beat_count": len(beats),
         "total_duration_sec": total_duration_sec,
+        "duration_delta_sec": duration_delta_sec,
         "visual_pacing_plan_path": str(visual_pacing_plan_path),
     }
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="FlowMind visual pacing executor v1")
+    parser = argparse.ArgumentParser(
+        description="FlowMind SCENES timed visual execution executor"
+    )
     parser.add_argument(
         "--state",
         required=True,
