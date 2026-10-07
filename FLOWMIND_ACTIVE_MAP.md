@@ -1,643 +1,542 @@
-# FLOWMIND ACTIVE MAP
+FLOWMIND ACTIVE MAP
 
-Status: ACTIVE OPERATIONAL MAP
-Project: FlowMind / Imagine What If
-Updated: 2026-10-05
-Mode: PRODUCTION EXECUTION ORDER IMPLEMENTATION MODE
+Status: ACTIVE OPERATIONAL MAP Project: FlowMind / Imagine What If
+Updated: 2026-10-07 Mode: AUTHORITY SIMPLIFICATION / GOVERNANCE
+COMPACTION
 
-## 1. Purpose
+1. Purpose
 
-This file is the single current operational authority for FlowMind.
+This file is the single current operational and recovery checkpoint for
+FlowMind.
 
-It defines only:
+It answers only:
 
--   current mode
--   current objective
--   current step
--   current allowed work
--   current forbidden work
--   current exit condition
--   current next action
+-   what target is active
+-   what is currently paused or allowed
+-   what has been verified
+-   what materially remains NOT DONE
+-   what is deferred
+-   what exit conditions remain
+-   what the next logical action is
+-   what durable evidence anchors recovery
 
-It does NOT define:
+Permanent operating/execution rules belong to:
 
--   permanent operating discipline
--   high-level product intent
--   detailed target architecture
--   authority classification
--   control-plane semantics
--   runtime truth
--   historical architecture
--   completed authority-migration history
+FLOWMIND_CORE_RULES.md
 
-Those belong to their canonical owners.
+This file does not duplicate those rules.
 
-------------------------------------------------------------------------
+2. Authority Routing
 
-## 2. Current Authority Routing
+Permanent operating/execution rules: FLOWMIND_CORE_RULES.md
 
-Permanent operating discipline:
-`000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md`
+Current operational/recovery state: FLOWMIND_ACTIVE_MAP.md
 
-Product intent: `FLOWMIND_WORKING_TARGET.md`
+Product intent: FLOWMIND_WORKING_TARGET.md
 
-Detailed-target identity and classification:
-`FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md`
+Authority classification and reference routing:
+FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
 
-Current trusted detailed target: `CURRENT_TRUSTED_DETAILED_TARGET`
+Detailed architecture: CURRENT_TRUSTED_DETAILED_TARGET as resolved by
+the Registry
 
-Resolved by the Registry as: `FLOWMIND_TARGET_ARCHITECTURE_V3_2.md`
-
-Execution discipline / MAP CHECK / anti-loop:
-`docs/FLOWMIND_WORK_PROTOCOL_V1.md`
-
-Control-plane semantics: `CANONICAL_DISPATCHER_SPEC.md`
-
-Current operational authority: `FLOWMIND_ACTIVE_MAP.md`
+Control-plane semantics: CANONICAL_DISPATCHER_SPEC.md
 
 Runtime truth: verified current repo and runtime evidence
 
-Historical guard:
-`docs/FLOWMIND_MAP_GUARD_V1.md`
-classification:
-FROZEN LEGACY
+Compatibility during the current governance migration:
 
-Historical target:
-`FLOWMIND_TARGET_ARCHITECTURE_V3_1.md`
-classification:
-FROZEN LEGACY
+-   000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md -> transitional pointer
+    to FLOWMIND_CORE_RULES.md
+-   docs/FLOWMIND_WORK_PROTOCOL_V1.md -> transitional reference /
+    compatibility document
 
-------------------------------------------------------------------------
+Historical authorities remain historical unless the Registry explicitly
+classifies otherwise.
 
-## 3. Current Verified State
+3. Current Governance Transaction
 
-Authority System V2 publication is complete.
+Current transaction:
 
-The V3.2 architecture promotion is complete.
-
-The following remain closed and must not be reopened without new
-material evidence:
-
--   V3.2 architecture review
--   cross-module ownership review
--   contradiction review
--   duplication review
--   internal architecture validation
--   deferred-scope review
--   authority reconciliation
--   authority migration
--   authority publication
--   Project Sources synchronization for the completed authority block
-
-Completed checks remain completed.
-
-A new chat does not reset them.
-
-A historical file remaining in Git does not reset them.
-
-A Project Source filename suffix does not reset them.
-
-Governance work is not the current blocker.
-
-Production reentry gap identification is complete.
-
-Exactly one highest-value implementation target is selected and
-authorized:
-
-`PRODUCTION EXECUTION ORDER REPAIR`
-
-Verified runtime evidence established the following implementation gap:
-
--   the current runtime introduced `AUDIO` as a canonical phase
--   the canonical control contract does not define `AUDIO` as a
-    canonical phase
--   canonical audio is required as downstream timing truth
--   exact timed visual execution must derive from actual canonical audio
--   current visual pacing is positioned after final render and depends
-    on already-resolved media
--   current asset planning/resolution occurs before
-    canonical-audio-driven exact timing
--   current final render is guarded under `QA` even though it creates
-    the final video
--   current QA consumes the final video and therefore must remain
-    downstream of final render
--   the existing asset resolver/provider layer is reusable and is not
-    the current blocker
-
-This is the selected blocker because it prevents a correct real
-end-to-end production contour.
-
-The separate QA verdict defect is verified but is NOT part of the
-current implementation target.
-
-Durable implementation recovery boundary:
-
--   selected target status: `IN PROGRESS`
--   last verified implementation boundary:
-    `engine/executors/audio_executor.py` v1.2.0
--   verification evidence:
-    `AUDIO_EXECUTOR_SCENES_MIGRATION=PASS`, exit=0
--   verified file SHA-256:
-    `d7535ac57d4cabfcf9a5cf58768cc04d3fc0c2f53040eb9d15e76423b59307e6`
--   verified result: audio planning is an internal `SCENES` substep; the
-    canonical `AUDIO` phase dependency is removed from this executor;
-    segment count remains dynamic; the downstream `audio_plan` contract
-    is preserved; the executor does not advance canonical phase
--   material NOT DONE state:
-    `engine/executors/audio_renderer.py` has NOT been modified for this
-    target
--   next unresolved implementation action:
-    inspect a fresh current-repo copy of
-    `engine/executors/audio_renderer.py` and decide its required boundary
-    repair
--   runtime freeze: `YES` while the selected production-order contour is
-    cross-file incomplete
-
-This recovery boundary is durable handoff state.
-
-A new chat must recover from this boundary through the active Work
-Protocol RECOVERY CHECK and must not restart from `audio_executor.py`.
-
-------------------------------------------------------------------------
-
-## 4. Current Mode
-
-Current mode:
-
-PRODUCTION EXECUTION ORDER IMPLEMENTATION MODE
+AUTHORITY SIMPLIFICATION / GOVERNANCE COMPACTION
 
 Purpose:
 
-Repair the verified production execution-order gap using the existing
-active contour.
+-   make FLOWMIND_CORE_RULES.md the single owner of permanent operating
+    and execution discipline
+-   make FLOWMIND_ACTIVE_MAP.md the single current-state/recovery
+    checkpoint
+-   remove duplicated active governance ownership
+-   make new-chat recovery small and deterministic
+-   preserve specialized reference authorities without rereading them by
+    default
 
-This mode authorizes exactly one implementation target:
+Runtime implementation is FROZEN during this transaction.
 
-`PRODUCTION EXECUTION ORDER REPAIR`
+Production completion remains:
 
-This is not authorization for broad refactoring.
+98%
 
-The implementation must preserve:
+Do not increase production completion above 98% until the production
+target’s remaining runtime exit conditions and validated commit are
+complete.
 
--   one canonical dispatcher
--   one canonical project state
--   one active production contour
--   existing reusable provider/resolver capabilities
--   explicit artifact contracts
--   evidence-driven validation
--   one-file-at-a-time execution
+Verified governance work in this transaction:
 
-Intermediate runtime execution is frozen while a changed file is
-temporarily incompatible with not-yet-updated files inside this selected
-contour.
+-   FLOWMIND_CORE_RULES.md created and validated
+-   logical-action execution rule added to FLOWMIND_CORE_RULES.md
+-   large replacement content is delivered as .txt by default
+-   000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md compacted to a
+    transitional compatibility pointer and validated
+-   docs/FLOWMIND_WORK_PROTOCOL_V1.md compacted to a transitional
+    reference / compatibility document and validated
+-   FLOWMIND_ACTIVE_MAP.md compacted into the single operational/recovery
+    checkpoint and validated
+-   FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md reconciled to the simplified
+    authority model and validated
+-   targeted active-authority dependency/reference scan completed
+-   CANONICAL_DISPATCHER_SPEC.md old governance dependency migrated to
+    FLOWMIND_CORE_RULES.md and validated
+-   final cross-file authority validation completed with PASS
+-   Git status inspected; production/runtime modifications and runtime
+    evidence remain intentionally outside the governance commit
 
-Do not claim the contour operational until the required cross-file
-dependencies are coherent and validated.
+Governance transaction status:
 
-------------------------------------------------------------------------
+IN PROGRESS / READY FOR DURABLE PUBLICATION
 
-## 5. Current Objective
+4. Frozen Production Target
 
-Current objective:
+Production target:
 
-Restore the production execution order so that the active runtime
-follows the trusted production dependency chain without creating a new
-canonical phase or a second orchestration contour.
+PRODUCTION EXECUTION ORDER REPAIR
 
-Required canonical lifecycle remains:
+Production target status:
 
-TOPIC -\> SCRIPT -\> SCENES -\> ASSETS -\> ASSEMBLY -\> QA -\>
-READY_FOR_UPLOAD -\> UPLOADED -\> ARCHIVED
+IN PROGRESS / FROZEN FOR GOVERNANCE COMPACTION
 
-with HALT as the controlled stop state.
+Do not reopen completed production boundaries merely because governance
+is being compacted.
 
-`AUDIO` is not a canonical lifecycle phase.
+Required canonical lifecycle:
 
-Required production dependency order inside the canonical lifecycle:
+TOPIC -> SCRIPT -> SCENES -> ASSETS -> ASSEMBLY -> QA ->
+READY_FOR_UPLOAD -> UPLOADED -> ARCHIVED
 
-SCRIPT -\> Visual Intent / Pass 1 -\> Canonical Audio -\> actual audio
-timing -\> Pass 2 / timed execution -\> Media Requirements -\> Media
-Resolution -\> Assembly / deterministic final render -\> QA of the
+HALT remains the controlled stop state.
+
+AUDIO is not a canonical lifecycle phase.
+
+Required production dependency order:
+
+SCRIPT -> Visual Intent / Pass 1 -> Canonical Audio -> actual audio
+timing -> Pass 2 / timed execution -> Media Requirements -> Media
+Resolution -> Assembly / deterministic final render -> QA of the
 completed final artifact
-
-Operational ownership target:
-
-SCENES -\> Visual Intent / Pass 1 -\> canonical audio
-planning/rendering/validation -\> Pass 2 exact timed execution
-
-ASSETS -\> media requirements derived from the timed execution contract
--\> media resolution -\> rights evidence required by the active resolver
-contract
-
-ASSEMBLY -\> assembly/readiness -\> deterministic final render -\> final
-render readiness
-
-QA -\> evaluate the already-created final artifact
 
 The dispatcher remains the only canonical phase-transition authority.
 
-Internal executors must not silently advance canonical phase.
+5. Verified Production Boundaries
 
-------------------------------------------------------------------------
+The following implementation boundaries are already verified and must
+not be reopened without material new evidence.
 
-## 6. Current Step
+Audio executor
 
-Current step:
+engine/executors/audio_executor.py
 
-IMPLEMENT `PRODUCTION EXECUTION ORDER REPAIR`
+Verified:
 
-Target status:
-
-IN PROGRESS
-
-Execution rule:
-
-ONE FILE -\> VERIFY -\> RECORD RESULT -\> NEXT FILE
-
-Last verified implementation substep:
-
-`engine/executors/audio_executor.py`
-
-Result:
-
-PASS
+-   audio planning is an internal SCENES substep
+-   no canonical AUDIO phase
+-   dynamic segment count
+-   downstream audio_plan preserved
+-   no canonical phase advance
 
 Evidence:
 
-`AUDIO_EXECUTOR_SCENES_MIGRATION=PASS`, exit=0
+AUDIO_EXECUTOR_SCENES_MIGRATION=PASS
 
-Current unresolved implementation substep:
+Audio renderer
 
-`engine/executors/audio_renderer.py`
+Verified:
 
-Material NOT DONE state:
+-   internal SCENES substep
+-   no FLOWMIND_AUDIO_RENDER_LIMIT production dependency
+-   dynamic audio_plan rendering
+-   valid rendered files can be reused idempotently
+-   actual duration obtained through ffprobe
+-   phase remains SCENES
+-   actual duration is written
+-   duration_validated=True
+-   audio_path preserved
+-   loudness validation remains a required downstream audio-readiness
+    step
 
-`engine/executors/audio_renderer.py` has not been modified for this
+Runtime evidence included 9 segments and 390.505 seconds for the control
+artifact.
+
+These counts are evidence, not production constants.
+
+Scenes executor / Visual Intent Pass 1
+
+engine/executors/scenes_executor.py
+
+Verified repaired boundary:
+
+-   runtime PASS
+-   OpenAI call per scene
+-   topic-agnostic visual units
+-   no hard-coded current topic
+-   no canonical phase transition
+-   dynamic visual-unit output
+
+Evidence:
+
+SCENES_PASS1_RUNTIME=PASS
+
+Historical runtime evidence included 9 scenes and 31 visual units.
+
+These counts are evidence, not production constants.
+
+Visual pacing / Pass 2
+
+engine/executors/visual_pacing_executor.py
+
+Verified repaired boundary:
+
+-   maps ordered proportional visual units onto actual audio-timed beats
+-   preserves actual timing
+-   preserves order
+-   supports dynamic counts
+-   no canonical phase transition
+-   exact timing ownership remains downstream of actual canonical audio
+
+Assets
+
+engine/executors/assets_executor.py
+
+Verified repaired/runtime boundary:
+
+-   timed beats produce asset requirements dynamically
+-   resolved media is produced through the existing active resolver path
+-   asset IDs are dynamic
+-   no hard-coded runtime asset count
+
+Historical runtime evidence included 84 timed beats, 84 assets, and 84
+resolved media items.
+
+These counts are evidence, not production constants.
+
+Do not invent a second resolver/orchestrator unless new runtime evidence
+proves an actual gap.
+
+Canonical dispatcher
+
+engine/canonical_dispatcher.py
+
+Verified repaired lifecycle boundary:
+
+-   AUDIO removed as a canonical phase
+-   relevant lifecycle includes SCRIPT, SCENES, ASSETS, ASSEMBLY, QA
+-   SCENES -> ASSETS guard requires scenes_path, audio_render_path, and
+    visual_pacing_plan_path
+-   QA -> READY requires qa_passed=True
+-   READY -> UPLOADED requires approved_for_upload=True
+-   dispatcher remains API-only
+
+Do not treat canonical_dispatcher.py as a CLI.
+
+Assembly executor
+
+engine/executors/assembly_executor.py
+
+Verified static and runtime boundary:
+
+-   consumes timed media
+-   groups beat assets into scene timeline
+-   each scene has audio once
+-   visual segments follow timed beat media
+-   before final render, render_ready=False is intentional
+
+Evidence:
+
+ASSEMBLY_TIMED_MEDIA_RUNTIME=PASS
+
+Historical runtime evidence included 9 scenes, 84 beats, 84 visual
+segments, and expected duration 390.505 seconds.
+
+These counts are evidence, not production constants.
+
+Assembly readiness
+
+tools/apply_assembly_readiness.py
+
+Verified KEEP.
+
+It dynamically validates:
+
+-   project/assets relationships
+-   resolution/license readiness
+-   audio readiness
+-   loudness validation
+-   duration validation
+-   blockers
+-   timeline/scene relationships
+
+Before final render it intentionally leaves:
+
+render_ready=False
+
+with final render still required.
+
+Final render
+
+engine/executors/final_render_executor.py
+
+Historical render mechanics are runtime-proven under the old ownership
+boundary.
+
+Corrected current boundary:
+
+ASSEMBLY side only, before QA.
+
+Current corrected implementation has static PASS for the repaired
+ASSEMBLY guard.
+
+Do NOT claim corrected integrated runtime PASS yet.
+
+Historical mechanics evidence:
+
+FINAL_RENDER_TIMED_VISUALS_RUNTIME=PASS
+
+Corrected boundary evidence:
+
+FINAL_RENDER_ASSEMBLY_BOUNDARY_STATIC=PASS
+
+Final render readiness
+
+tools/apply_final_render_readiness.py
+
+Verified corrected static boundary:
+
+-   validates final video and final render report
+-   requires final render verdict PASS
+-   validates non-zero artifact/duration
+-   validates failed_scene_count=0
+-   validates blockers empty
+-   synchronizes assembly readiness
+-   sets render_ready=True after successful final render
+-   does not change canonical phase
+
+Evidence:
+
+FINAL_RENDER_READINESS_ASSEMBLY_STATIC=PASS
+
+Corrected integrated runtime proof is still NOT DONE.
+
+Active phase runner
+
+tools/flowmind_run_phase.py
+
+Verified repaired static contour:
+
+SCRIPT: script_executor
+
+SCENES: scenes_executor audio_executor audio_renderer
+audio_loudness_report apply_audio_loudness_report visual_pacing_executor
+
+ASSETS: assets_executor
+
+ASSEMBLY: assembly_executor apply_assembly_readiness
+final_render_executor apply_final_render_readiness
+
+QA: qa_executor
+
+Verified:
+
+-   no canonical AUDIO phase
+-   state phase AUDIO fails closed
+-   runner does not transition canonical phase
+-   each substep must leave canonical phase unchanged
+
+Evidence:
+
+FLOWMIND_RUN_PHASE_REPAIRED_CONTOUR_STATIC=PASS
+
+Full repaired runner runtime PASS remains NOT DONE until clean control
+replay.
+
+6. Known Deferred Defect
+
+QA verdict defect is VERIFIED but DEFERRED from the production-order
 target.
 
-Before modifying this file, use a fresh copy directly from the current
-repo.
+Current known behavior in qa_executor:
 
-Required decision question:
+-   QA consumes an existing final artifact
+-   final verdict logic is still defective
+-   upload-readiness logic is circular
+-   final verdict is hardcoded BLOCKED / qa_passed=False /
+    approved=False
 
-Can the existing audio renderer be fully adapted into an internal
-`SCENES` substep so that it consumes the dynamic `audio_plan`, renders
-the actual planned segment set without a manually configured production
-segment-count limit, preserves the downstream `audio_render` contract,
-and does not advance canonical phase?
+Do not fix this inside PRODUCTION EXECUTION ORDER REPAIR.
 
-Required result if modification is justified by the fresh file:
+The production-order target may close if the clean replay reaches QA
+through the corrected lifecycle and the only remaining failure is this
+already-known QA verdict defect.
 
--   audio rendering remains an internal `SCENES` production substep
--   it does not require a canonical `AUDIO` phase
--   the render set derives from the actual `audio_plan` segment set
--   production does not depend on `FLOWMIND_AUDIO_RENDER_LIMIT` as a
-    scene/segment-count control
--   existing idempotent reuse of valid rendered audio is preserved where
-    supported by the verified implementation
--   the downstream `audio_render` artifact contract is preserved
--   the executor does not advance canonical phase
+Then the QA defect becomes the next separate target.
 
-After replacement, if modification is required:
+7. Clean Replay State
 
--   syntax must pass
--   phase/input/output contract must pass targeted verification
--   absence of manual production segment-count control must pass targeted
-    verification
--   no production runtime chain is executed until the currently edited
-    dependency boundary is safe to test
+A clean control replay is still required to close the production-order
+target.
 
-Then proceed to the next file inside the same selected implementation
-target based on verified dependency order.
+Its purpose is not to re-prove every module independently.
 
-The Active Map does not need to be rewritten between ordinary substeps.
-However, before a required new-chat handoff or when chat/context
-degradation makes continuation unsafe, create a context recovery
-checkpoint according to the active Work Protocol so the last verified
-boundary and next unresolved action are durable.
+It must provide integrated runtime evidence of:
 
-------------------------------------------------------------------------
+SCENES -> Pass 1 -> canonical audio -> actual audio timing -> timed Pass
+2 -> ASSETS -> resolved media -> ASSEMBLY -> final render -> final
+readiness -> dispatcher transition to QA -> QA receives the
+already-created final video
 
-## 7. Authorized Implementation Contour
+Known historical candidates and experiments must not be mutated to
+manufacture PASS.
 
-The selected target may modify only files directly required to repair
-the verified production-order gap.
-
-In-scope runtime components include, when their verified contract
-requires modification:
-
--   `engine/executors/audio_executor.py`
--   `engine/executors/audio_renderer.py`
--   `engine/executors/visual_pacing_executor.py`
--   `engine/executors/assets_executor.py`
--   `engine/executors/assembly_executor.py`
--   `engine/executors/final_render_executor.py`
--   `tools/audio_loudness_report.py`
--   `tools/apply_audio_loudness_report.py`
--   `tools/apply_assembly_readiness.py`
--   `tools/apply_final_render_readiness.py`
--   `tools/flowmind_run_phase.py`
--   `engine/canonical_dispatcher.py`
--   targeted active tests/checks that directly encode the superseded
-    `AUDIO` lifecycle or the repaired production-order contract
-
-A file being listed here does not mean it must be changed.
-
-Use:
-
-KEEP MODIFY REMOVE
-
-based on verified current implementation evidence.
-
-Do not modify a component merely because it is in the authorized
-contour.
-
-No new production module is authorized unless current evidence proves
-the existing contour cannot satisfy the required contract.
-
-------------------------------------------------------------------------
-
-## 8. Current Component Classification
-
-Current evidence supports:
-
-KEEP:
-
--   existing canonical state mechanism
--   existing dispatcher as the single canonical transition authority
--   existing asset resolver capability
--   existing Pexels provider capability
--   existing deterministic visual provider capability
--   existing audio rendering capability
--   existing loudness validation capability
--   existing final render capability
--   existing QA capability as the downstream consumer of the final
-    artifact
-
-MODIFY:
-
--   audio executor phase/ownership boundary
--   audio renderer phase/ownership boundary
--   visual pacing dependency boundary and timing ownership
--   assets executor upstream contract
--   assembly/final-render execution boundary where required
--   readiness tools whose phase guards encode the old ordering
--   active phase runner orchestration
--   canonical dispatcher runtime implementation that currently contains
-    the non-canonical `AUDIO` phase
--   targeted tests/checks that encode the old runtime ordering
-
-REMOVE:
-
--   `AUDIO` as a canonical runtime phase
--   required production dependence on a manually configured
-    scene/segment render count
--   post-final-render ownership of exact visual timing
-
-DEFER:
-
--   QA hardcoded final verdict defect
--   editorial/script quality tuning
--   provider migration
--   capability benchmarking
--   delivery/upload hardening
--   performance optimization unrelated to this blocker
-
-------------------------------------------------------------------------
-
-## 9. Allowed Actions Now
-
-Allowed:
-
--   modify only the selected production-order contour
--   work one specific file at a time
--   require a fresh current-repo copy before modifying an existing file
--   perform full-file replacement only
--   run targeted syntax checks after each replacement
--   run the smallest contract check needed to validate the current
-    substep
--   inspect an immediately dependent file only when required to avoid an
-    unsafe edit
--   preserve already-verified provider/API preflight PASS unless recheck
-    conditions are triggered
--   keep runtime execution frozen across temporarily incomplete
-    cross-file implementation states
--   run a bounded integration validation after the required dependencies
-    become coherent
--   run a clean control replay after the production-order contour is
-    coherent
--   commit after the selected implementation block is validated
--   create a bounded context recovery checkpoint before block completion
-    only when the active Work Protocol exception is triggered
-
-Default execution:
-
-ONE STEP -\> EVIDENCE -\> VERIFY -\> NEXT STEP
-
-When files are modified:
-
-ONE STEP = ONE SPECIFIC FILE
-
-No batch file editing.
-
-------------------------------------------------------------------------
-
-## 10. Forbidden Actions Now
+Previously rejected/blocked replay evidence remains historical evidence.
 
 Do not:
 
--   reopen authority reconciliation
--   reopen V3.2 architecture review
--   recreate V3.2
--   create V3.3
--   reactivate V3.1
--   reactivate MAP_GUARD
--   modify unrelated governance files
--   create a second dispatcher
--   create a second production contour
--   add `AUDIO` or any other new canonical phase
--   preserve `AUDIO` as canonical lifecycle authority for convenience
--   create a second canonical state
--   add hard-coded scene counts
--   add hard-coded segment counts
--   require `FLOWMIND_AUDIO_RENDER_LIMIT` as a production
-    scene/segment-count control
--   derive exact shot timing from estimated scene duration when actual
-    canonical audio exists
--   resolve final media before the timed execution/media-requirement
-    contract is ready
--   run final render as a QA-owned creative/production operation
--   make QA create the artifact it is supposed to evaluate
--   modify providers merely to solve orchestration
--   start provider migration
--   start capability benchmarking
--   tune script quality or creative quality inside this implementation
-    target
--   fix the separate QA hardcoded verdict defect inside this target
--   add infrastructure for future scale
--   activate legacy code without audit
--   use placeholders or stubs in production
--   claim runtime success without runtime evidence
--   run full E2E while the production-order contour is knowingly
-    cross-file incomplete
+-   manually change script_qa FAIL to PASS
+-   patch historical fixtures to make them green
+-   resume donor/bootstrap archaeology by inertia
+-   restart completed module audits without new material evidence
 
-------------------------------------------------------------------------
+New replay directories observed in the working tree before governance
+compaction:
 
-## 11. Implementation Invariants
+-   projects/FM_CONTROL_REPLAY_20261006/
+-   projects/FM_CONTROL_REPLAY_20261006_01/
+-   projects/FM_CONTROL_REPLAY_20261006_R1/
+-   projects/FM_CONTROL_REPLAY_20261006_R2/
 
-The implementation must preserve all of the following:
+Their final success/failure status is UNVERIFIED in this Active Map.
 
-1.  Canonical lifecycle authority remains owned by the dispatcher.
+They must not be deleted or classified without direct inspection when
+production work resumes.
 
-2.  `AUDIO` is an internal production capability, not a canonical phase.
+8. Production Exit Conditions
 
-3.  Pass 1 visual intent exists before canonical audio exact timing is
-    required.
+PRODUCTION EXECUTION ORDER REPAIR completes when:
 
-4.  Actual canonical audio exists before exact timed Pass 2 execution
-    planning.
-
-5.  Exact timing derives from actual canonical audio.
-
-6.  Media requirements are downstream of the timed execution contract.
-
-7.  Media resolution is downstream of media requirements.
-
-8.  Final render consumes ready production artifacts and occurs before
-    QA.
-
-9.  QA consumes the completed final artifact.
-
-10. Scene/segment counts are derived from actual project artifacts, not
-    manual production constants.
-
-11. Provider/API secrets remain outside code.
-
-12. Existing reusable provider/resolver capability is preserved unless
-    runtime evidence proves a specific incompatibility.
-
-13. No executor silently changes canonical phase.
-
-14. Errors are explicit and logged/returned; no empty exception
-    handling.
-
-15. Repeated execution must not silently create conflicting canonical
-    state.
-
-------------------------------------------------------------------------
-
-## 12. Validation Strategy
-
-Per-file validation:
-
--   syntax
--   direct phase/input/output contract
--   absence of forbidden hard-coded production counts where relevant
--   no unauthorized canonical phase mutation
-
-Cross-file validation is deferred until the dependencies required for
-the repaired contour are coherent.
-
-Then validate:
-
-SCENES -\> canonical audio -\> timed execution -\> ASSETS -\> resolved
-media -\> ASSEMBLY -\> final video -\> QA boundary
-
-The first successful integration target is:
-
-a real final video artifact reaches QA through the corrected canonical
-lifecycle.
-
-A QA PASS is not required to close this target if the already-verified
-separate QA verdict defect is the only remaining blocker.
-
-If that happens:
-
--   record the production-order target as PASS
--   select the QA verdict defect as the next separate implementation
-    target
--   do not mix both fixes into one block
-
-External API preflight follows the active Work Protocol.
-
-Previously verified provider checks remain valid unless their
-configuration, account, scope, prior result, or runtime evidence
-materially changes.
-
-------------------------------------------------------------------------
-
-## 13. Exit Condition
-
-PRODUCTION EXECUTION ORDER IMPLEMENTATION MODE completes when all of the
-following are true:
-
-1.  `AUDIO` is no longer a canonical runtime phase.
-
-2.  canonical audio is produced as an internal production substep before
-    exact timed execution.
-
-3.  exact timed execution is produced before media resolution.
-
-4.  media resolution produces the required resolved/licensed media for
-    assembly.
-
-5.  final render occurs inside the production/assembly side of the QA
-    boundary.
-
+1.  AUDIO is no longer a canonical runtime phase.
+2.  Canonical audio is internal before exact timing.
+3.  Exact timed execution exists before media resolution.
+4.  Media resolution produces required resolved/licensed media.
+5.  Final render is on the ASSEMBLY/production side of the QA boundary.
 6.  QA receives an already-created final video.
-
-7.  active runner orchestration matches the repaired contour.
-
-8.  dispatcher runtime implementation matches the canonical lifecycle
-    contract.
-
-9.  targeted old-order tests/checks are updated or retired based on
-    verified active ownership.
-
-10. one clean control replay provides runtime evidence through the QA
+7.  Active runner matches the repaired contour.
+8.  Dispatcher matches the canonical lifecycle.
+9.  Targeted old-order tests/checks are updated or retired where
+    required.
+10. One clean control replay provides runtime evidence through the QA
     boundary.
+11. No second active contour or canonical state exists.
+12. The validated implementation block is committed.
 
-11. no second active contour or second canonical state exists.
+Current interpretation:
 
-12. the validated implementation block is committed.
+-   implementation repairs are substantially complete
+-   corrected final-render/readiness integrated runtime proof is still
+    pending
+-   full repaired runner runtime proof is still pending
+-   clean control replay through QA boundary is still pending
+-   validated production implementation commit is still pending
 
-The separate QA verdict defect may remain as the next blocker if it is
-the only reason the control replay cannot produce QA PASS.
+Do not raise production completion above 98% before these closure
+conditions are satisfied.
 
-------------------------------------------------------------------------
+9. Governance Exit Conditions
 
-## 14. Current Next Action
+AUTHORITY SIMPLIFICATION / GOVERNANCE COMPACTION completes when:
 
-Current next action:
+1.  FLOWMIND_CORE_RULES.md is the single active owner of permanent
+    operating/execution discipline.
+2.  FLOWMIND_ACTIVE_MAP.md is the single current operational/recovery
+    checkpoint.
+3.  000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md no longer owns duplicate
+    rules.
+4.  docs/FLOWMIND_WORK_PROTOCOL_V1.md no longer owns duplicate rules.
+5.  FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md routes authority to the
+    simplified model.
+6.  No other active authority document materially restores the retired
+    duplicate ownership.
+7.  Cross-file authority validation passes.
+8.  The governance block is committed and pushed.
+9.  Required Project Sources are synchronized.
+10. A recovery check confirms that a new chat can continue from CORE +
+    ACTIVE MAP without reconstructing project history.
 
-Continue the selected implementation target from the last verified
-boundary with exactly one unresolved runtime file:
+No V3.3 is authorized.
 
-`engine/executors/audio_renderer.py`
+No production architecture rewrite is authorized.
 
-Current status of that file for this target:
+10. Current Allowed Work
 
-NOT DONE
+Until governance compaction closes, allowed work is limited to:
 
-Before editing:
+-   governance authority simplification
+-   current-state compaction
+-   authority routing correction
+-   targeted cross-file authority validation
+-   Git commit/push of the validated governance block
+-   required Project Sources synchronization
+-   recovery verification
 
-use a fresh copy directly from the current repo.
+Production runtime execution remains frozen.
 
-Required decision question:
+Do not mix production fixes into this governance block.
 
-Can the existing audio renderer be fully adapted into an internal
-`SCENES` substep so that the render set derives from the actual
-`audio_plan`, production does not depend on a manually configured
-scene/segment render count, the downstream `audio_render` contract is
-preserved, and no canonical phase is advanced?
+11. Current Next Logical Action
 
-Do not restart `audio_executor.py` without new material evidence.
+Current next logical action:
 
-Do not edit any other runtime file on this step.
+Publish the validated governance simplification block durably without
+mixing production/runtime WIP.
 
-Before a new chat is used for implementation, the context recovery
-checkpoint containing the verified `audio_executor.py` boundary and this
-Active Map handoff must be committed, pushed, synchronized to Project
-Sources where required by the Work Protocol, and recovery-verified.
+Required sequence:
+
+1.  stage only the intended governance files:
+    - FLOWMIND_CORE_RULES.md
+    - 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
+    - docs/FLOWMIND_WORK_PROTOCOL_V1.md
+    - FLOWMIND_ACTIVE_MAP.md
+    - FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
+    - CANONICAL_DISPATCHER_SPEC.md
+2.  verify the staged file set exactly
+3.  run staged diff validation
+4.  commit the governance block
+5.  push the current branch
+6.  verify the pushed commit and remaining unstaged production/runtime WIP
+7.  replace/synchronize every affected Project Source with the committed
+    versions
+8.  verify Project Source contents
+9.  perform a compact new-chat recovery verification using CORE + ACTIVE MAP
+
+Do not stage:
+
+-   engine runtime modifications
+-   tool runtime modifications
+-   control replay directories
+-   historical runtime evidence directories
+-   unrelated files
+
+Production runtime remains FROZEN until governance publication and
+recovery verification complete.
+
+Governance publication is NOT complete until the affected Project Sources
+are synchronized and verified.
 
 End.
