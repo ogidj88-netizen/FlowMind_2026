@@ -1,8 +1,7 @@
 FLOWMIND ACTIVE MAP
 
 Status: ACTIVE OPERATIONAL MAP Project: FlowMind / Imagine What If
-Updated: 2026-10-07 Mode: AUTHORITY SIMPLIFICATION / GOVERNANCE
-COMPACTION
+Updated: 2026-10-07 Mode: PRODUCTION EXECUTION ORDER REPAIR
 
 1. Purpose
 
@@ -54,58 +53,62 @@ Compatibility during the current governance migration:
 Historical authorities remain historical unless the Registry explicitly
 classifies otherwise.
 
-3. Current Governance Transaction
+3. Governance Closure State
 
-Current transaction:
+Governance transaction:
 
 AUTHORITY SIMPLIFICATION / GOVERNANCE COMPACTION
 
-Purpose:
+Status:
 
--   make FLOWMIND_CORE_RULES.md the single owner of permanent operating
-    and execution discipline
--   make FLOWMIND_ACTIVE_MAP.md the single current-state/recovery
-    checkpoint
--   remove duplicated active governance ownership
--   make new-chat recovery small and deterministic
--   preserve specialized reference authorities without rereading them by
-    default
+COMPLETED / PUBLISHED / RECOVERY VERIFIED
 
-Runtime implementation is FROZEN during this transaction.
+Purpose achieved:
+
+- FLOWMIND_CORE_RULES.md is the single owner of permanent operating and
+  execution discipline
+- FLOWMIND_ACTIVE_MAP.md is the single current-state/recovery checkpoint
+- duplicate active governance ownership has been removed
+- new-chat recovery is compact and deterministic
+- specialized reference authorities remain available without being reread
+  by default
+
+Verified governance closure evidence:
+
+- FLOWMIND_CORE_RULES.md created and validated
+- logical-action execution rule added to FLOWMIND_CORE_RULES.md
+- large replacement content is delivered as .txt by default
+- 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md compacted to a transitional
+  compatibility pointer and validated
+- docs/FLOWMIND_WORK_PROTOCOL_V1.md compacted to a transitional reference /
+  compatibility document and validated
+- FLOWMIND_ACTIVE_MAP.md compacted into the single operational/recovery
+  checkpoint and validated
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md reconciled to the simplified
+  authority model and validated
+- targeted active-authority dependency/reference scan completed
+- CANONICAL_DISPATCHER_SPEC.md old governance dependency migrated to
+  FLOWMIND_CORE_RULES.md and validated
+- final cross-file authority validation completed with PASS
+- governance publication commit ee94ae1 created and pushed successfully
+- required affected Project Sources synchronized 6/6
+- compact new-chat recovery verification completed successfully using
+  FLOWMIND_CORE_RULES.md + FLOWMIND_ACTIVE_MAP.md without reconstructing
+  project history or promoting legacy authority
+
+Governance compaction is closed.
+
+Production runtime is no longer frozen by governance.
 
 Production completion remains:
 
 98%
 
 Do not increase production completion above 98% until the production
-target’s remaining runtime exit conditions and validated commit are
-complete.
+target's remaining runtime exit conditions and validated implementation
+commit are complete.
 
-Verified governance work in this transaction:
-
--   FLOWMIND_CORE_RULES.md created and validated
--   logical-action execution rule added to FLOWMIND_CORE_RULES.md
--   large replacement content is delivered as .txt by default
--   000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md compacted to a
-    transitional compatibility pointer and validated
--   docs/FLOWMIND_WORK_PROTOCOL_V1.md compacted to a transitional
-    reference / compatibility document and validated
--   FLOWMIND_ACTIVE_MAP.md compacted into the single operational/recovery
-    checkpoint and validated
--   FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md reconciled to the simplified
-    authority model and validated
--   targeted active-authority dependency/reference scan completed
--   CANONICAL_DISPATCHER_SPEC.md old governance dependency migrated to
-    FLOWMIND_CORE_RULES.md and validated
--   final cross-file authority validation completed with PASS
--   Git status inspected; production/runtime modifications and runtime
-    evidence remain intentionally outside the governance commit
-
-Governance transaction status:
-
-IN PROGRESS / READY FOR DURABLE PUBLICATION
-
-4. Frozen Production Target
+4. Active Production Target
 
 Production target:
 
@@ -113,7 +116,7 @@ PRODUCTION EXECUTION ORDER REPAIR
 
 Production target status:
 
-IN PROGRESS / FROZEN FOR GOVERNANCE COMPACTION
+IN PROGRESS / ACTIVE
 
 Do not reopen completed production boundaries merely because governance
 is being compacted.
@@ -458,26 +461,28 @@ Current interpretation:
 Do not raise production completion above 98% before these closure
 conditions are satisfied.
 
-9. Governance Exit Conditions
+9. Governance Closure
 
-AUTHORITY SIMPLIFICATION / GOVERNANCE COMPACTION completes when:
+AUTHORITY SIMPLIFICATION / GOVERNANCE COMPACTION is COMPLETE.
 
-1.  FLOWMIND_CORE_RULES.md is the single active owner of permanent
-    operating/execution discipline.
-2.  FLOWMIND_ACTIVE_MAP.md is the single current operational/recovery
-    checkpoint.
-3.  000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md no longer owns duplicate
-    rules.
-4.  docs/FLOWMIND_WORK_PROTOCOL_V1.md no longer owns duplicate rules.
-5.  FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md routes authority to the
-    simplified model.
-6.  No other active authority document materially restores the retired
-    duplicate ownership.
-7.  Cross-file authority validation passes.
-8.  The governance block is committed and pushed.
-9.  Required Project Sources are synchronized.
-10. A recovery check confirms that a new chat can continue from CORE +
-    ACTIVE MAP without reconstructing project history.
+Verified closure conditions:
+
+1. FLOWMIND_CORE_RULES.md is the single active owner of permanent
+   operating/execution discipline.
+2. FLOWMIND_ACTIVE_MAP.md is the single current operational/recovery
+   checkpoint.
+3. 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md no longer owns duplicate
+   rules.
+4. docs/FLOWMIND_WORK_PROTOCOL_V1.md no longer owns duplicate rules.
+5. FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md routes authority to the simplified
+   model.
+6. No other active authority document materially restores the retired
+   duplicate ownership.
+7. Cross-file authority validation passed.
+8. Governance publication commit ee94ae1 was committed and pushed.
+9. Required affected Project Sources were synchronized 6/6.
+10. New-chat recovery verification passed using CORE + ACTIVE MAP without
+    reconstructing project history.
 
 No V3.3 is authorized.
 
@@ -485,58 +490,63 @@ No production architecture rewrite is authorized.
 
 10. Current Allowed Work
 
-Until governance compaction closes, allowed work is limited to:
+Governance compaction is closed.
 
--   governance authority simplification
--   current-state compaction
--   authority routing correction
--   targeted cross-file authority validation
--   Git commit/push of the validated governance block
--   required Project Sources synchronization
--   recovery verification
+Production runtime work for the active target is UNFROZEN.
 
-Production runtime execution remains frozen.
+Allowed work is limited to the current production target and the smallest
+evidence required to satisfy its remaining exit conditions.
 
-Do not mix production fixes into this governance block.
+Do not:
+
+- reopen completed production boundaries without material new evidence
+- rerun governance compaction
+- reconstruct project history
+- resume donor/bootstrap archaeology by inertia
+- mutate historical failed replay evidence to manufacture PASS
+- fix the known deferred QA verdict defect inside PRODUCTION EXECUTION
+  ORDER REPAIR
+- introduce a second dispatcher, canonical state, resolver, or production
+  contour
+- mix unrelated architecture/provider migration work into the current target
 
 11. Current Next Logical Action
 
 Current next logical action:
 
-Publish the validated governance simplification block durably without
-mixing production/runtime WIP.
+Perform ONE CLEAN CONTROL REPLAY through the QA boundary using the repaired
+production contour.
 
-Required sequence:
+Purpose:
 
-1.  stage only the intended governance files:
-    - FLOWMIND_CORE_RULES.md
-    - 000_ACTIVE_FLOWMIND_PROJECT_INSTRUCTIONS.md
-    - docs/FLOWMIND_WORK_PROTOCOL_V1.md
-    - FLOWMIND_ACTIVE_MAP.md
-    - FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md
-    - CANONICAL_DISPATCHER_SPEC.md
-2.  verify the staged file set exactly
-3.  run staged diff validation
-4.  commit the governance block
-5.  push the current branch
-6.  verify the pushed commit and remaining unstaged production/runtime WIP
-7.  replace/synchronize every affected Project Source with the committed
-    versions
-8.  verify Project Source contents
-9.  perform a compact new-chat recovery verification using CORE + ACTIVE MAP
+Provide the remaining integrated runtime evidence for PRODUCTION EXECUTION
+ORDER REPAIR without re-proving already verified modules independently.
 
-Do not stage:
+The replay must demonstrate, in order:
 
--   engine runtime modifications
--   tool runtime modifications
--   control replay directories
--   historical runtime evidence directories
--   unrelated files
+SCENES -> Visual Intent / Pass 1 -> canonical audio -> actual audio timing
+-> loudness readiness -> timed Pass 2 -> ASSETS -> resolved/licensed media
+-> ASSEMBLY -> deterministic final render -> final render readiness ->
+dispatcher transition to QA -> QA receives the already-created final video
 
-Production runtime remains FROZEN until governance publication and
-recovery verification complete.
+Execution constraints:
 
-Governance publication is NOT complete until the affected Project Sources
-are synchronized and verified.
+- start from a valid clean control input/state
+- use the repaired active runner and canonical dispatcher
+- do not manually change script_qa FAIL to PASS
+- do not patch historical fixtures to make them green
+- do not resume donor/bootstrap archaeology by inertia
+- do not restart completed module audits without material new evidence
+- preserve historical failed/blocked replay evidence
+- inspect existing replay directories only when needed to avoid misclassifying
+  or overwriting evidence
+- final render may take time; do not kill a healthy render merely because it
+  is long-running
+- if the replay reaches QA with an already-created final video and the only
+  remaining failure is the known deferred QA verdict defect, treat that
+  defect according to Section 6 rather than repairing it inside this target
+
+Closure after replay still requires the validated production implementation
+block to be committed.
 
 End.
