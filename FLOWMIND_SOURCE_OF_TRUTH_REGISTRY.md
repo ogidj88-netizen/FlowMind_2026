@@ -320,6 +320,27 @@ active role-owner set.
 A file not listed here does not gain active authority merely because it
 exists in the repo or Project Sources.
 
+5.1 Approved Audit Methodology Reference (non-authoritative)
+
+Reference document: FLOWMIND_AUDIT_FRAMEWORK_V1.md
+
+Classification: APPROVED METHODOLOGY REFERENCE; PENDING PUBLICATION
+until the complete governance transaction is validated and published.
+
+Purpose: define the system-wide audit method (Hard Gates, MQS-100,
+FDS-100, VQS-100, evidence grading, future-impact checks, and
+end-to-end validation).
+
+This reference is NOT a seventh canonical authority, NOT a current
+operational checkpoint, and NOT a source of implementation truth.
+Its use is governed by the six canonical authority owners above.
+The active audit target, progress, evidence boundary, and one next
+logical action remain owned exclusively by FLOWMIND_ACTIVE_MAP.md.
+
+The reference must be checked against the current repo before use.
+A file existing locally does not by itself prove Git publication or
+Project Sources synchronization.
+
 6. FROZEN LEGACY Set
 
 The following files are FROZEN LEGACY:

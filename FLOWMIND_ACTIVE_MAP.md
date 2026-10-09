@@ -1,7 +1,7 @@
 FLOWMIND ACTIVE MAP
 
 Status: ACTIVE OPERATIONAL MAP Project: FlowMind / Imagine What If
-Updated: 2026-10-07 Mode: PRODUCTION EXECUTION ORDER REPAIR
+Updated: 2026-10-09 Mode: SYSTEM AUDIT — GOVERNANCE PUBLICATION
 
 1. Purpose
 
@@ -108,15 +108,27 @@ Do not increase production completion above 98% until the production
 target's remaining runtime exit conditions and validated implementation
 commit are complete.
 
-4. Active Production Target
+4A. Current Audit Checkpoint (2026-10-09)
+
+The approved SYSTEM AUDIT methodology is now the current workstream.
+The immediate phase is GOVERNANCE PUBLICATION, not code remediation.
+R2 editorial issues are historical evidence only. R3 success or failure
+is UNKNOWN without direct current runtime evidence. No technical or
+editorial production-readiness PASS is claimed.
+
+The historical production-order repair material below is retained for
+traceability and may still contain open exit conditions. Its former
+NEXT ACTION is superseded by Section 11.
+
+4. Historical Production Target (superseded operational focus)
 
 Production target:
 
 PRODUCTION EXECUTION ORDER REPAIR
 
-Production target status:
+Historical production target status at 2026-10-07 checkpoint:
 
-IN PROGRESS / ACTIVE
+IN PROGRESS / NOT CLOSED; deferred pending system audit baseline
 
 Do not reopen completed production boundaries merely because governance
 is being compacted.
@@ -391,10 +403,11 @@ already-known QA verdict defect.
 
 Then the QA defect becomes the next separate target.
 
-7. Clean Replay State
+7. Historical Clean Replay State (unverified; not current next action)
 
-A clean control replay is still required to close the production-order
-target.
+At the 2026-10-07 checkpoint a clean control replay remained required
+to close the production-order target. This is historical NOT DONE, not
+the current next action.
 
 Its purpose is not to re-prove every module independently.
 
@@ -430,7 +443,7 @@ Their final success/failure status is UNVERIFIED in this Active Map.
 They must not be deleted or classified without direct inspection when
 production work resumes.
 
-8. Production Exit Conditions
+8. Historical Production Exit Conditions (not superseded as proof)
 
 PRODUCTION EXECUTION ORDER REPAIR completes when:
 
@@ -490,63 +503,59 @@ No production architecture rewrite is authorized.
 
 10. Current Allowed Work
 
-Governance compaction is closed.
+Current active target: SYSTEM AUDIT — GOVERNANCE PUBLICATION.
 
-Production runtime work for the active target is UNFROZEN.
+Approved audit methodology: FLOWMIND_AUDIT_FRAMEWORK_V1.md (reference;
+not a seventh canonical authority). Current repo evidence supplied by
+operator on 2026-10-09:
 
-Allowed work is limited to the current production target and the smallest
-evidence required to satisfy its remaining exit conditions.
+- Framework created, wc -l = 134; untracked, not committed.
+- Registry changed from 660 to 681 lines; diff reports 21 insertions.
+- git diff --check returned no errors for reported working tree.
+- Core Rules unchanged; historical R2/R3 runtime directories preserved.
+- Git branch wip-transfer-20261006; latest reported local commit 1c3efa3;
+  local branch ahead of origin by one at last branch-status check.
 
-Do not:
+This evidence is operator-reported and time-scoped; it is not proof of
+publication or proof of runtime readiness.
 
-- reopen completed production boundaries without material new evidence
-- rerun governance compaction
-- reconstruct project history
-- resume donor/bootstrap archaeology by inertia
-- mutate historical failed replay evidence to manufacture PASS
-- fix the known deferred QA verdict defect inside PRODUCTION EXECUTION
-  ORDER REPAIR
-- introduce a second dispatcher, canonical state, resolver, or production
-  contour
-- mix unrelated architecture/provider migration work into the current target
+Audit methodology decisions already approved:
+
+- system-wide runtime and contract audit, not fixture-specific R2 fixes
+- independent Hard Gates; MQS-100, FDS-100 and VQS-100 only with evidence
+- UNKNOWN remains UNKNOWN; no fabricated PASS, FAIL or scores
+- Future Impact Gate for Long/Shorts, variable scenes, Director and scale
+- audit sequence: Runtime Evidence -> Impact Triage -> Contract & Module
+  Audit -> Targeted Quality Hardening -> Downstream Regression ->
+  Integrated Validation -> Production Readiness
+- no speculative tooling, second dispatcher or extra current-state owner
+
+Material NOT DONE:
+
+- full Active Map replacement and local validation (this transaction)
+- cross-file authority and reference consistency validation
+- targeted git staging, commit and push of governance-only changes
+- relevant Project Sources sync and new-chat recovery verification
+- runtime baseline and actual module inventory after governance closure
+- historical production-order replay/QA closure not presumed completed
+
+Governance publication exit conditions:
+
+1. Framework is present and registered only as reference methodology.
+2. Active Map has one unambiguous current target and next action.
+3. No conflicting active authority or duplicate recovery document exists.
+4. Intended changes validated; unrelated runtime artifacts not staged.
+5. Governance commit/push and Project Sources sync are verified.
+6. Recovery test reconstructs current checkpoint from Core Rules + Map.
 
 11. Current Next Logical Action
 
-Current next logical action:
+Complete full replacement of FLOWMIND_ACTIVE_MAP.md from the reviewed
+current-repo source, then validate file line count, git diff --check,
+its diff and status. STOP on unexpected content or unrelated modifications.
 
-Perform ONE CLEAN CONTROL REPLAY through the QA boundary using the repaired
-production contour.
-
-Purpose:
-
-Provide the remaining integrated runtime evidence for PRODUCTION EXECUTION
-ORDER REPAIR without re-proving already verified modules independently.
-
-The replay must demonstrate, in order:
-
-SCENES -> Visual Intent / Pass 1 -> canonical audio -> actual audio timing
--> loudness readiness -> timed Pass 2 -> ASSETS -> resolved/licensed media
--> ASSEMBLY -> deterministic final render -> final render readiness ->
-dispatcher transition to QA -> QA receives the already-created final video
-
-Execution constraints:
-
-- start from a valid clean control input/state
-- use the repaired active runner and canonical dispatcher
-- do not manually change script_qa FAIL to PASS
-- do not patch historical fixtures to make them green
-- do not resume donor/bootstrap archaeology by inertia
-- do not restart completed module audits without material new evidence
-- preserve historical failed/blocked replay evidence
-- inspect existing replay directories only when needed to avoid misclassifying
-  or overwriting evidence
-- final render may take time; do not kill a healthy render merely because it
-  is long-running
-- if the replay reaches QA with an already-created final video and the only
-  remaining failure is the known deferred QA verdict defect, treat that
-  defect according to Section 6 rather than repairing it inside this target
-
-Closure after replay still requires the validated production implementation
-block to be committed.
+After successful replacement, the NEXT transaction is cross-file
+consistency review and governance-only Git publication. Do not start
+runtime module audit until governance publication/recovery is closed.
 
 End.
