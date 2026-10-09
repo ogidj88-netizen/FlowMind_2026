@@ -1,6 +1,6 @@
 # FLOWMIND AUDIT FRAMEWORK V1.0
 
-Status: APPROVED METHODOLOGY / PENDING REPO PUBLICATION
+Status: APPROVED METHODOLOGY / PUBLISHED IN REPOSITORY
 Project: FlowMind / Imagine What If
 Scope: system-wide evidence-driven audit methodology, not current operational state
 
