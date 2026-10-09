@@ -503,21 +503,27 @@ No production architecture rewrite is authorized.
 
 10. Current Allowed Work
 
-Current active target: SYSTEM AUDIT — GOVERNANCE PUBLICATION.
+Current active target: SYSTEM AUDIT — GOVERNANCE PUBLICATION / RECOVERY RECONCILIATION.
+
+Verified remote checkpoint (GitHub, branch wip-transfer-20261006):
+
+- Governance methodology and Registry update were published in commit
+  f890056 (confirmed previously against GitHub).
+- FLOWMIND_CORE_RULES.md new-chat GitHub recovery rule was committed and
+  pushed in c096486; verified remote HEAD:
+  c0964868b566c914db3abe4b3d8e79fc51291bd1.
+- FLOWMIND_AUDIT_FRAMEWORK_V1.md exists in the current GitHub branch.
+  Its own header still says PENDING REPO PUBLICATION; that wording is
+  stale relative to verified GitHub presence, not evidence of an
+  unpublished file.
+- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md exists in the same branch.
+- The previous statements that the Framework is untracked, the Registry
+  uncommitted, and HEAD is 1c3efa3 are STALE and superseded.
+- GitHub proves pushed repository state only. Current local Mac working
+  tree cleanliness and runtime status remain UNVERIFIED.
 
 Approved audit methodology: FLOWMIND_AUDIT_FRAMEWORK_V1.md (reference;
-not a seventh canonical authority). Current repo evidence supplied by
-operator on 2026-10-09:
-
-- Framework created, wc -l = 134; untracked, not committed.
-- Registry changed from 660 to 681 lines; diff reports 21 insertions.
-- git diff --check returned no errors for reported working tree.
-- Core Rules unchanged; historical R2/R3 runtime directories preserved.
-- Git branch wip-transfer-20261006; latest reported local commit 1c3efa3;
-  local branch ahead of origin by one at last branch-status check.
-
-This evidence is operator-reported and time-scoped; it is not proof of
-publication or proof of runtime readiness.
+not a seventh canonical authority).
 
 Audit methodology decisions already approved:
 
@@ -532,30 +538,40 @@ Audit methodology decisions already approved:
 
 Material NOT DONE:
 
-- full Active Map replacement and local validation (this transaction)
-- cross-file authority and reference consistency validation
-- targeted git staging, commit and push of governance-only changes
-- relevant Project Sources sync and new-chat recovery verification
-- runtime baseline and actual module inventory after governance closure
-- historical production-order replay/QA closure not presumed completed
+- publish this corrected Active Map to the working GitHub branch
+- reconcile stale publication wording in the Framework when the
+  governance consistency transaction is performed
+- reconcile affected Project Sources with the GitHub-first recovery rule;
+  do not treat an older Project Sources Map as current
+- verify new-chat recovery against the published branch and Active Map
+- establish current runtime baseline and actual module inventory after
+  governance/recovery closure
+- historical production-order replay/QA closure remains unverified
 
-Governance publication exit conditions:
+Governance/recovery exit conditions:
 
-1. Framework is present and registered only as reference methodology.
-2. Active Map has one unambiguous current target and next action.
-3. No conflicting active authority or duplicate recovery document exists.
-4. Intended changes validated; unrelated runtime artifacts not staged.
-5. Governance commit/push and Project Sources sync are verified.
-6. Recovery test reconstructs current checkpoint from Core Rules + Map.
+1. The approved Framework is present as reference methodology only.
+2. Active Map has one current target, evidence boundary, and next action.
+3. No duplicate active authority or second recovery owner is introduced.
+4. Intended governance changes are validated and published without
+   unrelated runtime artifacts.
+5. Materially stale reference/Project Sources publication claims are
+   reconciled or explicitly flagged as historical.
+6. New-chat recovery correctly reads GitHub branch HEAD and this Map;
+   it does not infer local runtime PASS or a clean working tree.
+
+Production code changes remain paused for this recovery transaction.
 
 11. Current Next Logical Action
 
-Complete full replacement of FLOWMIND_ACTIVE_MAP.md from the reviewed
-current-repo source, then validate file line count, git diff --check,
-its diff and status. STOP on unexpected content or unrelated modifications.
+Replace FLOWMIND_ACTIVE_MAP.md in full from the verified current GitHub
+blob, incorporating this checkpoint; inspect git diff --check and the
+file-specific diff, then commit/push this governance-only change after
+validation. Do not stage unrelated runtime or generated artifacts.
 
-After successful replacement, the NEXT transaction is cross-file
-consistency review and governance-only Git publication. Do not start
-runtime module audit until governance publication/recovery is closed.
+After publication, resolve only material stale reference/Project Sources
+claims and perform one new-chat recovery test. Then return to the
+system-wide runtime evidence baseline; do not resume speculative R2
+patching or treat R3 as PASS without proof.
 
 End.
