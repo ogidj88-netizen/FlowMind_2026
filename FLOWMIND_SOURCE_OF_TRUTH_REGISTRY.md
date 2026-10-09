@@ -324,8 +324,8 @@ exists in the repo or Project Sources.
 
 Reference document: FLOWMIND_AUDIT_FRAMEWORK_V1.md
 
-Classification: APPROVED METHODOLOGY REFERENCE; PENDING PUBLICATION
-until the complete governance transaction is validated and published.
+Classification: APPROVED METHODOLOGY REFERENCE; PUBLISHED IN REPOSITORY
+Governance reconciliation remains open until cross-file validation is complete.
 
 Purpose: define the system-wide audit method (Hard Gates, MQS-100,
 FDS-100, VQS-100, evidence grading, future-impact checks, and
