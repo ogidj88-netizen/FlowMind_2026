@@ -374,40 +374,55 @@ Do not create a second handoff/current-state document.
 
 Normal new-chat recovery uses:
 
-1.  FLOWMIND_CORE_RULES.md
-2.  FLOWMIND_ACTIVE_MAP.md
-3.  durable repo/runtime evidence referenced by the Active Map when
-    needed
+1.  FLOWMIND_CORE_RULES.md for permanent discipline
+2.  the current working branch HEAD from the connected GitHub repository
+3.  FLOWMIND_ACTIVE_MAP.md read from that same branch/ref
+4.  only the durable repo/runtime evidence required by the Active Map
 
-Do not reconstruct the entire project history.
+Current repository: ogidj88-netizen/FlowMind_2026.
+Current working branch for this governance checkpoint:
+wip-transfer-20261006.
 
-Do not automatically reread:
+The branch name is a bootstrap locator, NOT permanent authority. A
+verified branch migration must update the canonical recovery locator
+before new-chat recovery switches branches. Never silently fall back to
+the default branch.
 
--   detailed architecture
--   dispatcher specification
--   registry
--   legacy documents
--   historical handoffs
+At the beginning of a new technical chat:
 
-Read a reference authority only when the current decision materially
-requires its scope.
+1.  Resolve the working branch and its HEAD commit on GitHub.
+2.  Fetch FLOWMIND_ACTIVE_MAP.md from that exact branch/ref.
+3.  Recover the current target, last verified boundary, material NOT
+    DONE state, exit conditions, and ONE next logical action.
+4.  Check referenced commit/runtime evidence only where material to the
+    immediate decision. Do not repeat completed checks without cause.
+5.  If the Map claims a state contradicted by newer verified Git or
+    runtime evidence, mark the disputed claim STALE / UNVERIFIED and
+    STOP implementation until the minimum necessary reconciliation.
 
-A new chat must:
+GitHub confirms only pushed repository state. Uncommitted local Mac
+changes and local runtime evidence are NOT visible through GitHub.
+When such evidence is material, ask the operator for the minimum
+necessary local proof. Do not infer a clean working tree from GitHub.
 
-1.  recover the current target
-2.  recover the last verified boundary
-3.  recover material NOT DONE state
-4.  recover the one next unresolved logical action
-5.  continue from that boundary
+Project Sources copies are stable reference/bootstrap material, not
+authority for live operational state. If a Project Sources copy of the
+Active Map disagrees with the verified Git branch copy, use Git for
+repository state and flag the stale copy; never silently merge them.
 
-If Active Map and durable repo evidence are sufficient:
+If GitHub is unavailable, do not claim that a Project Sources copy is
+current. Mark remote freshness UNVERIFIED and request the minimum
+necessary evidence before a state-dependent action.
+
+Do not reconstruct the entire project history or automatically reread
+the full authority chain. Read a reference authority only when the
+current decision materially requires its scope.
+
+A new chat alone is NOT a reason to repeat completed runtime checks.
+
+If the Active Map and durable evidence are sufficient:
 
 STOP RECOVERING -> CONTINUE WORK
-
-If they materially conflict:
-
-STOP normal implementation -> obtain only the evidence required to
-resolve that conflict
 
 Chat memory or a pasted handoff may provide context but must not
 override newer verified repo/runtime evidence.
