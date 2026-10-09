@@ -11,7 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 TOOL_NAME = "apply_final_render_readiness"
-TOOL_VERSION = "1.0.0"
+TOOL_VERSION = "1.0.2"
 
 FINAL_RENDER_REQUIREMENT = "final render executor"
 
@@ -95,7 +95,7 @@ def require_number(value: Any, field_name: str) -> float:
     if isinstance(value, bool):
         raise ApplyFinalRenderReadinessError(f"{field_name} must be number")
 
-    if not isinstance(value, int | float):
+    if not isinstance(value, (int, float)):
         raise ApplyFinalRenderReadinessError(f"{field_name} must be number")
 
     return float(value)
@@ -163,8 +163,10 @@ def validate_state_has_final_artifacts(
     final_render_report_path: Path,
 ) -> tuple[Path, Path]:
     phase = require_non_empty_string(state.get("phase"), "PROJECT_STATE.phase")
-    if phase != "QA":
-        raise ApplyFinalRenderReadinessError(f"PROJECT_STATE.phase must be QA, got {phase}")
+    if phase != "ASSEMBLY":
+        raise ApplyFinalRenderReadinessError(
+            f"PROJECT_STATE.phase must be ASSEMBLY before final render readiness, got {phase}"
+        )
 
     artifacts = state.get("artifacts")
     if not isinstance(artifacts, dict):

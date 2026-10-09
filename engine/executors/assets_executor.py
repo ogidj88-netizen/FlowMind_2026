@@ -18,7 +18,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "assets_executor"
-EXECUTOR_VERSION = "2.0.1"
+EXECUTOR_VERSION = "2.0.3"
 
 ALLOWED_ASSET_TYPES = {
     "stock_video",
@@ -119,25 +119,25 @@ def normalize_query(value: str) -> str:
 
 
 def build_asset_query(asset_type: str, visual_intent: str, topic: str) -> str:
-    base_topic = normalize_query(topic)
     visual = normalize_query(visual_intent)
+    base_topic = normalize_query(topic)
 
     if asset_type == "simple_motion_text":
-        return normalize_query(f"minimal animated text {base_topic}")
+        return normalize_query(f"minimal animated text {visual}")
 
     if asset_type == "chart_or_bill_visual":
-        return normalize_query("utility bill cost breakdown usage rate fixed charges")
+        return normalize_query(f"chart document data visualization {visual}")
 
     if asset_type == "screen_style_visual":
-        return normalize_query("checklist compare electricity bill usage rate fixed charges")
+        return normalize_query(f"screen interface checklist comparison {visual}")
 
     if asset_type == "stock_video":
-        return normalize_query("home appliances electricity usage refrigerator water heater")
+        return visual
 
     if asset_type == "stock_image":
-        return normalize_query(f"household energy costs simple home finance {base_topic}")
+        return visual
 
-    return visual
+    return normalize_query(f"{visual} {base_topic}")
 
 
 def choose_usage_role(asset_type: str) -> str:
@@ -411,8 +411,10 @@ def validate_visual_pacing_payload(
 def build_asset_entry_from_beat(
     beat: dict[str, Any],
     topic: str,
+    global_order: int,
 ) -> dict[str, Any]:
     order = require_positive_int(beat["beat_order"], "beat.beat_order")
+    global_order = require_positive_int(global_order, "asset.global_order")
     scene_id = require_non_empty_string(beat["scene_id"], "beat.scene_id")
     asset_type = require_non_empty_string(
         beat["requested_asset_type"],
@@ -441,7 +443,7 @@ def build_asset_entry_from_beat(
     resolver_duration_sec = max(1, int(round(float(duration_sec))))
 
     return {
-        "asset_id": f"ASSET_{order:03d}",
+        "asset_id": f"ASSET_{global_order:06d}",
         "scene_id": scene_id,
         "order": order,
         "asset_type": asset_type,
@@ -522,10 +524,17 @@ def run_assets_executor(state_path: Path) -> dict[str, Any]:
     visual_pacing_payload = read_json_file(visual_pacing_plan_path)
     beats = validate_visual_pacing_payload(visual_pacing_payload, scenes)
 
-    assets = [build_asset_entry_from_beat(beat, topic) for beat in beats]
+    assets = [
+        build_asset_entry_from_beat(beat, topic, global_order)
+        for global_order, beat in enumerate(beats, start=1)
+    ]
 
     if len(assets) != len(beats):
         raise AssetsExecutorError("asset_count must equal timed beat_count")
+
+    asset_ids = [asset["asset_id"] for asset in assets]
+    if len(set(asset_ids)) != len(asset_ids):
+        raise AssetsExecutorError("asset_id values must be globally unique within the project")
 
     for index, asset in enumerate(assets, start=1):
         validate_asset_entry(asset, index)

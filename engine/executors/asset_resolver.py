@@ -22,7 +22,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 RESOLVER_NAME = "asset_resolver"
-RESOLVER_VERSION = "1.2.0"
+RESOLVER_VERSION = "1.2.1"
 PROVIDER_MODE = "local_then_provider"
 
 APPROVED_ASSET_DIRS = (
@@ -502,8 +502,8 @@ def resolve_assets(
     used_paths: set[str] = set()
     used_provider_ids: set[str] = set()
 
-    if not candidate_files:
-        warnings.append("no approved local media files found")
+    # Local search is only the first resolution branch. A local miss is not a
+    # final warning when provider fallback can still resolve the requirement.
 
     for asset in assets:
         candidate_path = choose_candidate(asset, candidate_files, used_paths)
@@ -523,10 +523,9 @@ def resolve_assets(
                 resolved_assets.append(resolved_asset)
                 continue
 
-            warnings.append(
-                f"{require_non_empty_string(asset.get('asset_id'), 'asset.asset_id')}: "
-                f"local candidate rejected: {license_note}"
-            )
+            # A rejected local candidate is branch-local evidence, not a final
+            # resolved-media warning. Provider fallback below owns recovery; if
+            # it fails, the requirement becomes an explicit blocker.
 
         asset_id = require_non_empty_string(asset.get("asset_id"), "asset.asset_id")
         asset_type = require_non_empty_string(asset.get("asset_type"), "asset.asset_type")

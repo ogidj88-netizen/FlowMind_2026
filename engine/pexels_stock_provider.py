@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -12,7 +13,7 @@ from urllib.request import Request, urlopen
 
 
 PROVIDER_NAME = "pexels"
-PROVIDER_VERSION = "1.0.0"
+PROVIDER_VERSION = "1.2.0"
 API_BASE = "https://api.pexels.com/v1"
 API_KEY_ENV = "PEXELS_API_KEY"
 LICENSE_URL = "https://www.pexels.com/license/"
@@ -23,11 +24,68 @@ HTTP_TIMEOUT_SEC = 25
 MAX_IMAGE_BYTES = 20 * 1024 * 1024
 MAX_VIDEO_BYTES = 80 * 1024 * 1024
 CHUNK_BYTES = 1024 * 1024
+API_MAX_ATTEMPTS = 3
+API_RETRY_BACKOFF_SEC = 0.75
+RETRYABLE_API_HTTP_CODES = {500, 502, 503, 504}
+MAX_ERROR_BODY_CHARS = 500
+QUERY_FALLBACK_MAX_WORDS = 8
+QUERY_FALLBACK_STOPWORDS = {
+    "a", "an", "the", "of", "on", "in", "with", "and", "or", "to", "from",
+    "show", "showing", "shows", "close-up", "shot", "view", "scene",
+    "emphasis", "section", "sections",
+}
 SUPPORTED_ASSET_TYPES = {"stock_image", "stock_video"}
 
 
 class PexelsProviderError(RuntimeError):
-    pass
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int | None = None,
+        response_body: str | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.response_body = response_body
+
+
+def _http_error_body(exc: HTTPError) -> str:
+    try:
+        raw = exc.read()
+    except OSError:
+        return ""
+
+    if not raw:
+        return ""
+
+    return raw.decode("utf-8", errors="replace").strip()[:MAX_ERROR_BODY_CHARS]
+
+
+def _query_variants(asset_query: str) -> list[str]:
+    original = " ".join(asset_query.strip().split())
+    variants = [original]
+
+    tokens = re.findall(r"[A-Za-z0-9]+(?:-[A-Za-z0-9]+)?", original.lower())
+    content_tokens = [
+        token
+        for token in tokens
+        if token not in QUERY_FALLBACK_STOPWORDS
+    ]
+
+    if len(content_tokens) >= 3:
+        compact = " ".join(content_tokens[:QUERY_FALLBACK_MAX_WORDS])
+        if compact and compact not in variants:
+            variants.append(compact)
+
+    if len(content_tokens) > QUERY_FALLBACK_MAX_WORDS:
+        edge_count = max(2, QUERY_FALLBACK_MAX_WORDS // 2)
+        edge_tokens = content_tokens[:edge_count] + content_tokens[-edge_count:]
+        edge = " ".join(edge_tokens[:QUERY_FALLBACK_MAX_WORDS])
+        if edge and edge not in variants:
+            variants.append(edge)
+
+    return variants
 
 
 def _now() -> str:
@@ -87,64 +145,94 @@ def _api_get(
     if not key:
         raise PexelsProviderError(f"{API_KEY_ENV} is not set")
 
-    request = Request(
-        f"{API_BASE}{endpoint}?{urlencode(params)}",
-        headers={
-            "Authorization": key,
-            "Accept": "application/json",
-            "User-Agent": "FlowMind/1.0",
-        },
-    )
+    url = f"{API_BASE}{endpoint}?{urlencode(params)}"
+    last_error: BaseException | None = None
 
-    try:
-        with urlopen(
-            request,
-            timeout=HTTP_TIMEOUT_SEC,
-        ) as response:
-            payload = json.loads(
-                response.read().decode("utf-8")
-            )
+    for attempt in range(1, API_MAX_ATTEMPTS + 1):
+        request = Request(
+            url,
+            headers={
+                "Authorization": key,
+                "Accept": "application/json",
+                "User-Agent": "FlowMind/1.0",
+            },
+        )
 
-            if not isinstance(payload, dict):
-                raise PexelsProviderError(
-                    "Pexels API returned non-object JSON"
+        try:
+            with urlopen(
+                request,
+                timeout=HTTP_TIMEOUT_SEC,
+            ) as response:
+                payload = json.loads(
+                    response.read().decode("utf-8")
                 )
 
-            return (
-                payload,
-                response.headers.get(
-                    "X-Ratelimit-Remaining"
-                ),
-            )
+                if not isinstance(payload, dict):
+                    raise PexelsProviderError(
+                        "Pexels API returned non-object JSON"
+                    )
 
-    except HTTPError as exc:
-        if exc.code == 429:
+                return (
+                    payload,
+                    response.headers.get(
+                        "X-Ratelimit-Remaining"
+                    ),
+                )
+
+        except HTTPError as exc:
+            last_error = exc
+            body = _http_error_body(exc)
+            detail = f": {body}" if body else ""
+
+            if exc.code == 429:
+                raise PexelsProviderError(
+                    f"Pexels API rate limit exceeded{detail}",
+                    status_code=exc.code,
+                    response_body=body or None,
+                ) from exc
+
+            if (
+                exc.code in RETRYABLE_API_HTTP_CODES
+                and attempt < API_MAX_ATTEMPTS
+            ):
+                time.sleep(API_RETRY_BACKOFF_SEC * attempt)
+                continue
+
             raise PexelsProviderError(
-                "Pexels API rate limit exceeded"
+                f"Pexels API HTTP {exc.code}{detail}",
+                status_code=exc.code,
+                response_body=body or None,
             ) from exc
 
-        raise PexelsProviderError(
-            f"Pexels API HTTP {exc.code}"
-        ) from exc
+        except URLError as exc:
+            last_error = exc
+            if attempt < API_MAX_ATTEMPTS:
+                time.sleep(API_RETRY_BACKOFF_SEC * attempt)
+                continue
+            raise PexelsProviderError(
+                f"Pexels API network error: {exc.reason}"
+            ) from exc
 
-    except URLError as exc:
-        raise PexelsProviderError(
-            f"Pexels API network error: {exc.reason}"
-        ) from exc
+        except TimeoutError as exc:
+            last_error = exc
+            if attempt < API_MAX_ATTEMPTS:
+                time.sleep(API_RETRY_BACKOFF_SEC * attempt)
+                continue
+            raise PexelsProviderError(
+                "Pexels API request timed out"
+            ) from exc
 
-    except (
-        UnicodeDecodeError,
-        json.JSONDecodeError,
-    ) as exc:
-        raise PexelsProviderError(
-            "Pexels API returned invalid JSON"
-        ) from exc
+        except (
+            UnicodeDecodeError,
+            json.JSONDecodeError,
+        ) as exc:
+            raise PexelsProviderError(
+                "Pexels API returned invalid JSON"
+            ) from exc
 
-    except TimeoutError as exc:
-        raise PexelsProviderError(
-            "Pexels API request timed out"
-        ) from exc
-
+    raise PexelsProviderError(
+        f"Pexels API request failed after {API_MAX_ATTEMPTS} attempts: {last_error}"
+    )
 
 def _download(
     url: str,
@@ -639,22 +727,49 @@ def resolve_stock_asset(
         max_bytes = MAX_VIDEO_BYTES
         selector = _select_video
 
-    payload, remaining = _api_get(
-        endpoint,
-        {
-            "query": asset_query,
-            "locale": "en-US",
-            "per_page": SEARCH_PER_PAGE,
-            "page": 1,
-        },
-    )
+    selected: dict[str, str] | None = None
+    remaining: str | None = None
+    provider_query: str | None = None
+    forbidden_errors: list[str] = []
 
-    selected = selector(
-        payload,
-        used_provider_ids,
-    )
+    query_variants = _query_variants(asset_query)
+
+    for query in query_variants:
+        try:
+            payload, remaining = _api_get(
+                endpoint,
+                {
+                    "query": query,
+                    "locale": "en-US",
+                    "per_page": SEARCH_PER_PAGE,
+                    "page": 1,
+                },
+            )
+        except PexelsProviderError as exc:
+            if exc.status_code == 403:
+                forbidden_errors.append(f"query={query!r}: {exc}")
+                continue
+            raise
+
+        candidate = selector(
+            payload,
+            used_provider_ids,
+        )
+
+        if candidate is None:
+            continue
+
+        selected = candidate
+        provider_query = query
+        break
 
     if selected is None:
+        if forbidden_errors and len(forbidden_errors) == len(query_variants):
+            raise PexelsProviderError(
+                "Pexels search forbidden for all same-intent query variants: "
+                + " | ".join(forbidden_errors),
+                status_code=403,
+            )
         return None
 
     media_path = output_dir / (
@@ -689,6 +804,8 @@ def resolve_stock_asset(
         "asset_id": asset_id,
         "asset_type": asset_type,
         "asset_query": asset_query,
+        "provider_query": provider_query,
+        "query_variant_count": len(query_variants),
         "source_provider": PROVIDER_NAME,
         "provider_version": PROVIDER_VERSION,
         "provider_asset_key": (
@@ -746,6 +863,8 @@ def resolve_stock_asset(
         "attribution_url": (
             selected["source_url"]
         ),
+        "provider_query": provider_query,
+        "query_variant_count": len(query_variants),
         "cache_hit": False,
         "rate_limit_remaining": remaining,
     }

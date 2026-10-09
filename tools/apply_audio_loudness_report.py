@@ -11,7 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 TOOL_NAME = "apply_audio_loudness_report"
-TOOL_VERSION = "1.0.0"
+TOOL_VERSION = "1.0.1"
 
 LOUDNESS_MISSING_REQUIREMENT = "loudness validation"
 LOUDNESS_BLOCKER = "loudness validation was not performed"
@@ -109,6 +109,7 @@ def remove_item(values: Any, item_to_remove: str, field_name: str) -> list[str]:
 def validate_loudness_report(
     audio_render: dict[str, Any],
     loudness_report: dict[str, Any],
+    audio_render_path: Path,
     loudness_report_path: Path,
 ) -> None:
     audio_project_id = require_non_empty_string(
@@ -192,7 +193,12 @@ def apply_loudness_report(
     audio_render = read_json_file(audio_render_path)
     loudness_report = read_json_file(loudness_report_path)
 
-    validate_loudness_report(audio_render, loudness_report, loudness_report_path)
+    validate_loudness_report(
+        audio_render,
+        loudness_report,
+        audio_render_path,
+        loudness_report_path,
+    )
 
     rendered_segment_count = require_int(
         audio_render.get("rendered_segment_count"),

@@ -16,8 +16,7 @@ class DispatcherTransitionError(StateValidationError):
 ALLOWED_PHASE_TRANSITIONS: dict[str, set[str]] = {
     "TOPIC": {"SCRIPT", "HALT"},
     "SCRIPT": {"SCENES", "HALT"},
-    "SCENES": {"AUDIO", "HALT"},
-    "AUDIO": {"ASSETS", "HALT"},
+    "SCENES": {"ASSETS", "HALT"},
     "ASSETS": {"ASSEMBLY", "HALT"},
     "ASSEMBLY": {"QA", "HALT"},
     "QA": {"READY_FOR_UPLOAD", "HALT"},
@@ -31,20 +30,18 @@ PHASE_ORDER: dict[str, int] = {
     "TOPIC": 10,
     "SCRIPT": 20,
     "SCENES": 30,
-    "AUDIO": 40,
-    "ASSETS": 50,
-    "ASSEMBLY": 60,
-    "QA": 70,
-    "READY_FOR_UPLOAD": 80,
-    "UPLOADED": 90,
-    "ARCHIVED": 100,
+    "ASSETS": 40,
+    "ASSEMBLY": 50,
+    "QA": 60,
+    "READY_FOR_UPLOAD": 70,
+    "UPLOADED": 80,
+    "ARCHIVED": 90,
     "HALT": 999,
 }
 
 NO_ROLLBACK_AFTER_PHASES = frozenset(
     {
         "ASSEMBLY",
-        "AUDIO",
         "QA",
         "READY_FOR_UPLOAD",
         "UPLOADED",
@@ -59,7 +56,6 @@ RESUMABLE_PHASES = frozenset(
         "SCENES",
         "ASSETS",
         "ASSEMBLY",
-        "AUDIO",
         "QA",
         "READY_FOR_UPLOAD",
     }
@@ -257,18 +253,22 @@ class CanonicalDispatcher:
         target_phase: str,
         candidate_state: Mapping[str, Any],
     ) -> None:
-        if previous_phase == "SCENES" and target_phase == "AUDIO":
+        if previous_phase == "SCENES" and target_phase == "ASSETS":
             artifacts = candidate_state.get("artifacts", {})
-            if "scenes_path" not in artifacts:
+            required_artifacts = (
+                "scenes_path",
+                "audio_render_path",
+                "visual_pacing_plan_path",
+            )
+            missing_artifacts = [
+                artifact_name
+                for artifact_name in required_artifacts
+                if artifact_name not in artifacts
+            ]
+            if missing_artifacts:
                 raise DispatcherTransitionError(
-                    "cannot transition SCENES -> AUDIO without artifacts.scenes_path"
-                )
-
-        if previous_phase == "AUDIO" and target_phase == "ASSETS":
-            artifacts = candidate_state.get("artifacts", {})
-            if "audio_plan_path" not in artifacts:
-                raise DispatcherTransitionError(
-                    "cannot transition AUDIO -> ASSETS without artifacts.audio_plan_path"
+                    "cannot transition SCENES -> ASSETS without artifacts: "
+                    + ", ".join(missing_artifacts)
                 )
 
         if previous_phase == "QA" and target_phase == "READY_FOR_UPLOAD":

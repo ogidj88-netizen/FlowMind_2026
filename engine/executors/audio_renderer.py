@@ -21,7 +21,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 RENDERER_NAME = "audio_renderer"
-RENDERER_VERSION = "1.3.0"
+RENDERER_VERSION = "1.3.1"
 SUPPORTED_PROVIDER = "elevenlabs"
 
 API_KEY_ENV = "ELEVENLABS_API_KEY"
@@ -57,6 +57,22 @@ REQUIRED_MISSING_REQUIREMENTS = (
 
 class AudioRendererError(RuntimeError):
     pass
+
+
+FATAL_PROVIDER_ERROR_MARKERS = (
+    "authentication_error",
+    "invalid_api_key",
+    "api_key_id_used_as_api_key",
+    "missing_permissions",
+    "unauthorized",
+    "provider voice id is missing",
+    "TTS API key is missing",
+)
+
+
+def is_fatal_provider_error(message: str) -> bool:
+    normalized = message.lower()
+    return any(marker.lower() in normalized for marker in FATAL_PROVIDER_ERROR_MARKERS)
 
 
 def utc_now_iso() -> str:
@@ -479,8 +495,12 @@ def build_segments(
                 )
             )
         except (AudioRendererError, OSError) as exc:
+            error_message = str(exc)
             failed_segment_count += 1
-            rendered_segments.append(build_failed_segment(segment, str(exc)))
+            rendered_segments.append(build_failed_segment(segment, error_message))
+
+            if is_fatal_provider_error(error_message):
+                break
 
     return rendered_segments, rendered_segment_count, failed_segment_count, total_duration_sec
 
@@ -534,6 +554,23 @@ def run_audio_renderer(state_path: Path) -> dict[str, Any]:
         model_id=model_id,
         audio_dir=audio_dir,
     )
+
+    if len(rendered_segments) < segment_count:
+        processed_ids = {
+            str(segment.get("segment_id"))
+            for segment in rendered_segments
+            if isinstance(segment, dict)
+        }
+        for segment in audio_segments:
+            segment_id = str(segment.get("segment_id"))
+            if segment_id in processed_ids:
+                continue
+            rendered_segments.append(
+                build_pending_segment(
+                    segment,
+                    "not rendered because a fatal provider/configuration error stopped the batch",
+                )
+            )
 
     all_segments_rendered = rendered_segment_count == segment_count and failed_segment_count == 0
     duration_validated = all_segments_rendered
@@ -601,12 +638,13 @@ def run_audio_renderer(state_path: Path) -> dict[str, Any]:
     saved_state = save_state_with_disk_guard(state_path, candidate_state)
 
     return {
-        "status": "AUDIO_RENDERER_OK",
+        "status": "AUDIO_RENDERER_OK" if all_segments_rendered else "AUDIO_RENDERER_BLOCKED",
         "project_id": project_id,
         "phase": saved_state["phase"],
         "audio_render_path": str(audio_render_path),
         "audio_status": audio_render["audio_status"],
         "audio_ready": audio_render["audio_ready"],
+        "render_complete": all_segments_rendered,
         "segment_count": audio_render["segment_count"],
         "render_limit": audio_render["render_limit"],
         "rendered_segment_count": audio_render["rendered_segment_count"],
@@ -637,6 +675,9 @@ def main() -> None:
         raise SystemExit(1) from exc
 
     print(json.dumps(result, indent=2, ensure_ascii=False, sort_keys=True))
+
+    if result.get("render_complete") is not True:
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":

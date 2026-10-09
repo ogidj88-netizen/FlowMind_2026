@@ -71,7 +71,7 @@ def require_number(value: Any, field_name: str) -> float:
     if isinstance(value, bool):
         raise LoudnessReportError(f"{field_name} must be a number")
 
-    if not isinstance(value, int | float):
+    if not isinstance(value, (int, float)):
         raise LoudnessReportError(f"{field_name} must be a number")
 
     return float(value)

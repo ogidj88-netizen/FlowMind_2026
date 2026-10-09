@@ -15,7 +15,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "visual_pacing_executor"
-EXECUTOR_VERSION = "2.0.0"
+EXECUTOR_VERSION = "2.1.0"
 
 TARGET_BEAT_DURATION_SEC = 5.0
 MIN_BEAT_DURATION_SEC = 3.0
@@ -218,6 +218,108 @@ def validate_scene(scene: dict[str, Any], index: int) -> None:
 
     fail_if_forbidden_markers(json.dumps(scene, ensure_ascii=False), f"scene[{index}]")
 
+
+
+def validate_visual_units(scene: dict[str, Any], scene_index: int) -> list[dict[str, Any]]:
+    scene_id = require_non_empty_string(
+        scene.get("scene_id"),
+        f"scene[{scene_index}].scene_id",
+    )
+    raw_units = require_list(
+        scene.get("visual_units"),
+        f"scene[{scene_index}].visual_units",
+    )
+    if not raw_units:
+        raise VisualPacingExecutorError(
+            f"scene[{scene_index}].visual_units must not be empty"
+        )
+
+    validated: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+
+    for unit_index, unit in enumerate(raw_units, start=1):
+        if not isinstance(unit, dict):
+            raise VisualPacingExecutorError(
+                f"scene[{scene_index}].visual_units[{unit_index}] must be an object"
+            )
+
+        unit_id = require_non_empty_string(
+            unit.get("unit_id"),
+            f"scene[{scene_index}].visual_units[{unit_index}].unit_id",
+        )
+        if unit_id in seen_ids:
+            raise VisualPacingExecutorError(
+                f"duplicate visual unit id in {scene_id}: {unit_id}"
+            )
+        seen_ids.add(unit_id)
+
+        source_scene_id = require_non_empty_string(
+            unit.get("source_scene_id"),
+            f"{unit_id}.source_scene_id",
+        )
+        if source_scene_id != scene_id:
+            raise VisualPacingExecutorError(
+                f"{unit_id}.source_scene_id mismatch: expected={scene_id}, got={source_scene_id}"
+            )
+
+        require_non_empty_string(unit.get("purpose"), f"{unit_id}.purpose")
+        require_non_empty_string(unit.get("visual_intent"), f"{unit_id}.visual_intent")
+        require_non_empty_string(unit.get("asset_type"), f"{unit_id}.asset_type")
+        require_non_empty_string(
+            unit.get("representation_mode"),
+            f"{unit_id}.representation_mode",
+        )
+        require_non_empty_string(
+            unit.get("production_priority"),
+            f"{unit_id}.production_priority",
+        )
+        require_non_empty_string(
+            unit.get("overlay_intent"),
+            f"{unit_id}.overlay_intent",
+        )
+
+        must_show = require_list(unit.get("must_show"), f"{unit_id}.must_show")
+        must_not_show = require_list(unit.get("must_not_show"), f"{unit_id}.must_not_show")
+        for item_index, item in enumerate(must_show, start=1):
+            require_non_empty_string(item, f"{unit_id}.must_show[{item_index}]")
+        for item_index, item in enumerate(must_not_show, start=1):
+            require_non_empty_string(item, f"{unit_id}.must_not_show[{item_index}]")
+
+        fail_if_forbidden_markers(
+            json.dumps(unit, ensure_ascii=False),
+            unit_id,
+        )
+        validated.append(unit)
+
+    return validated
+
+
+def allocate_visual_units_to_beats(
+    visual_units: list[dict[str, Any]],
+    beat_count: int,
+) -> list[dict[str, Any]]:
+    if beat_count <= 0:
+        raise VisualPacingExecutorError("beat_count must be > 0")
+    if not visual_units:
+        raise VisualPacingExecutorError("visual_units must not be empty")
+
+    unit_count = len(visual_units)
+
+    if unit_count == 1:
+        return [visual_units[0] for _ in range(beat_count)]
+
+    if beat_count == 1:
+        return [visual_units[0]]
+
+    assignments: list[dict[str, Any]] = []
+    for beat_index in range(beat_count):
+        unit_index = min(
+            unit_count - 1,
+            int((beat_index * unit_count) / beat_count),
+        )
+        assignments.append(visual_units[unit_index])
+
+    return assignments
 
 def validate_audio_segment(segment: dict[str, Any], index: int) -> None:
     required_fields = {
@@ -430,23 +532,23 @@ def build_beats(
             f"audio[{scene_id}].duration_sec",
         )
 
-        asset_type = require_non_empty_string(
-            scene.get("asset_type"),
-            f"scene[{scene_index}].asset_type",
-        )
-        visual_intent = require_non_empty_string(
-            scene.get("visual_intent"),
-            f"scene[{scene_index}].visual_intent",
-        )
         production_notes = require_non_empty_string(
             scene.get("production_notes"),
             f"scene[{scene_index}].production_notes",
         )
+        visual_units = validate_visual_units(scene, scene_index)
 
         scene_cursor = 0.0
         beat_durations = split_duration(duration_sec)
+        unit_assignments = allocate_visual_units_to_beats(
+            visual_units,
+            len(beat_durations),
+        )
 
-        for beat_index, beat_duration in enumerate(beat_durations, start=1):
+        for beat_index, (beat_duration, visual_unit) in enumerate(
+            zip(beat_durations, unit_assignments),
+            start=1,
+        ):
             scene_start = round(scene_cursor, 3)
             scene_end = round(scene_cursor + beat_duration, 3)
             global_start = round(global_cursor, 3)
@@ -455,6 +557,35 @@ def build_beats(
             if beat_index == len(beat_durations):
                 scene_end = round(duration_sec, 3)
                 global_end = round(global_start + (scene_end - scene_start), 3)
+
+            visual_unit_id = require_non_empty_string(
+                visual_unit.get("unit_id"),
+                f"{scene_id}.beat[{beat_index}].visual_unit_id",
+            )
+            asset_type = require_non_empty_string(
+                visual_unit.get("asset_type"),
+                f"{visual_unit_id}.asset_type",
+            )
+            visual_intent = require_non_empty_string(
+                visual_unit.get("visual_intent"),
+                f"{visual_unit_id}.visual_intent",
+            )
+            representation_mode = require_non_empty_string(
+                visual_unit.get("representation_mode"),
+                f"{visual_unit_id}.representation_mode",
+            )
+            production_priority = require_non_empty_string(
+                visual_unit.get("production_priority"),
+                f"{visual_unit_id}.production_priority",
+            )
+            purpose = require_non_empty_string(
+                visual_unit.get("purpose"),
+                f"{visual_unit_id}.purpose",
+            )
+            overlay_intent = require_non_empty_string(
+                visual_unit.get("overlay_intent"),
+                f"{visual_unit_id}.overlay_intent",
+            )
 
             display_text, text_mode = select_display_text(scene, beat_index)
             visual_action = choose_visual_action(beat_index, asset_type, text_mode)
@@ -475,9 +606,16 @@ def build_beats(
                 "scene_order": scene_order,
                 "scene_start_sec": scene_start,
                 "source_audio_path": source_audio_path,
+                "source_visual_unit_id": visual_unit_id,
                 "text_mode": text_mode,
                 "visual_action": visual_action,
                 "visual_intent": visual_intent,
+                "visual_purpose": purpose,
+                "representation_mode": representation_mode,
+                "production_priority": production_priority,
+                "must_show": list(visual_unit["must_show"]),
+                "must_not_show": list(visual_unit["must_not_show"]),
+                "overlay_intent": overlay_intent,
                 "production_notes": production_notes,
                 "render_instruction": {
                     "ffmpeg_safe": True,
@@ -501,6 +639,7 @@ def build_beats(
             )
 
     return beats
+
 
 
 def validate_beats(
@@ -725,6 +864,8 @@ def run_visual_pacing_executor(state_path: Path) -> dict[str, Any]:
         "source_audio_render_path": str(audio_render_path),
         "timing_source": "actual_canonical_audio",
         "audio_master_clock": True,
+        "visual_unit_mapping": True,
+        "visual_unit_mapping_strategy": "ordered_proportional",
         "timed_execution_ready": True,
         "scene_count": scene_count,
         "beat_count": len(beats),

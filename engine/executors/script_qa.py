@@ -17,7 +17,7 @@ from engine.state_store import save_state_with_disk_guard
 from engine.state_validator import StateValidationError, load_state
 
 QA_GATE_NAME = "script_qa"
-QA_VERSION = "1.1.1"
+QA_VERSION = "1.1.2"
 WORDS_PER_MINUTE = 145.0
 ALLOWED_DURATION_DRIFT = 0.20
 MIN_PASS_SCORE = 85
@@ -181,16 +181,36 @@ def check_niche_match(script_text: str, niche: str) -> bool:
         hits = sum(1 for concept in required_concepts if concept in normalized_script)
         return hits >= 3
 
+    if "explainer" in normalized_niche:
+        paragraphs = get_paragraphs(script_text)
+        has_explanatory_depth = len(paragraphs) >= 7
+        has_mechanism = any(
+            term in normalized_script
+            for term in (
+                "because",
+                "means",
+                "works",
+                "comes from",
+                "can come from",
+                "there is",
+                "there are",
+                "in that case",
+                "this means",
+            )
+        )
+        has_practical_resolution = check_practical_payoff(script_text)
+        return has_explanatory_depth and has_mechanism and has_practical_resolution
+
     niche_words = [
         word
         for word in re.findall(r"\b[a-z0-9']+\b", normalized_niche)
-        if len(word) >= 5
+        if len(word) >= 5 and word not in {"content", "channel", "videos"}
     ]
     if not niche_words:
         return False
 
     hits = sum(1 for word in niche_words if word in normalized_script)
-    return hits >= max(1, len(niche_words) // 3)
+    return hits >= max(1, (len(niche_words) + 2) // 3)
 
 
 def check_structure(script_text: str) -> bool:
@@ -416,23 +436,86 @@ def check_curiosity_gap(script_text: str) -> bool:
 def classify_paragraph(paragraph: str) -> str:
     normalized = normalize_text(paragraph)
 
-    if any(term in normalized for term in ("your bill", "hidden", "quietly", "before", "mistake")):
-        return "hook"
+    term_groups = {
+        "hook": (
+            "hidden risk",
+            "hidden cost",
+            "the real clue",
+            "wrong problem",
+            "wrong part",
+            "obvious explanation",
+            "before you",
+        ),
+        "problem": (
+            "problem",
+            "blame",
+            "mystery",
+            "confusion",
+            "trap",
+            "instinct",
+            "can waste",
+        ),
+        "diagnostic": (
+            "check",
+            "compare",
+            "write down",
+            "diagnose",
+            "ask which",
+            "start with",
+            "pattern interrupt",
+        ),
+        "payoff": (
+            "the point",
+            "once you",
+            "so if",
+            "you can",
+            "the payoff",
+            "answer those",
+            "becomes a map",
+            "in order",
+        ),
+        "mechanism": (
+            "because",
+            "comes from",
+            "can come from",
+            "there is",
+            "there are",
+            "rate",
+            "pricing",
+            "fixed charge",
+            "time-of-use",
+            "usage",
+            "structure",
+        ),
+        "example": (
+            "for example",
+            "picture",
+            "imagine",
+            "refrigerator",
+            "water heater",
+            "dishwasher",
+            "dryer",
+            "computer",
+            "dehumidifier",
+            "appliance",
+            "fridge",
+            "freezer",
+            "pool pump",
+        ),
+    }
 
-    if any(term in normalized for term in ("problem", "blame", "mystery", "confusion", "rises", "trap", "instinct")):
-        return "problem"
+    scores = {
+        beat: sum(1 for term in terms if term in normalized)
+        for beat, terms in term_groups.items()
+    }
+    best_score = max(scores.values(), default=0)
+    if best_score <= 0:
+        return "explanation"
 
-    if any(term in normalized for term in ("check", "compare", "write down", "list", "diagnose", "seven-day", "better question", "which layer moved", "pattern interrupt")):
-        return "diagnostic"
-
-    if any(term in normalized for term in ("the point", "once you", "so if", "you can", "start with", "resolves", "answer those", "becomes a map", "payoff")):
-        return "payoff"
-
-    if any(term in normalized for term in ("rate", "structure", "pricing", "fixed charges", "time-of-use", "usage", "kilowatt-hours", "delivery charges", "plan changes")):
-        return "mechanism"
-
-    if any(term in normalized for term in ("refrigerator", "water heater", "dishwasher", "dryer", "computer", "dehumidifier", "appliance", "fridge", "freezer", "pool pump")):
-        return "example"
+    priority = ("diagnostic", "payoff", "mechanism", "example", "problem", "hook")
+    for beat in priority:
+        if scores[beat] == best_score:
+            return beat
 
     return "explanation"
 
