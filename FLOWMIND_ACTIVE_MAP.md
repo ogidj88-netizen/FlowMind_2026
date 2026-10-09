@@ -1,7 +1,7 @@
 FLOWMIND ACTIVE MAP
 
 Status: ACTIVE OPERATIONAL MAP Project: FlowMind / Imagine What If
-Updated: 2026-10-09 Mode: SYSTEM AUDIT — GOVERNANCE PUBLICATION
+Updated: 2026-10-09 Mode: SYSTEM AUDIT — GOVERNANCE / RECOVERY FINAL CHECK
 
 1. Purpose
 
@@ -111,7 +111,7 @@ commit are complete.
 4A. Current Audit Checkpoint (2026-10-09)
 
 The approved SYSTEM AUDIT methodology is now the current workstream.
-The immediate phase is GOVERNANCE PUBLICATION, not code remediation.
+The immediate phase is RECOVERY VERIFICATION, not code remediation.
 R2 editorial issues are historical evidence only. R3 success or failure
 is UNKNOWN without direct current runtime evidence. No technical or
 editorial production-readiness PASS is claimed.
@@ -503,75 +503,71 @@ No production architecture rewrite is authorized.
 
 10. Current Allowed Work
 
-Current active target: SYSTEM AUDIT — GOVERNANCE PUBLICATION / RECOVERY RECONCILIATION.
+Current active target: SYSTEM AUDIT — GOVERNANCE / RECOVERY FINAL CHECK.
 
-Verified remote checkpoint (GitHub, branch wip-transfer-20261006):
+Verified repository publication checkpoint (branch wip-transfer-20261006):
 
-- Governance methodology and Registry update were published in commit
-  f890056 (confirmed previously against GitHub).
-- FLOWMIND_CORE_RULES.md new-chat GitHub recovery rule was committed and
-  pushed in c096486; verified remote HEAD:
-  c0964868b566c914db3abe4b3d8e79fc51291bd1.
-- FLOWMIND_AUDIT_FRAMEWORK_V1.md exists in the current GitHub branch.
-  Its own header still says PENDING REPO PUBLICATION; that wording is
-  stale relative to verified GitHub presence, not evidence of an
-  unpublished file.
-- FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md exists in the same branch.
-- The previous statements that the Framework is untracked, the Registry
-  uncommitted, and HEAD is 1c3efa3 are STALE and superseded.
-- GitHub proves pushed repository state only. Current local Mac working
-  tree cleanliness and runtime status remain UNVERIFIED.
+- Audit methodology and Registry publication: f890056.
+- GitHub-first recovery rule in FLOWMIND_CORE_RULES.md: c096486.
+- Reconciled Active Map publication: e7aa508.
+- Audit Framework header corrected to PUBLISHED IN REPOSITORY: a612e4d.
+- Registry Section 5.1 corrected to PUBLISHED IN REPOSITORY: 80acbbf.
+- Framework is an approved reference methodology, NOT a seventh canonical authority.
+- Older publication-pending statements are historical and superseded.
+- The current GitHub branch HEAD must be fetched directly at recovery time;
+  historical commit IDs in this Map are evidence anchors, not a HEAD pointer.
 
-Approved audit methodology: FLOWMIND_AUDIT_FRAMEWORK_V1.md (reference;
-not a seventh canonical authority).
+Project Sources cleanup confirmed by the user:
 
-Audit methodology decisions already approved:
+- Stale FLOWMIND_ACTIVE_MAP.md Project Source copy removed.
+- Stale FLOWMIND_AUDIT_FRAMEWORK_V1.md Project Source copy removed.
+- Stale FLOWMIND_SOURCE_OF_TRUTH_REGISTRY.md Project Source copy removed.
+- GitHub remains the durable master; do not reintroduce stale copies.
+
+Audit method approved:
 
 - system-wide runtime and contract audit, not fixture-specific R2 fixes
 - independent Hard Gates; MQS-100, FDS-100 and VQS-100 only with evidence
 - UNKNOWN remains UNKNOWN; no fabricated PASS, FAIL or scores
 - Future Impact Gate for Long/Shorts, variable scenes, Director and scale
-- audit sequence: Runtime Evidence -> Impact Triage -> Contract & Module
-  Audit -> Targeted Quality Hardening -> Downstream Regression ->
+- sequence: Runtime Evidence -> Impact Triage -> Contract & Module Audit ->
+  Targeted Quality Hardening -> Downstream Regression ->
   Integrated Validation -> Production Readiness
 - no speculative tooling, second dispatcher or extra current-state owner
 
 Material NOT DONE:
 
-- publish this corrected Active Map to the working GitHub branch
-- reconcile stale publication wording in the Framework when the
-  governance consistency transaction is performed
-- reconcile affected Project Sources with the GitHub-first recovery rule;
-  do not treat an older Project Sources Map as current
-- verify new-chat recovery against the published branch and Active Map
+- verify one fresh new-chat recovery against the latest GitHub branch HEAD
+  and this published Active Map
 - establish current runtime baseline and actual module inventory after
-  governance/recovery closure
+  governance/recovery verification
 - historical production-order replay/QA closure remains unverified
 
 Governance/recovery exit conditions:
 
-1. The approved Framework is present as reference methodology only.
-2. Active Map has one current target, evidence boundary, and next action.
-3. No duplicate active authority or second recovery owner is introduced.
-4. Intended governance changes are validated and published without
-   unrelated runtime artifacts.
-5. Materially stale reference/Project Sources publication claims are
-   reconciled or explicitly flagged as historical.
-6. New-chat recovery correctly reads GitHub branch HEAD and this Map;
-   it does not infer local runtime PASS or a clean working tree.
+1. Framework is published as reference methodology only.
+2. Active Map owns one current target and one next logical action.
+3. No duplicate active authority or recovery owner is introduced.
+4. Publication changes are in GitHub without unrelated runtime artifacts.
+5. Material stale publication claims are reconciled or marked historical.
+6. A fresh new chat fetches GitHub HEAD and this Map without inferring
+   local runtime PASS or a clean working tree.
 
-Production code changes remain paused for this recovery transaction.
+Repository publication is verified for the listed governance changes.
+Fresh new-chat recovery against this updated Map is NOT DONE.
+Production code changes remain paused until that recovery check passes.
 
 11. Current Next Logical Action
 
-Replace FLOWMIND_ACTIVE_MAP.md in full from the verified current GitHub
-blob, incorporating this checkpoint; inspect git diff --check and the
-file-specific diff, then commit/push this governance-only change after
-validation. Do not stage unrelated runtime or generated artifacts.
+Run exactly one fresh new-chat recovery test: fetch the current GitHub
+branch HEAD, read FLOWMIND_CORE_RULES.md and FLOWMIND_ACTIVE_MAP.md
+directly from GitHub, and report the last verified checkpoint, remaining
+NOT DONE and one next logical action. Do not modify production.
 
-After publication, resolve only material stale reference/Project Sources
-claims and perform one new-chat recovery test. Then return to the
-system-wide runtime evidence baseline; do not resume speculative R2
-patching or treat R3 as PASS without proof.
+If the test passes, close governance/recovery reconciliation and start
+SYSTEM AUDIT with the current runtime evidence baseline and module
+inventory. Do not reopen governance publication merely because the
+branch HEAD advanced. Do not claim R3 PASS or production readiness
+without direct runtime evidence.
 
 End.
