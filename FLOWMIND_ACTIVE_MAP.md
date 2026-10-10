@@ -1,7 +1,7 @@
 FLOWMIND ACTIVE MAP
 
 Status: ACTIVE OPERATIONAL MAP Project: FlowMind / Imagine What If
-Updated: 2026-10-09 Mode: SYSTEM AUDIT — GOVERNANCE / RECOVERY FINAL CHECK
+Updated: 2026-10-10 Mode: SYSTEM AUDIT — RUNTIME EVIDENCE (READ-ONLY)
 
 1. Purpose
 
@@ -111,7 +111,7 @@ commit are complete.
 4A. Current Audit Checkpoint (2026-10-09)
 
 The approved SYSTEM AUDIT methodology is now the current workstream.
-The immediate phase is RECOVERY VERIFICATION, not code remediation.
+Recovery verification is completed; the immediate phase is RUNTIME EVIDENCE, not code remediation.
 R2 editorial issues are historical evidence only. R3 success or failure
 is UNKNOWN without direct current runtime evidence. No technical or
 editorial production-readiness PASS is claimed.
@@ -503,7 +503,12 @@ No production architecture rewrite is authorized.
 
 10. Current Allowed Work
 
-Current active target: SYSTEM AUDIT — GOVERNANCE / RECOVERY FINAL CHECK.
+Current active target: SYSTEM AUDIT — RUNTIME EVIDENCE (READ-ONLY).
+
+Recovery checkpoint (verified 2026-10-09): branch wip-transfer-20261006,
+GitHub HEAD fab8ce1e550314dfa95c02f10d1c526daf42f19b;
+GitHub-first new-chat recovery PASS. Historical recovery NOT DONE claims
+below are superseded, not fresh work items. No production changes authorized.
 
 Verified repository publication checkpoint (branch wip-transfer-20261006):
 
@@ -535,13 +540,18 @@ Audit method approved:
   Integrated Validation -> Production Readiness
 - no speculative tooling, second dispatcher or extra current-state owner
 
-Material NOT DONE:
+Material NOT DONE (current):
 
-- verify one fresh new-chat recovery against the latest GitHub branch HEAD
-  and this published Active Map
-- establish current runtime baseline and actual module inventory after
-  governance/recovery verification
-- historical production-order replay/QA closure remains unverified
+- reconcile R2 final-render PASS with canonical state still in ASSEMBLY;
+  verify final-render readiness and dispatcher/QA handoff using evidence
+- establish current runtime baseline and actual module inventory without
+  re-running completed work or modifying historical replay artifacts
+- inspect R3 identity only if material: its PROJECT_STATE.json identifies R2
+  and references R2 artifacts; R3 is NOT independently validated
+- verify whether Claude/Gemini/Grok audit findings exist and were accepted
+  into the Audit Registry; no external-AI audit PASS is established
+- integrated runner replay through QA, QA verdict repair, downstream
+  regression and validated implementation commit remain NOT DONE
 
 Governance/recovery exit conditions:
 
@@ -554,20 +564,30 @@ Governance/recovery exit conditions:
    local runtime PASS or a clean working tree.
 
 Repository publication is verified for the listed governance changes.
-Fresh new-chat recovery against this updated Map is NOT DONE.
-Production code changes remain paused until that recovery check passes.
+Fresh new-chat recovery passed at the verified 2026-10-09 checkpoint.
+Production code changes remain paused during read-only runtime evidence audit.
 
 11. Current Next Logical Action
 
-Run exactly one fresh new-chat recovery test: fetch the current GitHub
-branch HEAD, read FLOWMIND_CORE_RULES.md and FLOWMIND_ACTIVE_MAP.md
-directly from GitHub, and report the last verified checkpoint, remaining
-NOT DONE and one next logical action. Do not modify production.
+Read-only inspect R2 final-render readiness evidence and canonical phase
+transition prerequisites. R2 final_render_report.json (2026-10-09) records
+FINAL_RENDER_OK / PASS, 13/13 scenes, 53 visual segments, 236.726 seconds,
+-0.071 seconds duration delta, zero failed scenes, blockers and warnings,
+with final_video.mp4 present (55,298,076 bytes).
 
-If the test passes, close governance/recovery reconciliation and start
-SYSTEM AUDIT with the current runtime evidence baseline and module
-inventory. Do not reopen governance publication merely because the
-branch HEAD advanced. Do not claim R3 PASS or production readiness
-without direct runtime evidence.
+R2 PROJECT_STATE.json (updated 2026-10-09T14:01:18Z) references the
+final render report and video but remains phase ASSEMBLY, qa_passed=false,
+approval_status=PENDING and approved_for_upload=false. Therefore render
+PASS is NOT integrated QA PASS or production readiness.
+
+R3 PROJECT_STATE.json identifies R2 and points to R2 artifacts; do not
+assume independent R3 replay success or manually patch historical state.
+
+Do not rerender, execute production, mutate replay folders or change
+canonical phases merely to manufacture PASS. Use existing evidence first.
+
+Operational convenience: for large JSON/text files use Finder reveal
+(open -R path) and upload the file instead of pasting full terminal output.
+This is not a new governance authority.
 
 End.
