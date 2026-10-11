@@ -1,7 +1,7 @@
 FLOWMIND ACTIVE MAP
 
 Status: ACTIVE OPERATIONAL MAP Project: FlowMind / Imagine What If
-Updated: 2026-10-10 Mode: SYSTEM AUDIT — RUNTIME EVIDENCE (READ-ONLY)
+Updated: 2026-10-11 Mode: ACCEPTED HANDOFF PUBLISHED / NEXT TARGET READ-ONLY
 
 1. Purpose
 
@@ -108,17 +108,65 @@ Do not increase production completion above 98% until the production
 target's remaining runtime exit conditions and validated implementation
 commit are complete.
 
-4A. Current Audit Checkpoint (2026-10-09)
+4A. Current Implementation Checkpoint (2026-10-11)
 
-The approved SYSTEM AUDIT methodology is now the current workstream.
-Recovery verification is completed; the immediate phase is RUNTIME EVIDENCE, not code remediation.
-R2 editorial issues are historical evidence only. R3 success or failure
-is UNKNOWN without direct current runtime evidence. No technical or
-editorial production-readiness PASS is claimed.
+ASSEMBLY → QA implementation: ACCEPT / PUBLISHED.
 
-The historical production-order repair material below is retained for
-traceability and may still contain open exit conditions. Its former
-NEXT ACTION is superseded by Section 11.
+Canonical publication branch: wip-transfer-20261006.
+Implementation base: 9ae21716c74825335188e951b23f4d88b59570e7.
+Accepted implementation commit: 6911dfc3f25db7df3b418a9b58ed3edebbdf874a.
+
+Independent final acceptance reviewed the complete implementation diff,
+including eight tracked files and both new files:
+engine/final_handoff.py and tests/test_final_handoff.py.
+No HIGH/CRITICAL blocker was found for this bounded handoff block.
+
+Implemented and isolated-test verified:
+- shared read-only final packet validation and guarded ASSEMBLY -> QA;
+- guards on HALT/resume and protection against publication-receipt patching;
+- expected_state checks under the existing interprocess state lock;
+- staging and locked publication for active assembly/readiness/render writers;
+- publication receipt in canonical PROJECT_STATE and a recovery journal;
+- partial publications rejected downstream until commit/rollback recovery;
+- assembly-plan digest bound to final-render evidence;
+- complete semantic QA-input fingerprint and explicit stale-QA retry;
+- idempotent final readiness and opt-in QA-only continuation;
+- unchanged default ASSEMBLY step sequence and approval/upload ownership.
+
+Test evidence: 48 tests PASS, 55.308 seconds.
+Command executed in the isolated development worktree:
+PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s tests -p test_final_handoff.py -v
+Execution log: /tmp/flowmind-publication-tests.log in that validation environment.
+The acceptance review matched all 48 current test names to successful log
+results; this local log is environment-specific evidence, not a Git artifact.
+Durable regression definitions: tests/test_final_handoff.py in the
+implementation commit above.
+
+Physical separate-process fixtures cover stale writers after HALT,
+dispatcher versus all three artifact producers, readiness rollback and
+resume ordering, partial publication, crash before state commit, and crash
+after state commit. Assertions check state/history and canonical artifact
+bytes, not only exit code. Tests include Long/Shorts, variable scene/segment
+counts, repeat runs, stale receipts, and unchanged QA/approval gates.
+Renderer race tests use doubles; no production render is claimed.
+
+Residual risks:
+- HALT waits for media hashing/probing while the state lock is held; large
+  packages may increase latency. No critical latency was established by
+  the available evidence.
+- staging retains intermediate files and render evidence referenced by
+  current reports; accumulation consumes disk space. Do not delete such
+  evidence indiscriminately.
+- process-crash tests do not establish disk-failure/power-loss behavior.
+
+Production replay: NOT DONE.
+QA verdict repair: NOT DONE, separate deferred contour.
+No integrated production QA PASS, production readiness, R3 success, render,
+upload, or production completion above 98% is claimed.
+
+The 2026-10-09/10 read-only R2 checkpoint is historical evidence. The
+historical production-order material below remains for traceability;
+its former NEXT ACTION is superseded by Section 11.
 
 4. Historical Production Target (superseded operational focus)
 
@@ -372,7 +420,9 @@ Verified:
 
 -   no canonical AUDIO phase
 -   state phase AUDIO fails closed
--   runner does not transition canonical phase
+-   default runner does not transition canonical phase
+-   explicit --handoff-to-qa continuation now delegates the guarded
+    ASSEMBLY -> QA transition to the canonical dispatcher (Section 4A)
 -   each substep must leave canonical phase unchanged
 
 Evidence:
@@ -469,7 +519,8 @@ Current interpretation:
     pending
 -   full repaired runner runtime proof is still pending
 -   clean control replay through QA boundary is still pending
--   validated production implementation commit is still pending
+-   accepted handoff implementation is published (Section 4A); full
+    production target closure and integrated runtime proof remain pending
 
 Do not raise production completion above 98% before these closure
 conditions are satisfied.
@@ -503,7 +554,9 @@ No production architecture rewrite is authorized.
 
 10. Current Allowed Work
 
-Current active target: SYSTEM AUDIT — RUNTIME EVIDENCE (READ-ONLY).
+Current active target: V3.2 MODULE-TO-CODE / RUNTIME EVIDENCE MAP (READ-ONLY).
+The accepted ASSEMBLY -> QA implementation block is published (Section 4A).
+The mapping task has not been started by this publication operation.
 
 Recovery checkpoint (verified 2026-10-09): branch wip-transfer-20261006,
 GitHub HEAD fab8ce1e550314dfa95c02f10d1c526daf42f19b;
@@ -542,16 +595,17 @@ Audit method approved:
 
 Material NOT DONE (current):
 
-- reconcile R2 final-render PASS with canonical state still in ASSEMBLY;
-  verify final-render readiness and dispatcher/QA handoff using evidence
+- integrated production replay through final readiness, guarded dispatcher
+  transition and QA: NOT DONE; isolated handoff acceptance does not advance
+  historical R2 state or establish production QA PASS
 - establish current runtime baseline and actual module inventory without
   re-running completed work or modifying historical replay artifacts
 - inspect R3 identity only if material: its PROJECT_STATE.json identifies R2
   and references R2 artifacts; R3 is NOT independently validated
 - verify whether Claude/Gemini/Grok audit findings exist and were accepted
   into the Audit Registry; no external-AI audit PASS is established
-- integrated runner replay through QA, QA verdict repair, downstream
-  regression and validated implementation commit remain NOT DONE
+- production replay through QA, QA verdict repair and production downstream
+  regression remain NOT DONE; accepted handoff publication is complete
 
 Governance/recovery exit conditions:
 
@@ -565,29 +619,32 @@ Governance/recovery exit conditions:
 
 Repository publication is verified for the listed governance changes.
 Fresh new-chat recovery passed at the verified 2026-10-09 checkpoint.
-Production code changes remain paused during read-only runtime evidence audit.
+Production execution remains paused. The explicitly authorized isolated
+handoff implementation and its publication are complete; this checkpoint
+does not authorize production execution or QA verdict changes.
 
 11. Current Next Logical Action
 
-Read-only inspect R2 final-render readiness evidence and canonical phase
-transition prerequisites. R2 final_render_report.json (2026-10-09) records
-FINAL_RENDER_OK / PASS, 13/13 scenes, 53 visual segments, 236.726 seconds,
--0.071 seconds duration delta, zero failed scenes, blockers and warnings,
-with final_video.mp4 present (55,298,076 bytes).
+Build a read-only map of V3.2 modules to actual current code and available
+runtime evidence. Resolve the trusted V3.2 reference through the existing
+Registry, identify implementation paths, and distinguish VERIFIED,
+UNVERIFIED and NOT DONE without creating another operational authority.
 
-R2 PROJECT_STATE.json (updated 2026-10-09T14:01:18Z) references the
-final render report and video but remains phase ASSEMBLY, qa_passed=false,
-approval_status=PENDING and approved_for_upload=false. Therefore render
-PASS is NOT integrated QA PASS or production readiness.
+Use the published handoff checkpoint in Section 4A as the accepted boundary.
+Do not reopen its completed tests without material new evidence.
+Production replay and QA verdict repair remain NOT DONE and are separate
+from the next mapping target.
 
-R3 PROJECT_STATE.json identifies R2 and points to R2 artifacts; do not
-assume independent R3 replay success or manually patch historical state.
+Historical R2 evidence (2026-10-09): FINAL_RENDER_OK / PASS, 13/13 scenes,
+53 visual segments, 236.726 seconds, -0.071 seconds duration delta,
+zero failed scenes/blockers/warnings, final video 55,298,076 bytes.
+R2 canonical state remained ASSEMBLY, qa_passed=false,
+approval_status=PENDING and approved_for_upload=false. Those artifacts
+were not mutated by this implementation or publication.
+R3 state identifies R2 and references R2 artifacts; independent R3 success
+remains UNVERIFIED.
 
-Do not rerender, execute production, mutate replay folders or change
-canonical phases merely to manufacture PASS. Use existing evidence first.
-
-Operational convenience: for large JSON/text files use Finder reveal
-(open -R path) and upload the file instead of pasting full terminal output.
-This is not a new governance authority.
+Do not run production, paid API, render, upload or modify historical replay
+artifacts as part of the mapping target without separate authorization.
 
 End.
