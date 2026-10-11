@@ -13,7 +13,8 @@ REPO_ROOT = CURRENT_FILE.parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from engine.state_store import save_state_with_disk_guard
+from engine.final_handoff import validate_final_handoff
+from engine.state_store import save_state_with_disk_guard, file_lock, write_bytes_atomic
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "qa_executor"
@@ -126,9 +127,7 @@ def read_json_file(path: Path) -> dict[str, Any]:
 def write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     serialized = json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
-    temp_path = path.with_suffix(path.suffix + ".tmp")
-    temp_path.write_text(serialized, encoding="utf-8")
-    temp_path.replace(path)
+    write_bytes_atomic(path, serialized.encode("utf-8"))
 
 
 def fail_if_forbidden_markers(value: str, source_name: str) -> None:
@@ -711,11 +710,17 @@ def build_missing_requirements(
 
 
 def run_qa_executor(state_path: Path) -> dict[str, Any]:
+    with file_lock(str(state_path.resolve()) + ".qa.lock"):
+        return _run_qa_executor(state_path)
+
+
+def _run_qa_executor(state_path: Path) -> dict[str, Any]:
     state = load_state(state_path)
 
     if state["phase"] != "QA":
         raise QaExecutorError("QA executor may run only when phase is QA")
 
+    handoff_packet = validate_final_handoff(state_path, state)
     project_id = require_non_empty_string(state["project_id"], "project_id")
     manifest = state["manifest"]
     artifacts = state.get("artifacts", {})
@@ -876,6 +881,7 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
 
     qa_report = {
         "project_id": project_id,
+        "handoff_input_fingerprint": handoff_packet["input_fingerprint"],
         "executor": EXECUTOR_NAME,
         "executor_version": EXECUTOR_VERSION,
         "source_phase": state["phase"],
@@ -916,6 +922,8 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
     serialized = json.dumps(qa_report, ensure_ascii=False)
     fail_if_forbidden_markers(serialized, "qa_report")
 
+    if validate_final_handoff(state_path, state)["input_fingerprint"] != handoff_packet["input_fingerprint"]:
+        raise QaExecutorError("QA inputs changed during evaluation")
     write_json_atomic(qa_report_path, qa_report)
 
     candidate_state = dict(state)
@@ -925,7 +933,7 @@ def run_qa_executor(state_path: Path) -> dict[str, Any]:
     candidate_state["qa_passed"] = False
     candidate_state["updated_at"] = now
 
-    saved_state = save_state_with_disk_guard(state_path, candidate_state)
+    saved_state = save_state_with_disk_guard(state_path, candidate_state, expected_state=state)
 
     return {
         "status": "QA_EXECUTOR_OK",

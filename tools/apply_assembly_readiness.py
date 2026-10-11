@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import json
 import sys
 from datetime import datetime, timezone
@@ -8,6 +9,11 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from engine.state_store import publish_artifacts, recover_artifact_publication, artifact_staging_directory
+from engine.state_validator import StateValidationError
 
 
 TOOL_NAME = "apply_assembly_readiness"
@@ -320,7 +326,9 @@ def apply_assembly_readiness(
     resolved_assets_path: Path,
     audio_render_path: Path,
 ) -> dict[str, Any]:
+    recover_artifact_publication((REPO_ROOT / state_path).resolve())
     state = read_json_file(state_path)
+    original_state = deepcopy(state)
     assembly_plan = read_json_file(assembly_plan_path)
     resolved_assets = read_json_file(resolved_assets_path)
     audio_render = read_json_file(audio_render_path)
@@ -374,8 +382,14 @@ def apply_assembly_readiness(
     state["artifacts"] = artifacts
     state["updated_at"] = now
 
-    write_json_atomic(assembly_plan_path, assembly_plan)
-    write_json_atomic(state_path, state)
+    try:
+        with artifact_staging_directory(REPO_ROOT / state_path, "assembly-readiness-") as directory:
+            staged_plan = Path(directory) / "assembly_plan.json"
+            write_json_atomic(staged_plan, assembly_plan)
+            publish_artifacts(REPO_ROOT / state_path, state, expected_state=original_state,
+                              staged={(REPO_ROOT / assembly_plan_path): staged_plan})
+    except StateValidationError as exc:
+        raise ApplyAssemblyReadinessError(str(exc)) from exc
 
     return {
         "status": "APPLY_ASSEMBLY_READINESS_OK",

@@ -14,10 +14,12 @@ REPO_ROOT = CURRENT_FILE.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from engine.canonical_dispatcher import CanonicalDispatcher
+from engine.final_handoff import validate_final_handoff, project_file, read_object
 from engine.state_validator import StateValidationError, load_state
 
 
-RUNNER_VERSION = "2.0.0"
+RUNNER_VERSION = "2.1.0"
 
 REFUSED_PHASES = {
     "READY_FOR_UPLOAD",
@@ -76,6 +78,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print the phase pipeline without executing it",
     )
+    parser.add_argument(
+        "--handoff-to-qa", action="store_true",
+        help="Resume an existing final render: readiness -> guarded QA transition -> QA only",
+    )
+    parser.add_argument("--rerun-stale-qa", action="store_true",
+                        help="With --handoff-to-qa: archive stale evidence and rerun QA only")
     return parser
 
 
@@ -353,16 +361,163 @@ def run_phase(state_path: Path, dry_run: bool = False) -> int:
     return 0
 
 
+def validate_qa_receipt(state_path: Path, state: dict[str, Any], fingerprint: str) -> dict[str, Any]:
+    from datetime import datetime
+
+    path = project_file(state["artifacts"].get("qa_report_path"), state_path)
+    if path != (state_path.parent / "qa" / "qa_report.json").resolve():
+        raise FlowMindRunPhaseError("QA report path is not canonical")
+    report = read_object(path)
+    if (report.get("project_id") != state["project_id"]
+            or report.get("source_phase") != "QA"
+            or report.get("executor") != "qa_executor"
+            or report.get("handoff_input_fingerprint") != fingerprint):
+        raise FlowMindRunPhaseError("QA report is not bound to the current handoff packet")
+    if report.get("verdict") not in {"PASS", "FAIL", "BLOCKED"}:
+        raise FlowMindRunPhaseError("QA report has no valid verdict")
+    if (type(report.get("qa_passed")) is not bool
+            or report["qa_passed"] != state["qa_passed"]
+            or report["qa_passed"] != (report["verdict"] == "PASS")
+            or type(report.get("approved_for_upload")) is not bool
+            or report["approved_for_upload"] != state["approved_for_upload"]
+            or not isinstance(report.get("checks"), list) or not report["checks"]
+            or not isinstance(report.get("blockers"), list)):
+        raise FlowMindRunPhaseError("QA verdict/state evidence is inconsistent")
+    if report["verdict"] == "PASS" and (
+            report["blockers"] or any(check.get("status") in {"FAIL", "BLOCKED"}
+                                      for check in report["checks"])):
+        raise FlowMindRunPhaseError("QA PASS conflicts with checks")
+    transitions = [entry for entry in state["phase_history"] if entry["to"] == "QA"]
+    if not transitions:
+        raise FlowMindRunPhaseError("QA state has no recorded entry transition")
+    try:
+        created = datetime.fromisoformat(report["created_at"].replace("Z", "+00:00"))
+        entered = datetime.fromisoformat(transitions[-1]["at"].replace("Z", "+00:00"))
+        if created < entered:
+            raise FlowMindRunPhaseError("QA report predates QA transition")
+    except (KeyError, ValueError, TypeError, AttributeError) as exc:
+        raise FlowMindRunPhaseError("Invalid QA report timestamp") from exc
+    return report
+
+
+def handoff_to_qa(state_path: Path, dry_run: bool = False, *, rerun_stale_qa: bool = False) -> int:
+    from engine.state_store import file_lock, recover_artifact_publication
+
+    state_path = state_path.resolve()
+    repo_relative(state_path)
+    initial = load_canonical_state(state_path)
+    if initial["phase"] not in {"ASSEMBLY", "QA"}:
+        raise FlowMindRunPhaseError("Handoff supports only ASSEMBLY or interrupted QA")
+    if dry_run:
+        return _handoff_to_qa(state_path, dry_run=True)
+    with file_lock(str(state_path) + ".handoff.lock"):
+        recover_artifact_publication(state_path)
+        return _handoff_to_qa(state_path, rerun_stale_qa=rerun_stale_qa)
+
+
+def _handoff_to_qa(state_path: Path, dry_run: bool = False, *, rerun_stale_qa: bool = False) -> int:
+    """Explicit opt-in continuation. Never calls assembly/render/upload executors."""
+    from tools.apply_final_render_readiness import apply_final_render_readiness
+
+    state_path = state_path.resolve()
+    repo_relative(state_path)
+    state = load_canonical_state(state_path)
+    if state["phase"] not in {"ASSEMBLY", "QA"}:
+        raise FlowMindRunPhaseError("Handoff supports only ASSEMBLY or interrupted QA")
+    original_approval = (state["approval_status"], state["approved_for_upload"])
+    packet = validate_final_handoff(state_path, state, require_ready=state["phase"] == "QA")
+    if dry_run:
+        print("[HANDOFF] dry_run=true; readiness -> dispatcher QA -> QA; no render/upload")
+        return 0
+    if state["phase"] == "ASSEMBLY":
+        apply_final_render_readiness(
+            state_path, packet["assembly_plan_path"], packet["render_report_path"],
+        )
+        ready_state = load_canonical_state(state_path)
+        if ready_state != state:
+            raise FlowMindRunPhaseError("Readiness changed canonical state")
+        validate_final_handoff(state_path, ready_state)
+        CanonicalDispatcher(state_path).transition("QA")
+        current = load_canonical_state(state_path)
+        expected_history = state["phase_history"]
+        if (current["phase"] != "QA"
+                or len(current["phase_history"]) != len(expected_history) + 1
+                or current["phase_history"][:-1] != expected_history
+                or current["phase_history"][-1]["from"] != "ASSEMBLY"
+                or current["phase_history"][-1]["to"] != "QA"
+                or current["qa_passed"] != state["qa_passed"]
+                or (current["approval_status"], current["approved_for_upload"]) != original_approval):
+            raise FlowMindRunPhaseError("Dispatcher QA transition postconditions failed")
+        state = current
+    packet = validate_final_handoff(state_path, state)
+    # Recover valid orphan receipts; stale evidence requires explicit QA-only retry.
+    from copy import deepcopy
+    from engine.state_store import save_state_with_disk_guard, state_lock, write_bytes_atomic
+    import hashlib
+
+    orphan_path = state_path.parent / "qa" / "qa_report.json"
+    linked = "qa_report_path" in state["artifacts"]
+    if linked or orphan_path.exists():
+        candidate = deepcopy(state)
+        if not linked:
+            candidate["artifacts"]["qa_report_path"] = str(repo_relative(orphan_path))
+        try:
+            receipt = validate_qa_receipt(state_path, candidate, packet["input_fingerprint"])
+        except (FlowMindRunPhaseError, StateValidationError):
+            if not rerun_stale_qa:
+                raise
+            # Do not redirect arbitrary/noncanonical artifact paths or alter approval/QA flags.
+            receipt_path = project_file(candidate["artifacts"]["qa_report_path"], state_path)
+            if receipt_path != orphan_path.resolve() or state["qa_passed"] is not False:
+                raise FlowMindRunPhaseError("Stale QA retry requires canonical receipt and qa_passed=false")
+            with state_lock(state_path):
+                if load_canonical_state(state_path) != state:
+                    raise FlowMindRunPhaseError("state changed before stale QA retry")
+                data = receipt_path.read_bytes()
+                archive = receipt_path.parent / ("qa_report." + hashlib.sha256(data).hexdigest() + ".json")
+                if archive.exists() and archive.read_bytes() != data:
+                    raise FlowMindRunPhaseError("QA archive conflict")
+                if not archive.exists():
+                    write_bytes_atomic(archive, data)
+                # Keep canonical evidence until QA replaces it. Retry after interruption
+                # reuses the immutable archive and cannot duplicate phase history.
+        else:
+            if not linked:
+                state = save_state_with_disk_guard(state_path, candidate, expected_state=state)
+            print(f'[HANDOFF] QA_ALREADY_RECORDED verdict={receipt["verdict"]}; no QA execution')
+            return 0
+    history = state["phase_history"]
+    if not history or history[-1]["to"] != "QA":
+        raise FlowMindRunPhaseError("Interrupted QA has no entry transition")
+    exit_code = run_phase(state_path)
+    if exit_code != 0:
+        return exit_code
+    after = load_canonical_state(state_path)
+    if (after["phase"] != "QA" or after["phase_history"] != history
+            or (after["approval_status"], after["approved_for_upload"]) != original_approval
+            or after["manifest"] != state["manifest"]):
+        raise FlowMindRunPhaseError("QA changed protected handoff state")
+    final_packet = validate_final_handoff(state_path, after)
+    if final_packet["input_fingerprint"] != packet["input_fingerprint"]:
+        raise FlowMindRunPhaseError("QA changed final handoff inputs")
+    receipt = validate_qa_receipt(state_path, after, packet["input_fingerprint"])
+    print(f'[HANDOFF] QA_RECORDED verdict={receipt["verdict"]}; phase=QA; upload not requested')
+    return 0
+
+
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
 
     try:
-        exit_code = run_phase(
-            Path(args.state),
-            dry_run=bool(args.dry_run),
-        )
-    except FlowMindRunPhaseError as exc:
+        if args.rerun_stale_qa and not args.handoff_to_qa:
+            raise FlowMindRunPhaseError("--rerun-stale-qa requires --handoff-to-qa")
+        if args.handoff_to_qa:
+            exit_code = handoff_to_qa(Path(args.state), dry_run=bool(args.dry_run),
+                                      rerun_stale_qa=bool(args.rerun_stale_qa))
+        else:
+            exit_code = run_phase(Path(args.state), dry_run=bool(args.dry_run))
+    except (FlowMindRunPhaseError, StateValidationError, OSError, ValueError) as exc:
         print(f"FLOWMIND_RUN_PHASE_ERROR: {exc}", file=sys.stderr)
         raise SystemExit(2) from exc
 

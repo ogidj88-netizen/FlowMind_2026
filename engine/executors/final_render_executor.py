@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import tempfile
 import shutil
 import subprocess
 import sys
@@ -14,7 +15,7 @@ REPO_ROOT = CURRENT_FILE.parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from engine.state_store import save_state_with_disk_guard
+from engine.state_store import publish_artifacts, recover_artifact_publication, artifact_digest
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "final_render_executor"
@@ -789,6 +790,7 @@ def run_final_render_executor(state_path: Path) -> dict[str, Any]:
     require_tool("ffprobe")
 
     state_path = repo_path(state_path)
+    recover_artifact_publication(absolute_repo_path(state_path))
     state = load_state(absolute_repo_path(state_path))
 
     project_id, artifacts = validate_state(state)
@@ -799,6 +801,7 @@ def run_final_render_executor(state_path: Path) -> dict[str, Any]:
     audio_loudness_report_path = repo_path(artifacts["audio_loudness_report_path"])
 
     assembly_plan = read_json_file(assembly_plan_path)
+    source_plan_digest = artifact_digest(absolute_repo_path(assembly_plan_path))
     resolved_assets = read_json_file(resolved_assets_path)
     audio_render = read_json_file(audio_render_path)
     loudness_report = read_json_file(audio_loudness_report_path)
@@ -817,7 +820,11 @@ def run_final_render_executor(state_path: Path) -> dict[str, Any]:
     validate_loudness_report(loudness_report, project_id, len(timeline))
 
     project_dir = state_path.parent
-    final_render_dir = project_dir / FINAL_RENDER_DIRNAME
+    canonical_render_dir = project_dir / FINAL_RENDER_DIRNAME
+    staging_root = absolute_repo_path(project_dir) / ".staging"
+    staging_root.mkdir(exist_ok=True)
+    # Successful generations retain scene/segment evidence referenced by the report.
+    final_render_dir = repo_path(Path(tempfile.mkdtemp(dir=staging_root, prefix="final-render-")))
     scenes_dir = final_render_dir / SEGMENTS_DIRNAME
     visual_segments_dir = final_render_dir / VISUAL_SEGMENTS_DIRNAME
     tmp_dir = final_render_dir / TMP_DIRNAME
@@ -957,7 +964,7 @@ def run_final_render_executor(state_path: Path) -> dict[str, Any]:
         assembly_plan_path=assembly_plan_path,
         resolved_assets_path=resolved_assets_path,
         audio_render_path=audio_render_path,
-        final_video_path=final_video_path,
+        final_video_path=canonical_render_dir / FINAL_VIDEO_FILENAME,
         final_duration_sec=final_duration_sec,
         final_video_size_bytes=final_video_size_bytes,
         expected_duration_sec=expected_duration_sec,
@@ -965,16 +972,24 @@ def run_final_render_executor(state_path: Path) -> dict[str, Any]:
         visual_segment_count=total_visual_segments,
     )
 
+    report["source_assembly_plan_digest"] = source_plan_digest
     write_json_atomic(final_render_report_path, report)
+    staged_plan_path = final_render_dir / "assembly_plan.json"
+    write_json_atomic(staged_plan_path, assembly_plan)
 
     candidate_state = dict(state)
     candidate_artifacts = dict(candidate_state.get("artifacts", {}))
-    candidate_artifacts["final_video_path"] = str(final_video_path)
-    candidate_artifacts["final_render_report_path"] = str(final_render_report_path)
+    candidate_artifacts["final_video_path"] = str(canonical_render_dir / FINAL_VIDEO_FILENAME)
+    candidate_artifacts["final_render_report_path"] = str(canonical_render_dir / FINAL_RENDER_REPORT_FILENAME)
     candidate_state["artifacts"] = candidate_artifacts
     candidate_state["updated_at"] = utc_now_iso()
 
-    saved_state = save_state_with_disk_guard(absolute_repo_path(state_path), candidate_state)
+    saved_state = publish_artifacts(absolute_repo_path(state_path), candidate_state, expected_state=state,
+        staged={absolute_repo_path(assembly_plan_path): absolute_repo_path(staged_plan_path),
+                absolute_repo_path(canonical_render_dir / FINAL_VIDEO_FILENAME): absolute_repo_path(final_video_path),
+                absolute_repo_path(canonical_render_dir / FINAL_RENDER_REPORT_FILENAME): absolute_repo_path(final_render_report_path)})
+    final_video_path = canonical_render_dir / FINAL_VIDEO_FILENAME
+    final_render_report_path = canonical_render_dir / FINAL_RENDER_REPORT_FILENAME
 
     completed_progress_units += 1
     print_progress(

@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
-from engine.state_store import save_state_with_disk_guard
+from engine.final_handoff import FinalHandoffError, validate_final_handoff
+from engine.state_store import save_state_with_disk_guard, state_lock
 from engine.state_validator import StateValidationError, load_state
 
 
@@ -84,18 +85,19 @@ class CanonicalDispatcher:
         qa_passed: bool | None = None,
         artifacts_patch: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
-        current_state = self.load()
-        candidate_state = self._build_transition_candidate(
-            current_state=current_state,
-            target_phase=target_phase,
-            halt_reason=halt_reason,
-            resume_hint=resume_hint,
-            approval_status=approval_status,
-            approved_for_upload=approved_for_upload,
-            qa_passed=qa_passed,
-            artifacts_patch=artifacts_patch,
-        )
-        return save_state_with_disk_guard(self.state_path, candidate_state)
+        with state_lock(self.state_path):
+            current_state = self.load()
+            candidate_state = self._build_transition_candidate(
+                current_state=current_state,
+                target_phase=target_phase,
+                halt_reason=halt_reason,
+                resume_hint=resume_hint,
+                approval_status=approval_status,
+                approved_for_upload=approved_for_upload,
+                qa_passed=qa_passed,
+                artifacts_patch=artifacts_patch,
+            )
+            return save_state_with_disk_guard(self.state_path, candidate_state, expected_state=current_state)
 
     def halt(self, halt_reason: str, *, resume_hint: str | None = None) -> dict[str, Any]:
         return self.transition(
@@ -105,35 +107,44 @@ class CanonicalDispatcher:
         )
 
     def resume_from_halt(self, target_phase: str) -> dict[str, Any]:
-        current_state = self.load()
+        with state_lock(self.state_path):
+            current_state = self.load()
 
-        if current_state["phase"] != "HALT":
-            raise DispatcherTransitionError("resume_from_halt is allowed only from phase 'HALT'")
+            if current_state["phase"] != "HALT":
+                raise DispatcherTransitionError("resume_from_halt is allowed only from phase 'HALT'")
 
-        normalized_target = self._normalize_phase(target_phase)
-        if normalized_target not in RESUMABLE_PHASES:
-            raise DispatcherTransitionError(
-                f"resume target '{normalized_target}' is not allowed"
+            normalized_target = self._normalize_phase(target_phase)
+            if normalized_target not in RESUMABLE_PHASES:
+                raise DispatcherTransitionError(
+                    f"resume target '{normalized_target}' is not allowed"
+                )
+
+            halts = [entry for entry in current_state["phase_history"] if entry["to"] == "HALT"]
+            if not halts or halts[-1]["from"] == "HALT":
+                raise DispatcherTransitionError("resume requires recorded pre-HALT phase")
+            origin = halts[-1]["from"]
+            if normalized_target != origin:
+                self._assert_transition_allowed(origin, normalized_target)
+            self._assert_phase_guards(origin, normalized_target, current_state)
+
+            candidate_state = deepcopy(current_state)
+            candidate_state["phase"] = normalized_target
+            candidate_state["halted"] = False
+            candidate_state["halt_reason"] = None
+            candidate_state["resume_hint"] = None
+            candidate_state["updated_at"] = utc_now_iso()
+
+            candidate_state["phase_history"] = list(candidate_state.get("phase_history", []))
+            candidate_state["phase_history"].append(
+                {
+                    "from": "HALT",
+                    "to": normalized_target,
+                    "at": candidate_state["updated_at"],
+                }
             )
 
-        candidate_state = deepcopy(current_state)
-        candidate_state["phase"] = normalized_target
-        candidate_state["halted"] = False
-        candidate_state["halt_reason"] = None
-        candidate_state["resume_hint"] = None
-        candidate_state["updated_at"] = utc_now_iso()
-
-        candidate_state["phase_history"] = list(candidate_state.get("phase_history", []))
-        candidate_state["phase_history"].append(
-            {
-                "from": "HALT",
-                "to": normalized_target,
-                "at": candidate_state["updated_at"],
-            }
-        )
-
-        self._assert_phase_guards("HALT", normalized_target, candidate_state)
-        return save_state_with_disk_guard(self.state_path, candidate_state)
+            self._assert_phase_guards("HALT", normalized_target, candidate_state)
+            return save_state_with_disk_guard(self.state_path, candidate_state, expected_state=current_state)
 
     def mark_qa_passed(self) -> dict[str, Any]:
         current_state = self.load()
@@ -145,7 +156,7 @@ class CanonicalDispatcher:
         candidate_state = deepcopy(current_state)
         candidate_state["qa_passed"] = True
         candidate_state["updated_at"] = utc_now_iso()
-        return save_state_with_disk_guard(self.state_path, candidate_state)
+        return save_state_with_disk_guard(self.state_path, candidate_state, expected_state=current_state)
 
     def approve_for_upload(self) -> dict[str, Any]:
         current_state = self.load()
@@ -160,7 +171,7 @@ class CanonicalDispatcher:
         candidate_state["approved_for_upload"] = True
         candidate_state["approval_status"] = "APPROVED"
         candidate_state["updated_at"] = utc_now_iso()
-        return save_state_with_disk_guard(self.state_path, candidate_state)
+        return save_state_with_disk_guard(self.state_path, candidate_state, expected_state=current_state)
 
     def _build_transition_candidate(
         self,
@@ -198,6 +209,8 @@ class CanonicalDispatcher:
             candidate_state["qa_passed"] = qa_passed
 
         if artifacts_patch:
+            if "artifact_publication" in artifacts_patch:
+                raise DispatcherTransitionError("publication receipt may be changed only by artifact publisher")
             artifacts = dict(candidate_state.get("artifacts", {}))
             artifacts.update(dict(artifacts_patch))
             candidate_state["artifacts"] = artifacts
@@ -253,7 +266,13 @@ class CanonicalDispatcher:
         target_phase: str,
         candidate_state: Mapping[str, Any],
     ) -> None:
-        if previous_phase == "SCENES" and target_phase == "ASSETS":
+        if target_phase == "QA" and previous_phase in {"ASSEMBLY", "HALT"}:
+            try:
+                validate_final_handoff(self.state_path, candidate_state)
+            except FinalHandoffError as exc:
+                raise DispatcherTransitionError(f"final handoff rejected: {exc}") from exc
+
+        if target_phase == "ASSETS":
             artifacts = candidate_state.get("artifacts", {})
             required_artifacts = (
                 "scenes_path",
@@ -271,13 +290,17 @@ class CanonicalDispatcher:
                     + ", ".join(missing_artifacts)
                 )
 
-        if previous_phase == "QA" and target_phase == "READY_FOR_UPLOAD":
+        if target_phase == "READY_FOR_UPLOAD":
+            try:
+                validate_final_handoff(self.state_path, candidate_state)
+            except FinalHandoffError as exc:
+                raise DispatcherTransitionError(f"final handoff rejected: {exc}") from exc
             if candidate_state.get("qa_passed") is not True:
                 raise DispatcherTransitionError(
                     "cannot transition QA -> READY_FOR_UPLOAD while qa_passed is not true"
                 )
 
-        if previous_phase == "READY_FOR_UPLOAD" and target_phase == "UPLOADED":
+        if target_phase == "UPLOADED":
             if candidate_state.get("approved_for_upload") is not True:
                 raise DispatcherTransitionError(
                     "cannot transition READY_FOR_UPLOAD -> UPLOADED while approved_for_upload is not true"

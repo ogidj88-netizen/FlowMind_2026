@@ -12,7 +12,7 @@ REPO_ROOT = CURRENT_FILE.parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from engine.state_store import save_state_with_disk_guard
+from engine.state_store import publish_artifacts, recover_artifact_publication, artifact_staging_directory
 from engine.state_validator import StateValidationError, load_state
 
 EXECUTOR_NAME = "assembly_executor"
@@ -636,6 +636,7 @@ def build_scene_timeline(
 
 
 def run_assembly_executor(state_path: Path) -> dict[str, Any]:
+    recover_artifact_publication(state_path)
     state = load_state(state_path)
 
     if state["phase"] != "ASSEMBLY":
@@ -747,7 +748,6 @@ def run_assembly_executor(state_path: Path) -> dict[str, Any]:
         "blockers": [],
     }
 
-    write_json_atomic(assembly_plan_path, assembly_plan)
 
     candidate_state = dict(state)
     candidate_artifacts = dict(candidate_state.get("artifacts", {}))
@@ -755,7 +755,11 @@ def run_assembly_executor(state_path: Path) -> dict[str, Any]:
     candidate_state["artifacts"] = candidate_artifacts
     candidate_state["updated_at"] = now
 
-    saved_state = save_state_with_disk_guard(state_path, candidate_state)
+    with artifact_staging_directory(state_path, "assembly-") as directory:
+        staged_plan = Path(directory) / "assembly_plan.json"
+        write_json_atomic(staged_plan, assembly_plan)
+        saved_state = publish_artifacts(state_path, candidate_state, expected_state=state,
+                                       staged={assembly_plan_path: staged_plan})
 
     return {
         "status": "ASSEMBLY_EXECUTOR_OK",
