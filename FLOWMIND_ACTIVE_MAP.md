@@ -1,7 +1,7 @@
 FLOWMIND ACTIVE MAP
 
 Status: ACTIVE OPERATIONAL MAP Project: FlowMind / Imagine What If
-Updated: 2026-10-11 Mode: ACCEPTED HANDOFF PUBLISHED / NEXT TARGET READ-ONLY
+Updated: 2026-10-12 Mode: SEQUENTIAL MODULE ACCEPTANCE
 
 1. Purpose
 
@@ -554,9 +554,37 @@ No production architecture rewrite is authorized.
 
 10. Current Allowed Work
 
-Current active target: V3.2 MODULE-TO-CODE / RUNTIME EVIDENCE MAP (READ-ONLY).
+Current active target: determine and verify the first module in the
+canonical V3.2 order (READ-ONLY; acceptance pending).
 The accepted ASSEMBLY -> QA implementation block is published (Section 4A).
 The mapping task has not been started by this publication operation.
+
+Current working protocol: CORE_RULES Sections 2.1 and 2.2.
+No module is declared accepted by this registration. No next module is
+authorized for implementation. Do not start the first-module audit as
+part of this registration transaction.
+
+Script Module: IMPLEMENTED PARTIALLY / NOT ACCEPTED.
+Evidence: read-only audit in this conversation, 2026-10-12,
+"FLOWMIND — SCRIPT MODULE STATUS + MODULE APPROVAL GATE AUDIT".
+Code anchors: script_executor.py:96-140,153-241; script_qa.py:648-816;
+tools/flowmind_run_phase.py:35-39. Pure-function checks (python -B, exit 0)
+found 623 words for both 30-second and 480-second targets, both QA FAIL;
+current Script QA v1.1.2 rejected the archived v1.0.0 PASS script.
+Historical artifacts: projects/P2026_TEST_001/script/script_meta.json
+and script_qa.json. This evidence does not establish current module
+acceptance or production readiness.
+
+HIGH #2: READY FOR INDEPENDENT REVIEW; NOT ACCEPTED.
+The generation-bound audio evidence implementation is local and
+uncommitted. Its implementation report and targeted tests are not an
+independent acceptance verdict. Allowed scope: independent review only,
+without further implementation or expansion of audio functionality.
+
+Production, render, upload and paid API remain unauthorized without
+separate explicit user approval. Existing checkpoints, historical runtime
+results and production NOT DONE statuses below remain unchanged.
+Protocol registration status is determined by the current Git commit and remote publication state.
 
 Recovery checkpoint (verified 2026-10-09): branch wip-transfer-20261006,
 GitHub HEAD fab8ce1e550314dfa95c02f10d1c526daf42f19b;
@@ -624,6 +652,13 @@ handoff implementation and its publication are complete; this checkpoint
 does not authorize production execution or QA verdict changes.
 
 11. Current Next Logical Action
+
+Determine and verify the first module in the canonical V3.2 order under
+SEQUENTIAL MODULE ACCEPTANCE. This is the planned next action, not
+execution authorized by this registration. No module implementation is
+authorized; MODULE APPROVAL GATE must precede programming.
+
+Former broad mapping scope (retained as reference, superseded as next action):
 
 Build a read-only map of V3.2 modules to actual current code and available
 runtime evidence. Resolve the trusted V3.2 reference through the existing

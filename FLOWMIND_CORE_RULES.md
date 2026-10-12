@@ -60,6 +60,47 @@ Use one explicit verdict:
 -   РИЗИКОВАНО
 -   НЕ РЕКОМЕНДУЮ
 
+2.1 MODULE APPROVAL GATE
+
+Before new implementation or a material functional change, discuss and
+refresh the input/output contract, acceptance criteria, relevant models,
+APIs and technologies, cost/latency, and risks using current evidence.
+
+After that discussion, obtain explicit user approval of the specific
+scope. Old agreements are not automatic authorization for new work.
+
+Record the approved contract and scope in the existing canonical files,
+according to the Registry's authority roles, BEFORE programming. Do not
+create a second authority or infer permission from a target architecture.
+
+Production, render, upload and paid API calls require separate explicit
+user authorization; approval of a module contract alone does not permit them.
+
+2.2 SEQUENTIAL MODULE ACCEPTANCE
+
+Proceed sequentially in the canonical module order of V3.2, resolved
+through CURRENT_TRUSTED_DETAILED_TARGET in the Registry, starting with
+the first module.
+
+For each module, require:
+1. audit the actual implementation;
+2. verify functional runtime behavior;
+3. verify the actual quality of its output;
+4. obtain explicit user acceptance of that module.
+
+Unit tests alone are not acceptance. An implementation report or a
+passing safety fixture does not substitute for output-quality evidence
+and explicit user acceptance.
+
+If the current module is not accepted, do not start the next module.
+Any new implementation or material change must first pass Section 2.1.
+Previous accepted bounded blocks retain their recorded status; they do
+not automatically establish acceptance of an entire V3.2 module.
+
+Transitional exception: the already-started HIGH #2 may be completed only
+within independent review, with no further implementation or functional
+expansion. This exception does not authorize starting another module.
+
 3. Logical-action execution
 
 The unit of work is ONE LOGICALLY COMPLETED ACTION, not one command, one
